@@ -67,7 +67,8 @@ const InputComp = (props) => {
 
 const Layers = ({ width }) => {
     const [currentStep, setCurrentStep] = useState(1);
-    const { locationDetail } = useSelector((state) => state);
+    const { locationDetail, viewSideDetailFields } = useSelector((state) => state);
+
     const [mapData, setMapData] = useState({});
 
     const handleBackStep = () => {
@@ -121,7 +122,7 @@ const Layers = ({ width }) => {
                         {currentStep === 1 &&
                         <>
                             <Search/>
-                            <div style={styles.mapDetailsContainer}>
+                            {viewSideDetailFields === true ? <div style={styles.mapDetailsContainer}>
                                 <Row>
                                     <Col span={22} style={styles.inputLabel}>{locationDetail}</Col>
                                     <Col span={2}> <DeleteOutlined style={styles.inputLabel} /></Col>
@@ -129,7 +130,19 @@ const Layers = ({ width }) => {
                                 {renderInput('mapName', 'Name', mapData.mapName, 'text', 'Site Name' )}
                                 {renderInput('comments', 'Comments', mapData.comments, 'text', 'Comments' )}
 
-                            </div>
+                            </div> :
+
+                                <div style={styles.noLocationContainer}>
+                                    <div>
+                                        <Row style={styles.noLocation}>
+                                            <label>No location to show yet</label>
+                                        </Row>
+                                        <Row style={styles.noLocationSearch}>
+                                            <label>please search</label>
+                                        </Row>
+                                    </div>
+                                </div>
+                            }
                         </>
                         }
 
@@ -165,7 +178,7 @@ const Layers = ({ width }) => {
                                     type="primary"
                                     className={'sitewise-rect-primary-button'}
                                     onClick={currentStep === 1 ? moveNextStep : handleSubmit}
-                                    // disabled={(jsonText !== null && jsonError !== 'Invalid JSON data') ? false : true}
+                                    disabled={(viewSideDetailFields === true) ? false : true}
                                 >
                                     {currentStep === 1 ? 'Next' : 'Submit'}
                                 </Button>
@@ -184,7 +197,7 @@ const Layers = ({ width }) => {
 const styles = {
     container: { display: "flex", flexDirection: "column", height: "100vh" },
     topBox: { height: "93vh" },
-    bottomBox: { height: "7vh" },
+    bottomBox: { height: "7vh", borderTop: '1px solid #AEB9CA' },
     containerDiv: { padding: '15px' },
     mapDetailsContainer: {
         padding: '15px',
@@ -207,6 +220,23 @@ const styles = {
         fontWeight: 'bold',
         lineHeight: '22px',
         color: 'rgb(2, 30, 79)'
+    },
+    noLocationContainer: {
+        marginTop: '10px',
+        border: '1px solid #AEB9CA',
+        borderRadius: '5px',
+        display: 'flex',
+        justifyContent: 'center',
+        padding: '35px'
+    },
+    noLocationSearch: {
+        display: 'flex',
+        justifyContent: 'center',
+        color: '#AEB9CA'
+    },
+    noLocation: {
+        textAlign: 'center',
+        color: '#AEB9CA'
     }
 };
 
