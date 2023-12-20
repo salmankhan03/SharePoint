@@ -65,9 +65,9 @@ const  InfoCard = ({
 };
 
 const styles = {
-    header: { display: 'flex', padding: '8px 8px 6px 16px' },
+    header: { display: 'flex', padding: '10px 16px 10px 16px', alignItems: 'baseLine' },
     headerTitle: { display: 'flex', width: 200 },
-    title: { margin: 0, fontSize: 16, fontWeight: 'bold', lineHeight: '19px' },
+    title: { margin: 0, fontSize: 16, fontWeight: 'bold', lineHeight: '19px', color: '#021e4f' },
     spin: { marginLeft: 8, position: 'relative', top: 2 },
     cornerButtons: { display: 'flex', justifyContent: 'flex-end', width: 80 },
     cornerButton: { width: 20, height: 20, marginLeft: 8, color: pewter },

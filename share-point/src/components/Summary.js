@@ -34,9 +34,9 @@ console.log('dataSource--------------', dataSource)
     return (
         <div style={style} className="sitewise-skeleton-summary">
             {children || ''}
-            <List> Details from Google Maps </List>
-            <List> {dataSource} </List>
-            <List> View in Google Maps </List>
+            <List className={'summeryTitle'} style={styles.summeryTitle}> Details from Google Maps </List>
+            <List className={'summeryList'} style={styles.summeryList}> {dataSource} </List>
+            <List className={'summeryLink'} style={styles.summeryLink}> View in Google Maps </List>
         </div>
 
     )
@@ -88,7 +88,7 @@ console.log('dataSource--------------', dataSource)
 };
 
 const styles = {
-    container: { padding: '0 8px', backgroundColor: '#F4F6FC', margin: '8px 0' },
+    container: { padding: '0 8px', backgroundColor: '#F4F6FC', margin: '8px 10px 10px 10px', borderRadius: '4px' },
     item: {
         minHeight: 22,
         fontSize: 12,
@@ -97,7 +97,28 @@ const styles = {
         lineHeight: '16px'
     },
     label: { fontWeight: 'bold', width: 138, paddingRight: 24 },
-    value: { overflow: 'hidden', textOverflow: 'ellipsis', width: 108 }
+    value: { overflow: 'hidden', textOverflow: 'ellipsis', width: 108 },
+    summeryTitle: {
+        fontFamily: 'Poppins',
+        fontSize: '14px',
+        fontWeight: 'bold',
+        lineHeight: '22px',
+        color: 'rgb(2, 30, 79)'
+    },
+    summeryList: {
+        fontFamily: 'Poppins',
+        fontSize: '14px',
+        fontWeight: '600',
+        lineHeight: '22px',
+        color: 'rgb(2, 30, 79)'
+    },
+    summeryLink: {
+        fontFamily: 'Poppins',
+        fontSize: '14px',
+        fontWeight: '400',
+        lineHeight: '22px',
+        color: '#0087b7'
+    }
 };
 
 export default Summary;

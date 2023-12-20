@@ -60,6 +60,7 @@
   min-height: 60px;
   left: -40px;
   top: 20px;
+  padding: 0;
 }
 
 .gm-style .gm-style-iw-d {
@@ -93,6 +94,21 @@ button.gm-ui-hover-effect {
   font-weight: 500;
   box-shadow: none;
   border-radius: 4px;
+}
+
+.summeryLink .ant-spin-container{
+  font-size: 12px;
+}
+
+.sitewise-info-details-button {
+  border-color: #0087b7;
+  background-color: #0087b7;
+  color: #fff;
+  min-width: 80px;
+  font-weight: 700;
+  height: 32px;
+  box-shadow: none;
+  border-radius: 0px;
 }
 
 

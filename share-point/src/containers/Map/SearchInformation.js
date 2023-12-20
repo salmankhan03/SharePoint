@@ -178,6 +178,9 @@ const styles = {
         lineHeight: "20px",
         borderRight: border,
     },
+    button: {
+        width: '100%'
+    }
 };
 
 
