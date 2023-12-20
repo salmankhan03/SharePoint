@@ -39,7 +39,7 @@ const Search = () => {
             value={input}
             onChange={(e) => dispatch(setSearchProps("search", e.target.value))}
             // onPressEnter={() => dispatch(pressSearchEnter(path))}
-            placeholder="Search address or place..."
+            placeholder="Enter an address or latitude/longitude"
             prefix={<Icon component={SearchOutlined} style={styles.icon} />}
             suffix={
               <Icon
@@ -66,7 +66,7 @@ const Search = () => {
 
 const styles = {
   container: {
-    width: 400,
+    width: 368,
     border: `1px solid #AFB6C4`,
     borderRadius: 4,
     filter: "drop-shadow(0px 2px 5px rgba(44, 56, 73, 0.15))",
