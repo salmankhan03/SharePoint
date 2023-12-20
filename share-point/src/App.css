@@ -28,6 +28,52 @@
   color: #61dafb;
 }
 
+.sitewise-skeleton-search .ant-skeleton-paragraph li {
+  width: calc(100% - 32px) !important;
+  height: 22px;
+  margin-top: 6px;
+  margin-bottom: 6px;
+  margin-left: 16px;
+}
+
+.sitewise-skeleton-search span {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.sitewise-skeleton-search svg {
+  font-size: 16px;
+  margin-right: 8px;
+  color: rgb(0, 135, 183);
+}
+
+.sitewise-skeleton-search .ant-list-item:hover {
+  background-color: #f2f8fb;
+  cursor: pointer;
+}
+
+.gm-style-iw.gm-style-iw-c {
+  width: 280px;
+  min-height: 60px;
+  left: -40px;
+  top: 20px;
+}
+
+.gm-style .gm-style-iw-d {
+  overflow: auto !important;
+}
+
+.gm-style .gm-style-iw-tc::after {
+  display: none;
+}
+
+button.gm-ui-hover-effect {
+  visibility: hidden;
+}
+
+
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);

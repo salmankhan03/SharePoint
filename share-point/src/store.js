@@ -1,0 +1,200 @@
+import { configureStore, createSlice } from "@reduxjs/toolkit";
+import _ from "lodash";
+import { message } from "antd";
+// import uuid from "uuid";
+
+
+// import MeasureTool from "measuretool-googlemaps-v3";
+import config from "./config/config";
+
+
+
+export const center = { lat: 47.47941, lng: -122.196712 };
+export const zoom = 8;
+
+const measureUnit = (metricUnit) => (metricUnit ? "metric" : "imperial");
+
+const initialState = {
+    center,
+    zoom,
+    ref: {},
+    bounds: {
+        northeast: { lat: 48.28343872865081, lng: -120.32903621875 },
+        southwest: { lat: 46.66288602407259, lng: -124.06438778125 },
+    },
+    firstPageBounds: {
+        northeast: { lat: 48.28343872865081, lng: -120.32903621875 },
+        southwest: { lat: 46.66288602407259, lng: -124.06438778125 },
+    },
+    mapLoading: false,
+    mapResults: [],
+    display: false,
+    search: "",
+    locationDetail: undefined,
+    locationName: undefined,
+    position: undefined,
+    selected: undefined,
+    viewSideDetailFields: false
+};
+
+const mapSlice = createSlice({
+    name: "mapReducer",
+    initialState,
+    reducers: {
+        setSearchProps: (state, action) => {
+            return { ...state, ...action.payload };
+        },
+        setSearchPoint: (state, action) => {
+            const { path, value } = action.payload;
+            return { ...state, [path]: value };
+        },
+        setSearchMap: (state, action) => {
+            return {
+                ...state,
+                mapResults: action.payload,
+                mapLoading: false,
+                // display: true,
+            };
+        },
+        closeInfo: (state, action) => {
+            return {
+                ...state,
+                // shape: undefined,
+                // prevId: initialState.infoId,
+                position: null,
+                locationDetail: null,
+                display: false
+            };
+        },
+
+        addSiteDetail: (state, action) => {
+            return {
+                ...state,
+                viewSideDetailFields: true
+            };
+        },
+
+
+
+
+        setLayer: (state, action) => {
+            return {
+                ...state,
+                ...action.payload,
+            };
+        },
+        setLocation: (state, action) => {
+            return {
+                ...state,
+                locationDetail: action.payload.locationDetail,
+                locationName: action.payload.locationName,
+                center: {lat: action.payload.lat, lng: action.payload.lng},
+                position: {lat: action.payload.lat, lng: action.payload.lng},
+                selected: action.payload.id,
+                display: true
+            };
+        },
+
+        // closeInfo: (state, action) => {
+        //     console.log('id--------------------', action.payload, state.selected)
+        //     if (state.selected === action.payload) return { ...state, selected: undefined, position: undefined };
+        //     // const areaType = _.get(state, ['studyAreas', id, 'type']);
+        //     return {
+        //         ...state,
+        //         selected: action.payload,
+        //         // type: areaType
+        //     };
+        // },
+
+
+
+    },
+});
+
+const getLatLngPoint = (input) => {
+    const comma = input.split(",");
+    if (comma.length === 2) {
+        return getPoint(comma);
+    }
+    const space = input.split(" ");
+    if (space.length === 2) {
+        return getPoint(space);
+    }
+    return false;
+};
+
+const getPoint = (coords) => {
+    const lat = parseFloat(coords[0]);
+    const lng = parseFloat(coords[1]);
+    const isLatValid = lat >= -90 && lat <= 90;
+    const isLngValid = lng >= -180 && lng <= 180;
+    if (isLatValid && isLngValid) {
+        return { lat, lng };
+    }
+    return false;
+};
+
+export const setSearchProps = (type, text) => async (dispatch) => {
+    dispatch(mapSlice.actions.setSearchProps({ [type]: text }));
+};
+
+export const searchLocation = (input, path) => (dispatch) => {
+    const point = getLatLngPoint(input);
+    if (point) {
+        dispatch(mapSlice.actions.setSearchPoint({ point, path }));
+    } else {
+        dispatch(searchMapLocation(input));
+
+        // if (path === "input" || path === "tourInput") {
+        //     dispatch(searchLayerLocation(input, path));
+        // }
+    }
+};
+
+export const searchMapLocation = (input) => (dispatch, getState) => {
+    const { northeast, southwest } = getState().bounds;
+    const bounds = new window.google.maps.LatLngBounds(southwest, northeast);
+    console.log("bounds in searchLocat:", bounds);
+    dispatch(setSearchProps("mapLoading", true));
+    const service = new window.google.maps.places.AutocompleteService();
+    const geocoder = new window.google.maps.Geocoder();
+    service.getQueryPredictions({ input, bounds }, (results) => {
+        geocoder.geocode({ address: input }, (res, status) => {
+            const filtered = (results || []).filter((r) => r.place_id);
+            if (status === "OK" && res.length > 0) {
+                const shouldAdd = !_.find(
+                    results,
+                    (r) => r.description === res[0].formatted_address
+                );
+                const combined = shouldAdd ? filtered.concat(res[0]) : filtered;
+                console.log('combined-----------------------', combined)
+                console.log('filtered-----------------------', filtered)
+                dispatch(mapSlice.actions.setSearchMap(combined));
+            } else {
+                dispatch(mapSlice.actions.setSearchMap(filtered));
+            }
+        });
+    });
+};
+
+export const closeInfo = (value) => async (dispatch, getState) => {
+    dispatch(mapSlice.actions.closeInfo(value));
+};
+
+export const addSiteDetail = (value) => async (dispatch, getState) => {
+    dispatch(mapSlice.actions.addSiteDetail(value));
+};
+
+export const setLocation = (value) => async (dispatch) => {
+    dispatch(mapSlice.actions.setLocation(value));
+};
+
+export const setLayer = (field, value) => async (dispatch) => {
+    dispatch(mapSlice.actions.setLayer({ [field]: value }));
+};
+
+
+
+
+
+export default configureStore({ reducer: mapSlice.reducer });
