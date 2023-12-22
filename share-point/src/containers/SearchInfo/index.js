@@ -26,6 +26,7 @@ import _ from "lodash";
 // import uuid from 'uuid';
 import LeftDrawerContent from "../../components/LeftDrawerContent";
 import Search from "../Search";
+import {closeInfo} from "../../store";
 // import Icon from "../../components/Icon";
 // import InputBox from "../../components/InputBox";
 // import Details from "../Details";
@@ -109,8 +110,11 @@ const Layers = ({ width }) => {
             </div>
         );
     };
+    const dispatch = useDispatch();
 
-    console.log('map---------------------------', mapData)
+    const onClose = useCallback(() => {
+        dispatch(closeInfo());
+    }, [dispatch]);
 
     return (
         <div style={styles.container}>
@@ -125,7 +129,7 @@ const Layers = ({ width }) => {
                             {viewSideDetailFields === true ? <div style={styles.mapDetailsContainer}>
                                 <Row>
                                     <Col span={22} style={styles.inputLabel}>{locationDetail}</Col>
-                                    <Col span={2}> <DeleteOutlined style={styles.inputLabel} /></Col>
+                                    <Col span={2}> <DeleteOutlined onClick={onClose} style={styles.inputLabel} /></Col>
                                 </Row>
                                 {renderInput('mapName', 'Name', mapData.mapName, 'text', 'Site Name' )}
                                 {renderInput('comments', 'Comments', mapData.comments, 'text', 'Comments' )}

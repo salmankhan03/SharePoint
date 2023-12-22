@@ -124,7 +124,6 @@ const StudyAreas = ({ visible, locationDetail, position }) => {
         e.stopPropagation();
         dispatch(addSiteDetail())
         setButton('remove')
-
     }
 
     const span = 24 / '100%';
@@ -139,7 +138,7 @@ const StudyAreas = ({ visible, locationDetail, position }) => {
                     className={
                             "sitewise-info-details-button"
                     }
-                    onClick={(e) => button === 'select' ? onClick(e) : 'none'}
+                    onClick={(e) => button === 'select' ? onClick(e) : onClose()}
                     // disabled={disabled}
                     style={styles.button}
                 >

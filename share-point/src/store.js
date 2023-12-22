@@ -63,7 +63,8 @@ const mapSlice = createSlice({
                 // prevId: initialState.infoId,
                 position: null,
                 locationDetail: null,
-                display: false
+                display: false,
+                viewSideDetailFields: false
             };
         },
 
