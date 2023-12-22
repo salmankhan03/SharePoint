@@ -17,7 +17,6 @@ const MapResults = ({ path, search }) => {
   const tot = useSelector((state) => state);
   const dispatch = useDispatch();
 
-  console.log('tot-------------------------------------', tot)
   return (
     <div className="sitewise-skeleton-search">
       <Title level={4} style={styles.header}>
@@ -41,17 +40,13 @@ const MapResults = ({ path, search }) => {
                   const locationTerm = terms.find((term) => term.offset === 0);
                   if (locationTerm) {
                     const locationName = locationTerm.value;
-                    console.log('locationName-------------', locationName)
                     const geocoder = new window.google.maps.Geocoder();
                     geocoder.geocode(
-                      { address: locationName },
+                      { address: item.description },
                       (results, status) => {
                         if (status === "OK" && results.length > 0) {
-                          console.log('results--------------------------', results)
                           const location = results[0].geometry.location;
-                          console.log('location--------------------------', location)
-                          console.log('bounds--------------------------', results[0].geometry.bounds)
-                          dispatch(setLocation({locationName: locationName, locationDetail: results[0].formatted_address, id: results[0].place_id, lat: location.lat(), lng: location.lng()}))
+                          dispatch(setLocation({locationName: item.structured_formatting.main_text, locationDetail: results[0].formatted_address, id: results[0].place_id, lat: location.lat(), lng: location.lng()}))
                           // dispatch(
                           //   setLayer("center", {
                           //     lat: location.lat(),

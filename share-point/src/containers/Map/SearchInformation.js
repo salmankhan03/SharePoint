@@ -82,7 +82,7 @@ const border = '#264475';
 // import infoEditActions from '../../helpers/info_edit_actions';
 // import Thunder from '../../assets/icons/Thunder';
 
-const StudyAreas = ({ visible, locationDetail, position }) => {
+const StudyAreas = ({ visible, locationDetail, position, locationName }) => {
     // const { id, name, isTemp, analog, type, rings } = studyArea;
     // console.log('id in sa info:', id);
     const [button, setButton] = useState('select')
@@ -129,7 +129,7 @@ const StudyAreas = ({ visible, locationDetail, position }) => {
     const span = 24 / '100%';
     console.log('locationDetail----------------', locationDetail)
     return (
-        <InfoCard title={locationDetail} onClose={onClose} visible={visible}  position={position}>
+        <InfoCard title={locationName} onClose={onClose} visible={visible}  position={position}>
             <Thumbnails />
             {<Summary dataSource={locationDetail} />}
             <Col span={span} style={{ ...styles.columnWithBorder }}>
@@ -154,7 +154,7 @@ const StudyAreaInfo = () => {
     // const studyArea = useSelector(selectedStudyAreaSelector);
     // const position = _.get(studyArea, 'position');
     const position = useSelector((state) => state.center);
-//     const locationName = useSelector((state) => state.locationName);
+    const locationName = useSelector((state) => state.locationName);
     const locationDetail = useSelector((state) => state.locationDetail);
     const { display } = useSelector((state) => state);
     // const { selected } = useSelector((state) => state);
@@ -163,7 +163,7 @@ const StudyAreaInfo = () => {
     console.log('display------------------------', display)
     return (
         <InfoBox visible={display} position={position}>
-            <StudyAreas locationDetail={locationDetail} position={position} />
+            <StudyAreas locationDetail={locationDetail} position={position} locationName={locationName}/>
         </InfoBox>
     );
 };
