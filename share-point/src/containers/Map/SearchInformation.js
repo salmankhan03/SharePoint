@@ -153,7 +153,7 @@ const StudyAreas = ({ visible, locationDetail, position, locationName }) => {
 const StudyAreaInfo = () => {
     // const studyArea = useSelector(selectedStudyAreaSelector);
     // const position = _.get(studyArea, 'position');
-    const position = useSelector((state) => state.center);
+    const position = useSelector((state) => state.position);
     const locationName = useSelector((state) => state.locationName);
     const locationDetail = useSelector((state) => state.locationDetail);
     const { display } = useSelector((state) => state);

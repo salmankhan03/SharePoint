@@ -45,6 +45,7 @@ import _ from "lodash";
 // import extraMapTypes from '../../util/extra_map_types';
 // import drawingToCoordsRectangle from '../../helpers/drawing_to_coords_rectangle';
 import SearchInformation from './SearchInformation'
+import SearchMarker from "./SearchMarker";
 
 const streetViewOptions = {
     addressControl: true,
@@ -275,6 +276,7 @@ const Map = () => {
     return (
         <GoogleMap {...mapProps}>
            <SearchInformation/>
+           <SearchMarker/>
         </GoogleMap>
     );
 };
