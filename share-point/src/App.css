@@ -55,11 +55,14 @@
   cursor: pointer;
 }
 
-.gm-style-iw.gm-style-iw-c {
-  width: 280px;
-  min-height: 60px;
-  left: -40px;
-  top: 20px;
+/*.gm-style-iw.gm-style-iw-c {*/
+/*  width: 280px;*/
+/*  min-height: 60px;*/
+/*  left: -40px;*/
+/*  top: 20px;*/
+/*  padding: 0;*/
+/*}*/
+.gm-style .gm-style-iw-c{
   padding: 0;
 }
 

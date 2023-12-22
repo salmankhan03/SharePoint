@@ -69,7 +69,7 @@ const Layers = ({ width }) => {
     const [currentStep, setCurrentStep] = useState(1);
     const { locationDetail, viewSideDetailFields } = useSelector((state) => state);
 
-    const [mapData, setMapData] = useState({});
+    const [mapData, setMapData] = useState({mapName: '', comments: ''});
 
     const handleBackStep = () => {
         if (currentStep === 2) {
@@ -178,7 +178,7 @@ const Layers = ({ width }) => {
                                     type="primary"
                                     className={'sitewise-rect-primary-button'}
                                     onClick={currentStep === 1 ? moveNextStep : handleSubmit}
-                                    disabled={(viewSideDetailFields === true) ? false : true}
+                                    disabled={(viewSideDetailFields === true && mapData.mapName !== "" && mapData.comments !== "") ? false : true}
                                 >
                                     {currentStep === 1 ? 'Next' : 'Submit'}
                                 </Button>

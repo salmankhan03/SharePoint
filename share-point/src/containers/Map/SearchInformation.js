@@ -161,8 +161,9 @@ const StudyAreaInfo = () => {
     // const { selected } = useSelector((state) => state);
     // console.log('selected----------------', selected)
 //     const display = useSelector((state) => state.display);
+    console.log('display------------------------', display)
     return (
-        <InfoBox visible={position} position={position}>
+        <InfoBox visible={display} position={position}>
             <StudyAreas locationDetail={locationDetail} position={position} />
         </InfoBox>
     );
