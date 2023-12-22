@@ -282,7 +282,7 @@ const Map = () => {
 };
 
 const styles = {
-    map: { height: "100%" },
+    map: { height: "calc(100% - 70px)" },
 };
 
 export default Map;

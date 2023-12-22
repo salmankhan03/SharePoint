@@ -47,7 +47,7 @@ const styles = {
   container: {
     position: "fixed",
     userSelect: "auto",
-    top: 0,
+    top: 70,
     backgroundColor: "#fafafc",
     transition: "right 0.3s cubic-bezier(0.7, 0.3, 0.1, 1) 0s",
     left: 0,

@@ -8,7 +8,6 @@ import icon from './icon';
 const SearchMarker = ({ onPolygonComplete, onMapClick = () => {} }) => {
     const position = useSelector((state) => state.position);
 
-
         return (
             position && (
                 <Marker

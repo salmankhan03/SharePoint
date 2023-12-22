@@ -200,7 +200,7 @@ const Layers = ({ width }) => {
 
 const styles = {
     container: { display: "flex", flexDirection: "column", height: "100vh" },
-    topBox: { height: "93vh" },
+    topBox: { height: "calc(93vh - 70px)" },
     bottomBox: { height: "7vh", borderTop: '1px solid #AEB9CA' },
     containerDiv: { padding: '15px' },
     mapDetailsContainer: {
