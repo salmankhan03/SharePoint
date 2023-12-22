@@ -1,10 +1,5 @@
 import React from "react";
-import { useSelector } from "react-redux";
-
-// import LeftDrawer from './LeftDrawer';
 import LeftDrawer from "./LeftDrawer";
-// import UserDrawer from './UserDrawer';
-// import QuestionDrawer from './QuestionDrawer';
 
 const drawerValues = {
   collapsed: true,

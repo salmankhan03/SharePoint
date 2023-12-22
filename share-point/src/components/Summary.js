@@ -30,7 +30,6 @@ const Value = ({ value }) => {
 };
 
 const Summary = ({ loading, dataSource, style = styles.container, children, rightAlign }) => {
-console.log('dataSource--------------', dataSource)
     return (
         <div style={style} className="sitewise-skeleton-summary">
             {children || ''}
@@ -40,51 +39,7 @@ console.log('dataSource--------------', dataSource)
         </div>
 
     )
-    // if (dataSource.length > 0) {
-    //     return (
-    //         <div style={style} className="sitewise-skeleton-summary">
-    //             {children || ''}
-    //             <List
-    //                 // dataSource={'welcome'}
-    //                 // renderItem={(item, i) => {
-    //                 //     const { label, value, tooltip } = item;
-    //                 //     const color = i % 2 === 0 ? snow : 'white';
-    //                 //     const left = tooltip ? (
-    //                 //         <Col span={rightAlign ? 20 : 12} style={styles.label}>
-    //                 //             <Tooltip title={tooltip}>{label}</Tooltip>
-    //                 //         </Col>
-    //                 //     ) : (
-    //                 //         <Col span={rightAlign ? 20 : 12} style={styles.label}>
-    //                 //             {label}
-    //                 //         </Col>
-    //                 //     );
-    //                 //     return (
-    //                 //         <Skeleton loading={loading}>
-    //                 //             <List.Item style={{ ...styles.item, backgroundColor: color }}>
-    //                 //                 {left}
-    //                 //                 <Col
-    //                 //                     span={rightAlign ? 4 : 12}
-    //                 //                     style={{
-    //                 //                         ...styles.value,
-    //                 //                         ...(rightAlign ? { textAlign: 'right' } : {})
-    //                 //                     }}
-    //                 //                 >
-    //                 //                     <Value value={value} />
-    //                 //                 </Col>
-    //                 //             </List.Item>
-    //                 //         </Skeleton>
-    //                 //     );
-    //                 // }}
-    //             >
-    //                 {dataSource}
-    //                 {/*<Col span={rightAlign ? 20 : 12} style={styles.label}>*/}
-    //                 {/*               'hiiiii'*/}
-    //                 {/*            </Col>*/}
-    //             </List>
-    //         </div>
-    //     );
-    // }
-    // return false;
+
 };
 
 const styles = {

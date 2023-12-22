@@ -1,15 +1,8 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
-import { Dropdown, Menu, Spin, Typography } from 'antd';
+import { Spin, Typography } from 'antd';
 import { Button } from "antd";
-
-// import LightButton from './buttons/LightButton';
-// import PrimaryButtons from './buttons/PrimaryButtons';
 import CloseOutlined from "@ant-design/icons/lib/icons/CloseOutlined";
 
-// import copy from '../helpers/copy';
-// import { pewter } from '../util/colors';
-import Icon from './Icon';
 const pewter = '#cdd4e2';
 
 const { Title } = Typography;
@@ -22,7 +15,6 @@ const  InfoCard = ({
     children,
                        visible
 }) => {
-
 
     return (
         <>

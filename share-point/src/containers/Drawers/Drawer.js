@@ -1,5 +1,4 @@
 import React from "react";
-import { useDispatch } from "react-redux";
 import _ from "lodash";
 
 const reverse = {

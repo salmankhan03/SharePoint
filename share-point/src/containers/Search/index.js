@@ -4,23 +4,18 @@ import { Input } from "antd";
 import Icon, { SearchOutlined, CloseOutlined } from "@ant-design/icons";
 
 import MapResults from "./MapResults";
-// import LayerResults from "./LayerResults";
-// import PrimarySquareButton from "../../components/buttons/PrimarySquareButton";
 
 import { setSearchProps, searchLocation } from "../../store";
 
 const path = "input";
 
 const Search = () => {
-  // const active = useSelector((state) => state.search.active);
   const searchRef = useRef();
   const active = true;
   const input = useSelector((state) => state.search);
-  // const display = useSelector((state) => state.display);
 
   const trim = input.trim();
   const dispatch = useDispatch();
-  // const hide = useCallback(() => dispatch(setSearchProps('active', false)), [dispatch]);
   useEffect(() => {
     if (trim) {
       dispatch(searchLocation(trim, path));
@@ -30,7 +25,6 @@ const Search = () => {
     <div className="sitewise-search">
       {active ? (
         <div
-          // onClick={() => !display && dispatch(setSearchDisplay(path, true))}
           style={styles.container}
           className={trim ? "sitewise-search-hastext" : ""}
         >

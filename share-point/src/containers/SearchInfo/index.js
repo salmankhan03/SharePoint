@@ -1,45 +1,23 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
-    Checkbox,
-    Menu,
-    Radio,
-    Typography,
-    Modal,
     Button,
-    Switch,
-    Tabs,
 } from "antd";
 
-// import {
-//     SearchOutlined,
-//     PlusOutlined,
-//     FileOutlined,
-//     EllipsisOutlined,
-// } from "@ant-design/icons";
-// import Layer from "../../assets/icons/Layer";
 import { Row, Col } from "antd";
 import { Input as AntInput } from 'antd';
 import { DeleteOutlined } from '@ant-design/icons';
 
-import _ from "lodash";
-// import uuid from 'uuid';
+
 import LeftDrawerContent from "../../components/LeftDrawerContent";
 import Search from "../Search";
 import {closeInfo} from "../../store";
-// import Icon from "../../components/Icon";
-// import InputBox from "../../components/InputBox";
-// import Details from "../Details";
-// import LayersTree from "./LayersTree";
+
 
 
 
 const InputComp = (props) => {
     const { id, label, multiline, disabled, is_input_pw, showPassword, type, inputProps, value, onChange, placeholder, ...rest } = props;
-
-    // const class_wr = 'your-class-wr'; // replace with your class name
-    // const col_label = 'your-col-label'; // replace with your class name
-    // const col_field = 'your-col-field'; // replace with your class name
 
     const handleChange = event => onChange(id, event.target.value)
 

@@ -9,7 +9,6 @@ const { pages, defaultWidth } = left;
 
 const LeftDrawer = ({ path, width }) => {
   const page = pages.Layers;
-  console.log('page-----------------------------', page)
   return (
     <Drawer
       direction="left"
