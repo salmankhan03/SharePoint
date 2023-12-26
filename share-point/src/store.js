@@ -5,7 +5,6 @@ import { message } from "antd";
 
 
 // import MeasureTool from "measuretool-googlemaps-v3";
-import config from "./config/config";
 
 
 
