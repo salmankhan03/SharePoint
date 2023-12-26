@@ -12,7 +12,7 @@ import { DeleteOutlined } from '@ant-design/icons';
 import LeftDrawerContent from "../../components/LeftDrawerContent";
 import Search from "../Search";
 import {closeInfo} from "../../store";
-
+import axios from 'axios';
 
 
 
@@ -63,9 +63,36 @@ const Layers = ({ width }) => {
         }
     }
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async(e) => {
         e.preventDefault()
-        console.log('submit data')
+
+        const payload = {
+            accessKey: 'abc',
+            comment: mapData.comments,
+            from: mapData.name,
+            id: validateData.id,
+            sites: [
+                {
+                    comment: "4",
+                    site: {
+                        latitude: "3",
+                    },
+                    attributes: {
+                        test: "3",
+                    },
+                }
+            ]
+        }
+
+            try {
+                const response = await axios.post('https://submitapi.sitewise.com/submit', payload);
+                console.log('API Response:', response);
+                setMapData({mapName: '', comments: ''})
+                setCurrentStep(1)
+            } catch (error) {
+                console.error('Error making API call:', error);
+            }
+
     }
 
     const handleChangeInput = (key, value) => {
