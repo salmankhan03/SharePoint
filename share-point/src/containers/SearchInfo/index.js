@@ -14,6 +14,8 @@ import Search from "../Search";
 import {closeInfo} from "../../store";
 import axios from 'axios';
 
+import { message } from 'antd';
+
 
 
 const InputComp = (props) => {
@@ -87,10 +89,12 @@ const Layers = ({ width }) => {
             try {
                 const response = await axios.post('https://submitapi.sitewise.com/submit', payload);
                 console.log('API Response:', response);
+                message.success('Site Submitted successfully');
+                onClose()
                 setMapData({mapName: '', comments: ''})
                 setCurrentStep(1)
             } catch (error) {
-                console.error('Error making API call:', error);
+                message.error(error);
             }
 
     }
@@ -136,7 +140,7 @@ const Layers = ({ width }) => {
                             {viewSideDetailFields === true ? <div style={styles.mapDetailsContainer}>
                                 <Row>
                                     <Col span={22} style={styles.inputLabel}>{locationDetail}</Col>
-                                    <Col span={2} style={{display: 'flex', justifyContent: 'end'}}> <DeleteOutlined onClick={onClose} style={styles.inputLabel} /></Col>
+                                    <Col span={2} style={{display: 'flex', justifyContent: 'end', position: 'inherit'}}> <DeleteOutlined onClick={onClose} style={styles.inputLabel} /></Col>
                                 </Row>
                                 {renderInput('mapName', 'Name', mapData.mapName, 'text', 'Site Name' )}
                                 {renderInput('comments', 'Comments', mapData.comments, 'text', 'Comments' )}

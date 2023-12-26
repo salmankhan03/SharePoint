@@ -31,12 +31,14 @@ const Value = ({ value }) => {
 
 const Summary = ({ loading, dataSource, style = styles.container, children, rightAlign }) => {
     return (
-        <div style={style} className="sitewise-skeleton-summary">
-            {children || ''}
-            <List className={'summeryTitle'} style={styles.summeryTitle}> Details from Google Maps </List>
-            <List className={'summeryList'} style={styles.summeryList}> {dataSource} </List>
-            <List className={'summeryLink'} style={styles.summeryLink}> View in Google Maps </List>
-        </div>
+        <>
+            {dataSource !== null && <div style={style} className="sitewise-skeleton-summary">
+                {children || ''}
+                <List className={'summeryTitle'} style={styles.summeryTitle}> Details from Google Maps </List>
+                <List className={'summeryList'} style={styles.summeryList}> {dataSource} </List>
+                <List className={'summeryLink'} style={styles.summeryLink}> View in Google Maps </List>
+            </div>}
+        </>
 
     )
 

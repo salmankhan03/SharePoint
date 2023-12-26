@@ -71,6 +71,16 @@ const mapSlice = createSlice({
                 viewSideDetailFields: false
             };
         },
+        pressSearchPoint: (state, action) => {
+            return {
+                ...state,
+                position: action.payload.item,
+                center: action.payload.item,
+                display: true,
+                locationName: `${action.payload.item.lat}, ${action.payload.item.lng}`,
+                locationDetail: null,
+            }
+        },
 
         addSiteDetail: (state, action) => {
             return {
@@ -154,6 +164,10 @@ export const searchLocation = (input, path) => (dispatch) => {
         //     dispatch(searchLayerLocation(input, path));
         // }
     }
+};
+
+export const pressSearchPoint = (value) => async (dispatch, getState) => {
+    dispatch(mapSlice.actions.pressSearchPoint(value));
 };
 
 export const searchMapLocation = (input) => (dispatch, getState) => {

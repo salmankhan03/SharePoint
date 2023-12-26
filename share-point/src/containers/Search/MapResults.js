@@ -1,11 +1,11 @@
-import React from "react";
+import React, {useCallback} from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Typography, List } from "antd";
 import "../../App.css";
 
 import SearchResult from "../../components/SearchResult";
 
-import {setLayer, setLocation} from "../../store";
+import {pressSearchPoint, setLayer, setLocation} from "../../store";
 
 const { Title } = Typography;
 const locale = { emptyText: "No Results" };
@@ -17,13 +17,39 @@ const MapResults = ({ path, search }) => {
   const tot = useSelector((state) => state);
   const dispatch = useDispatch();
 
+  const values = input.split(', ');
+
+  const coordinates = {
+    lat: parseFloat(values[0]),
+    lng: parseFloat(values[1])
+  };
+
+
+  const latitudePattern = /^-?([1-8]?[0-9](\.[0-9]+)?|90(\.0+)?)$/;
+
+  const longitudePattern = /^-?((1[0-7]|[1-9])?[0-9](\.[0-9]+)?|180(\.0+)?)$/;
+
+  const isValidLatitude = latitudePattern.test(parseFloat(values[0]));
+  const isValidLongitude = longitudePattern.test(parseFloat(values[1]));
+
+  const drop = useCallback(item => dispatch(pressSearchPoint({path, item})), [path, dispatch]);
+
+
   return (
     <div className="sitewise-skeleton-search">
       <Title level={4} style={styles.header}>
         Address / Locations Found
       </Title>
 
-      {
+      {(isValidLatitude === true && isValidLongitude  === true) && (
+          <div
+              onClick={() => drop(coordinates)}
+              className="ant-list-item"
+              style={styles.result}
+          >{`${coordinates.lat}, ${coordinates.lng}`}</div>
+      )}
+
+      {(isValidLatitude === false || isValidLongitude === false) &&
         <List
           locale={locale}
           loadMore
