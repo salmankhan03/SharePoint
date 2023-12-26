@@ -76,6 +76,9 @@ const styles = {
     maxHeight: "calc(100vh - 82px)",
     overflow: "auto",
     boxShadow: "inset 0px 1px 0px #e3e5ed",
+    position: "fixed",
+    width: "100%",
+
   },
 };
 

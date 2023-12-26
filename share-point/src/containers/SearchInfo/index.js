@@ -26,9 +26,9 @@ const InputComp = (props) => {
             <Col span={24} style={styles.inputLabel}>
                 {label}
             </Col>
-            <Col span={24}>
+            <Col span={24} style={styles.inputs}>
                 <AntInput
-                    style={styles.inputs}
+                    style={{position: 'inherit'}}
                     // className={`${col_field} ${multiline ? 'input-multiline' : ''}`}
                     disabled={disabled}
                     placeholder={placeholder}
@@ -47,6 +47,7 @@ const InputComp = (props) => {
 const Layers = ({ width }) => {
     const [currentStep, setCurrentStep] = useState(1);
     const { locationDetail, viewSideDetailFields } = useSelector((state) => state);
+    const validateData = useSelector((state) => state.validateData);
 
     const [mapData, setMapData] = useState({mapName: '', comments: ''});
 
@@ -74,7 +75,7 @@ const Layers = ({ width }) => {
         }));
     };
 
-    const renderInput = (id, label, value, type = 'text', placeholder) => {
+    const renderInput = (id, label, value, type, placeholder) => {
         return (
             <div style={styles.input} key={id}>
                 <InputComp
@@ -103,11 +104,12 @@ const Layers = ({ width }) => {
                     <div style={styles.containerDiv} className={'containerDiv'}>
                         {currentStep === 1 &&
                         <>
+                            <div style={{color: '#021E4F', fontWeight: 700, fontSize: '14px', margin: '15px 2px'}}>{validateData?.instructions}</div>
                             <Search/>
                             {viewSideDetailFields === true ? <div style={styles.mapDetailsContainer}>
                                 <Row>
                                     <Col span={22} style={styles.inputLabel}>{locationDetail}</Col>
-                                    <Col span={2}> <DeleteOutlined onClick={onClose} style={styles.inputLabel} /></Col>
+                                    <Col span={2} style={{display: 'flex', justifyContent: 'end'}}> <DeleteOutlined onClick={onClose} style={styles.inputLabel} /></Col>
                                 </Row>
                                 {renderInput('mapName', 'Name', mapData.mapName, 'text', 'Site Name' )}
                                 {renderInput('comments', 'Comments', mapData.comments, 'text', 'Comments' )}
@@ -178,14 +180,16 @@ const Layers = ({ width }) => {
 
 const styles = {
     container: { display: "flex", flexDirection: "column", height: "100vh" },
-    topBox: { height: "calc(93vh - 70px)" },
-    bottomBox: { height: "7vh", borderTop: '1px solid #AEB9CA' },
+    topBox: { height: "calc(93vh - 70px)", backgroundColor: '#FAFAFC' },
+    bottomBox: { height: "7vh", borderTop: '1px solid #AEB9CA', backgroundColor: '#FFFFFF' },
     containerDiv: { padding: '15px' },
     mapDetailsContainer: {
         padding: '15px',
         border: '1px solid #AEB9CA',
         borderRadius: '5px',
-        margin: '10px 0'
+        margin: '10px 0',
+        backgroundColor: '#FFFFFF',
+
     },
     input: {
         margin: '8px 0'
@@ -195,6 +199,7 @@ const styles = {
         fontSize: '14px',
         fontWeight: 500,
         marginBottom: '4px',
+        position: 'inherit'
     },
     mapDetailHeading: {
         fontFamily: 'Poppins',
@@ -204,12 +209,13 @@ const styles = {
         color: 'rgb(2, 30, 79)'
     },
     noLocationContainer: {
-        marginTop: '10px',
+        margin: '20px 1px 0px',
         border: '1px solid #AEB9CA',
         borderRadius: '5px',
         display: 'flex',
         justifyContent: 'center',
-        padding: '35px'
+        padding: '35px',
+        backgroundColor: '#FFFFFF'
     },
     noLocationSearch: {
         display: 'flex',
@@ -219,6 +225,9 @@ const styles = {
     noLocation: {
         textAlign: 'center',
         color: '#AEB9CA'
+    },
+    inputs: {
+        position: 'inherit'
     }
 };
 

@@ -30,11 +30,11 @@ const StudyAreas = ({ visible, locationDetail, position, locationName }) => {
         <InfoCard title={locationName} onClose={onClose} visible={visible}  position={position}>
             <Thumbnails />
             {<Summary dataSource={locationDetail} />}
-            <Col span={span} style={{ ...styles.columnWithBorder }}>
+            <Col span={span} className={'columnButtons'} style={{ ...styles.columnWithBorder }}>
                 <Button
                     type={'primary'}
                     className={
-                            "sitewise-info-details-button"
+                        button === 'select' ? "sitewise-info-details-button" : "sitewise-info-remove-details-button"
                     }
                     onClick={(e) => button === 'select' ? onClick(e) : onClose()}
                     // disabled={disabled}
@@ -69,6 +69,7 @@ const styles = {
         textAlign: "center",
         lineHeight: "20px",
         borderRight: border,
+        margin: '8px'
     },
     button: {
         width: '100%'

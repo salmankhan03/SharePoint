@@ -132,6 +132,38 @@ button.gm-ui-hover-effect {
   border-radius: 0px;
 }
 
+.columnButtons {
+  height: 32px;
+  padding: 0;
+  font-size: 14px;
+  font-weight: bold;
+  text-align: center;
+  line-height: 20px;
+  border-right: #264475;
+  margin: 8px;
+}
+
+
+.sitewise-info-remove-details-button {
+  border-color: #0087b7;
+  background-color: #FFFFFF;
+  color: #0087b7;
+  min-width: 80px;
+  font-weight: 700;
+  height: 32px;
+  box-shadow: none;
+  border-radius: 0px;
+}
+
+.sitewise-info-details-button:where(.css-dev-only-do-not-override-2rgkd4).ant-btn-primary:not(:disabled):not(.ant-btn-disabled):hover {
+  background-color: #0087b7;
+  color: #fff;
+}
+
+.sitewise-info-remove-details-button:where(.css-dev-only-do-not-override-2rgkd4).ant-btn-primary:not(:disabled):not(.ant-btn-disabled):hover {
+  background-color: #FFFFFF;
+  color: #0087b7;
+}
 
 
 @keyframes App-logo-spin {
