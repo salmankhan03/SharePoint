@@ -1,0 +1,21 @@
+/* Separate css file added after making Dashboard to lazy load */
+/* Shortcuts Menu */
+.ant-menu-inline-collapsed > .ant-menu-submenu > .ant-menu-submenu-title,
+.ant-menu-inline > .ant-menu-submenu > .ant-menu-submenu-title,
+.ant-menu-dark.ant-menu-vertical .ant-menu-item,
+.ant-menu-dark.ant-menu-inline .ant-menu-item {
+    height: 56px;
+    margin: 0;
+    padding: 8px 28px !important;
+}
+/* User Drawer */
+.collapsed-drawer .ant-drawer-content-wrapper {
+    height: 160px;
+    bottom: 16px;
+}
+
+.expanded-drawer .ant-drawer-content-wrapper {
+    height: 160px;
+    bottom: 16px;
+    margin-left: 216px;
+}
