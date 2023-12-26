@@ -48,7 +48,7 @@ const InputComp = (props) => {
 
 const Layers = ({ width }) => {
     const [currentStep, setCurrentStep] = useState(1);
-    const { locationDetail, viewSideDetailFields } = useSelector((state) => state);
+    const { locationDetail, viewSideDetailFields, position } = useSelector((state) => state);
     const validateData = useSelector((state) => state.validateData);
 
     const [mapData, setMapData] = useState({mapName: '', comments: ''});
@@ -70,17 +70,15 @@ const Layers = ({ width }) => {
 
         const payload = {
             accessKey: 'abc',
-            comment: mapData.comments,
+            comment: mapData.email,
             from: mapData.name,
             id: validateData.id,
             sites: [
                 {
-                    comment: "4",
-                    site: {
-                        latitude: "3",
-                    },
+                    comment: mapData.comments,
+                    site: { latitude: position.lat , longitude: position.lng },
                     attributes: {
-                        test: "3",
+                        test: mapData.mapName,
                     },
                 }
             ]
