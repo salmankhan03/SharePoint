@@ -34,13 +34,17 @@ const initialState = {
     locationName: undefined,
     position: undefined,
     selected: undefined,
-    viewSideDetailFields: false
+    viewSideDetailFields: false,
+    validateData: undefined
 };
 
 const mapSlice = createSlice({
     name: "mapReducer",
     initialState,
     reducers: {
+        validateData: (state, action) => {
+            return { ...state, validateData: action.payload };
+        },
         setSearchProps: (state, action) => {
             return { ...state, ...action.payload };
         },
@@ -176,6 +180,10 @@ export const searchMapLocation = (input) => (dispatch, getState) => {
             }
         });
     });
+};
+
+export const validateData = (data) => async (dispatch) => {
+    dispatch(mapSlice.actions.validateData(data));
 };
 
 export const closeInfo = (value) => async (dispatch, getState) => {
