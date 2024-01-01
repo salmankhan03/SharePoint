@@ -12,20 +12,25 @@ const App = () => {
     const dispatch = useDispatch();
     const [isValidSession, setIsValidSession] = useState(true);
     const [loading, setLoading] = useState(false);
-    // const layers = useSelector((state) => state.layers);
 
     useEffect(() => {
         async function verifySession() {
             try {
+                const urlParams = new URLSearchParams(window.location.search);
+                const sessionToken = urlParams.get("accessKey");
                 setLoading(true);
 
-                const accessKey = "abc";
+                if (!sessionToken) {
+                    setIsValidSession(false);
+                    return;
+                }
+
                 const domainName = "submit-sites.sitewise.com"
 
                 const payload = {
-                    accessKey: accessKey,
+                    accessKey: sessionToken,
                     domainName: domainName
-                }
+                };
 
                 const response = await fetch(
                     `https://submitapi.sitewise.com/validate`,
@@ -34,9 +39,8 @@ const App = () => {
                         body: JSON.stringify(payload)
                     }
                 );
-
-                if (response.logoUrl !== '') {
-                    const data = await response.json();
+                const data = await response.json()
+                if (data) {
                     setLoading(false);
                     dispatch(validateData(data));
                 } else {
