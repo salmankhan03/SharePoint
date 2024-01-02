@@ -13,6 +13,7 @@ const streetViewOptions = {
 
 const Map = () => {
     const { center, zoom, position, display } = useSelector((state) => state);
+    const mapTypeId = useSelector(state => state.mapTypeId);
     const total = useSelector((state) => state);
     const [mapPosition, setMapPosition] = useState(position)
 
@@ -34,6 +35,7 @@ const Map = () => {
 
     const mapProps = {
         mapContainerStyle: { ...styles.map },
+        mapTypeId,
         zoom,
         center,
         options: {

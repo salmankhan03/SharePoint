@@ -34,7 +34,8 @@ const initialState = {
     position: undefined,
     selected: undefined,
     viewSideDetailFields: false,
-    validateData: undefined
+    validateData: undefined,
+    mapTypeId: "roadmap",
 };
 
 const mapSlice = createSlice({
@@ -109,19 +110,9 @@ const mapSlice = createSlice({
             };
         },
 
-        // closeInfo: (state, action) => {
-        //     console.log('id--------------------', action.payload, state.selected)
-        //     if (state.selected === action.payload) return { ...state, selected: undefined, position: undefined };
-        //     // const areaType = _.get(state, ['studyAreas', id, 'type']);
-        //     return {
-        //         ...state,
-        //         selected: action.payload,
-        //         // type: areaType
-        //     };
-        // },
-
-
-
+        mapTypeId: (state, action) => {
+            return { ...state, mapTypeId: action.payload };
+        },
     },
 });
 
@@ -213,6 +204,10 @@ export const setLocation = (value) => async (dispatch) => {
 
 export const setLayer = (field, value) => async (dispatch) => {
     dispatch(mapSlice.actions.setLayer({ [field]: value }));
+};
+
+export const setMapTypeId = (path, value) => async (dispatch, getState) => {
+    dispatch(mapSlice.actions.mapTypeId(value));
 };
 
 

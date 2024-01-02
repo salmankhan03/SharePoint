@@ -51,6 +51,8 @@ const Layers = ({ width }) => {
     const { locationDetail, viewSideDetailFields, position } = useSelector((state) => state);
     const validateData = useSelector((state) => state.validateData);
 
+    const instructionParagraphs = validateData?.instructions?.replace(/<br\/>/g, '');
+
     const [mapData, setMapData] = useState({mapName: '', comments: ''});
 
     const handleBackStep = () => {
@@ -84,9 +86,15 @@ const Layers = ({ width }) => {
             ]
         }
 
+        const contactInfo = {
+            name: mapData.name,
+            email: mapData.email
+        }
+
             try {
                 const response = await axios.post('https://submitapi.sitewise.com/submit', payload);
                 console.log('API Response:', response);
+                localStorage.setItem('contactInfo', JSON.stringify(contactInfo));
                 message.success('Site Submitted successfully');
                 onClose()
                 setMapData({mapName: '', comments: ''})
@@ -133,7 +141,7 @@ const Layers = ({ width }) => {
                     <div style={styles.containerDiv} className={'containerDiv'}>
                         {currentStep === 1 &&
                         <>
-                            <div style={{color: '#021E4F', fontWeight: 700, fontSize: '14px', margin: '15px 2px'}}>{validateData?.instructions}</div>
+                            <div style={{color: '#021E4F', fontWeight: 700, fontSize: '14px', margin: '15px 2px'}}>{instructionParagraphs}</div>
                             <Search/>
                             {viewSideDetailFields === true ? <div style={styles.mapDetailsContainer}>
                                 <Row>

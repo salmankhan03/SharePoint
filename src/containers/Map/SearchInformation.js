@@ -29,7 +29,7 @@ const StudyAreas = ({ visible, locationDetail, position, locationName }) => {
     return (
         <InfoCard title={locationName} onClose={onClose} visible={visible}  position={position}>
             {/*<Thumbnails />*/}
-            {<Summary dataSource={locationDetail} />}
+            {/*{<Summary dataSource={locationDetail} />}*/}
             <Col span={span} className={'columnButtons'} style={{ ...styles.columnWithBorder }}>
                 <Button
                     type={'primary'}

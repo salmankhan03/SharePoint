@@ -2,13 +2,14 @@ import React from "react";
 import Map from "../Map";
 import Drawers from "../Drawers";
 import PageHeaders from "../PageHeader";
+import Shortcuts from "../Shortcuts";
 
 const Dashboard = () => {
   return (
     <div style={styles.container}>
       <PageHeaders/>
       <Map />
-      {/*<Shortcuts />*/}
+      <Shortcuts />
       <Drawers />
     </div>
   );
