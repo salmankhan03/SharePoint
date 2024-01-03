@@ -113,9 +113,15 @@ const mapSlice = createSlice({
         setPosition: (state, action) => {
             return {
                 ...state,
-                position: action.payload.newPosition,
-                locationName: action.payload.locationName,
-                locationDetail: action.payload.locationName,
+                position: action.payload
+            };
+        },
+
+        setAddress: (state, action) => {
+            return {
+                ...state,
+                locationDetail: action.payload,
+                locationName: action.payload,
             };
         },
 
@@ -154,6 +160,10 @@ export const setSearchProps = (type, text) => async (dispatch) => {
 
 export const setPosition = (value) => async (dispatch) => {
     dispatch(mapSlice.actions.setPosition(value));
+};
+
+export const setAddress = (value) => async (dispatch) => {
+    dispatch(mapSlice.actions.setAddress(value));
 };
 
 export const searchLocation = (input, path) => (dispatch) => {

@@ -21,8 +21,8 @@ const MapTypes = ({ width }) => {
                     alt={isHybrid ? 'Hybrid' : 'Roadmap'}
                     style={styles.image}
                     onClick={() => changeMap(isHybrid ? 'hybrid' : 'roadmap')}
-                    width="110"
-                    height="105"
+                    width="75"
+                    height="75"
                 />
             </div>
         </>
@@ -30,7 +30,8 @@ const MapTypes = ({ width }) => {
 };
 
 const styles = {
-    container: { zIndex: 40 }
+    container: { zIndex: 40 },
+    image: {borderRadius: 4}
 };
 
 export default MapTypes;

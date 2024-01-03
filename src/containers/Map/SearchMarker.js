@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import { Marker } from '@react-google-maps/api';
 import icon from './icon';
-import {setPosition} from "../../store";
+import {setAddress, setPosition} from "../../store";
 
 const SearchMarker = () => {
     const position = useSelector((state) => state.position);
@@ -16,6 +16,7 @@ const SearchMarker = () => {
             geocoder.geocode({ location: position }, (results, status) => {
                 if (status === 'OK') {
                     if (results[0]) {
+                        dispatch(setAddress(results[0].formatted_address))
                         setLocationName(results[0].formatted_address);
                     }
                 } else {
@@ -31,9 +32,7 @@ const SearchMarker = () => {
             lng: e.latLng.lng(),
         };
 
-        dispatch(setPosition({newPosition, locationName}))
-        console.log('New Marker Position:', newPosition);
-        console.log('Location Name:', locationName);
+        dispatch(setPosition(newPosition))
     };
 
     return (
