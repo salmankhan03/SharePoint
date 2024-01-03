@@ -110,6 +110,15 @@ const mapSlice = createSlice({
             };
         },
 
+        setPosition: (state, action) => {
+            return {
+                ...state,
+                position: action.payload.newPosition,
+                locationName: action.payload.locationName,
+                locationDetail: action.payload.locationName,
+            };
+        },
+
         mapTypeId: (state, action) => {
             return { ...state, mapTypeId: action.payload };
         },
@@ -141,6 +150,10 @@ const getPoint = (coords) => {
 
 export const setSearchProps = (type, text) => async (dispatch) => {
     dispatch(mapSlice.actions.setSearchProps({ [type]: text }));
+};
+
+export const setPosition = (value) => async (dispatch) => {
+    dispatch(mapSlice.actions.setPosition(value));
 };
 
 export const searchLocation = (input, path) => (dispatch) => {
