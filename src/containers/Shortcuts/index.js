@@ -35,12 +35,16 @@ const Shortcuts = () => {
                     position: "absolute",
                     right: `calc(100% - (${windowWidth}px - 20px))`,
                     bottom: 35,
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'end'
                     // right: 15,
                 }}
             >
-                <div style={styles.siteLogo}>
+                <div>
                     <MapTypes/>
                 </div>
+                <div style={styles.font}>Powered By Sitewise</div>
             </div>
         </div>
     );
@@ -59,6 +63,7 @@ const styles = {
     thunderbolt: { fontSize: 28, position: "relative", left: 1, top: 2 },
     flex: { display: "flex" },
     siteLogo: { fontSize: "25px", fontWeight: "bold" },
+    font: {fontSize: 14, fontWeight: 500, color: "#021E4F", fontFamily: 'Roboto', marginTop: 15 }
 };
 
 export default Shortcuts;

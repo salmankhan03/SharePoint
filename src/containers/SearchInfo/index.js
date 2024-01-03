@@ -16,7 +16,7 @@ import axios from 'axios';
 
 import { message } from 'antd';
 
-
+const { TextArea } = AntInput;
 
 const InputComp = (props) => {
     const { id, label, multiline, disabled, is_input_pw, showPassword, type, inputProps, value, onChange, placeholder, autoFocus, ...rest } = props;
@@ -39,7 +39,7 @@ const InputComp = (props) => {
                 {label}
             </Col>
             <Col span={24} style={styles.inputs}>
-                <AntInput
+                {type === "text" ? <AntInput
                     style={{position: 'inherit'}}
                     ref={inputRef}
                     autoFocus={autoFocus}
@@ -50,7 +50,22 @@ const InputComp = (props) => {
                     value={value || ''}
                     onChange={handleChange}
                     {...rest}
-                />
+                /> :
+                    <TextArea
+                        rows={4}
+                        maxLength={6}
+                        style={{position: 'inherit'}}
+                        ref={inputRef}
+                        autoFocus={autoFocus}
+                        // className={`${col_field} ${multiline ? 'input-multiline' : ''}`}
+                        disabled={disabled}
+                        placeholder={placeholder}
+                        type={type}
+                        value={value || ''}
+                        onChange={handleChange}
+                        {...rest}
+                    />
+                }
             </Col>
         </div>
     );
@@ -162,7 +177,7 @@ const Layers = ({ width }) => {
                                     <Col span={2} style={{display: 'flex', justifyContent: 'end', position: 'inherit'}}> <DeleteOutlined onClick={onClose} style={styles.inputLabel} /></Col>
                                 </Row>
                                 {renderInput('mapName', 'Name', mapData.mapName, 'text', 'Site Name', viewSideDetailFields )}
-                                {renderInput('comments', 'Comments', mapData.comments, 'text', 'Comments' )}
+                                {renderInput('comments', 'Comments', mapData.comments, 'text-area', 'Comments' )}
 
                             </div> :
 

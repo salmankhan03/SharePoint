@@ -13,7 +13,7 @@ const PageHeaders = () => {
                         alt={"sitewise logo"}
                         width="210"
                     />
-                    Site Submit to Client
+                    <div>{validateData?.domainName}</div>
                 </div>
                 <div style={{display: 'flex'}}>
                     <img
