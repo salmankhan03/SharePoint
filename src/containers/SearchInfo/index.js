@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, {useCallback, useEffect, useRef, useState} from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
     Button,
@@ -19,9 +19,19 @@ import { message } from 'antd';
 
 
 const InputComp = (props) => {
-    const { id, label, multiline, disabled, is_input_pw, showPassword, type, inputProps, value, onChange, placeholder, ...rest } = props;
+    const { id, label, multiline, disabled, is_input_pw, showPassword, type, inputProps, value, onChange, placeholder, autoFocus, ...rest } = props;
 
     const handleChange = event => onChange(id, event.target.value)
+
+    const inputRef = useRef(null);
+
+    useEffect(() => {
+        if (autoFocus && inputRef.current) {
+            inputRef.current.focus();
+            inputRef.current.select();
+        }
+    }, [autoFocus]);
+
 
     return (
         <div style={{display: 'flex', flexDirection: "column"}}>
@@ -31,6 +41,8 @@ const InputComp = (props) => {
             <Col span={24} style={styles.inputs}>
                 <AntInput
                     style={{position: 'inherit'}}
+                    ref={inputRef}
+                    autoFocus={autoFocus}
                     // className={`${col_field} ${multiline ? 'input-multiline' : ''}`}
                     disabled={disabled}
                     placeholder={placeholder}
@@ -112,7 +124,7 @@ const Layers = ({ width }) => {
         }));
     };
 
-    const renderInput = (id, label, value, type, placeholder) => {
+    const renderInput = (id, label, value, type, placeholder, autoFocus) => {
         return (
             <div style={styles.input} key={id}>
                 <InputComp
@@ -122,6 +134,7 @@ const Layers = ({ width }) => {
                     type={type}
                     onChange={handleChangeInput}
                     placeholder={placeholder}
+                    autoFocus={autoFocus}
                 />
             </div>
         );
@@ -148,7 +161,7 @@ const Layers = ({ width }) => {
                                     <Col span={22} style={styles.inputLabel}>{locationDetail}</Col>
                                     <Col span={2} style={{display: 'flex', justifyContent: 'end', position: 'inherit'}}> <DeleteOutlined onClick={onClose} style={styles.inputLabel} /></Col>
                                 </Row>
-                                {renderInput('mapName', 'Name', mapData.mapName, 'text', 'Site Name' )}
+                                {renderInput('mapName', 'Name', mapData.mapName, 'text', 'Site Name', viewSideDetailFields )}
                                 {renderInput('comments', 'Comments', mapData.comments, 'text', 'Comments' )}
 
                             </div> :
