@@ -43,6 +43,7 @@ const Map = () => {
             fullscreenControl: false,
             zoomControl: false,
             streetViewControl: false,
+            disableDefaultUI: true,
         },
         onLoad,
         onUnmount,
