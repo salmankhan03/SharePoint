@@ -7,13 +7,13 @@ const PageHeaders = () => {
     return (
         <div style={styles.pageHeader}>
             <div style={{ display: 'flex', justifyContent: "space-between", alignItems: 'center', height: '100%',padding: '0 35px' }}>
-                <div style={{color: '#fff', fontSize: '25px', fontWeight: 500, display: 'flex', alignItems: 'center' }}>
+                <div style={{color: '#fff', fontSize: '20px', fontWeight: 500, display: 'flex', alignItems: 'center' }}>
                     <img
                         src={logo}
                         alt={"sitewise logo"}
                         width="210"
                     />
-                    <div>{validateData?.domainName}</div>
+                    <div>Site Submit to {validateData?.domainName}</div>
                 </div>
                 <div style={{display: 'flex'}}>
                     <img
