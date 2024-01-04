@@ -1,8 +1,9 @@
 import React, {useEffect, useRef, useState} from "react";
 import MapTypes from "../MapTypes";
+import {useSelector} from "react-redux";
 
 const Shortcuts = () => {
-
+    const mapTypeId = useSelector((state) => state.mapTypeId);
     const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
     const handleResize = () => {
@@ -18,6 +19,15 @@ const Shortcuts = () => {
             window.removeEventListener('resize', handleResize);
         };
     }, []);
+
+    const dynamicStyle = {
+        fontSize: 14,
+        fontWeight: 500,
+        fontFamily: 'Roboto',
+        marginTop: 15,
+        color: mapTypeId === 'roadmap' ? '#021E4F' : '#fff'
+    };
+
 
     return (
         <div
@@ -44,7 +54,7 @@ const Shortcuts = () => {
                 <div>
                     <MapTypes/>
                 </div>
-                <div style={styles.font}>Powered By Sitewise</div>
+                <div style={dynamicStyle}>Powered By Sitewise</div>
             </div>
         </div>
     );
@@ -63,7 +73,7 @@ const styles = {
     thunderbolt: { fontSize: 28, position: "relative", left: 1, top: 2 },
     flex: { display: "flex" },
     siteLogo: { fontSize: "25px", fontWeight: "bold" },
-    font: {fontSize: 14, fontWeight: 500, color: "#021E4F", fontFamily: 'Roboto', marginTop: 15 }
+    // font: {fontSize: 14, fontWeight: 500, color: "#021E4F", fontFamily: 'Roboto', marginTop: 15 }
 };
 
 export default Shortcuts;
