@@ -60,7 +60,7 @@ const Search = () => {
 
 const styles = {
   container: {
-    width: 368,
+    width: 'auto',
     border: `1px solid #AFB6C4`,
     borderRadius: 4,
     filter: "drop-shadow(0px 2px 5px rgba(44, 56, 73, 0.15))",

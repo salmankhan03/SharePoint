@@ -5,7 +5,7 @@ import {
 } from "antd";
 
 import { Row, Col } from "antd";
-import { Input as AntInput } from 'antd';
+import { Input as AntInput, Select } from 'antd';
 import { DeleteOutlined } from '@ant-design/icons';
 
 
@@ -13,9 +13,12 @@ import LeftDrawerContent from "../../components/LeftDrawerContent";
 import Search from "../Search";
 import {closeInfo} from "../../store";
 import axios from 'axios';
+import submitSuccess from '../../assets/images/submitSuccess.svg'
+import optionalFieldDown from '../../assets/images/optionalFieldDown.svg'
 
 import { message } from 'antd';
 
+const { Option } = Select;
 const { TextArea } = AntInput;
 
 const InputComp = (props) => {
@@ -81,6 +84,8 @@ const Layers = ({ width }) => {
     const instructionParagraphs = validateData?.instructions?.replace(/<br\/>/g, '');
 
     const [mapData, setMapData] = useState({mapName: '', comments: ''});
+    const [submitSuccessFull, SetSubmitSuccessFull] = useState(false)
+    const [optionalField, SetOptionalField] = useState(false)
 
     const handleBackStep = () => {
         if (currentStep === 2) {
@@ -121,15 +126,21 @@ const Layers = ({ width }) => {
             try {
                 const response = await axios.post('https://submitapi.sitewise.com/submit', payload);
                 console.log('API Response:', response);
+                SetSubmitSuccessFull(true)
                 localStorage.setItem('contactInfo', JSON.stringify(contactInfo));
                 message.success('Site Submitted successfully');
                 onClose()
                 setMapData({mapName: '', comments: ''})
-                setCurrentStep(1)
+                // setCurrentStep(1)
             } catch (error) {
                 message.error(error);
             }
 
+    }
+
+    const submitAnotherSite = () => {
+        SetSubmitSuccessFull(false)
+        setCurrentStep(1);
     }
 
     const handleChangeInput = (key, value) => {
@@ -154,6 +165,45 @@ const Layers = ({ width }) => {
             </div>
         );
     };
+
+    const selectOptions = [
+        { value: 'option1', label: 'Option 1' },
+        { value: 'option2', label: 'Option 2' },
+        { value: 'option3', label: 'Option 3' },
+        // ... add more options as needed
+    ];
+
+    const handleChangeSelect = (key, value) => {
+        setMapData((prevData) => ({
+            ...prevData,
+            [key]: value,
+        }));
+    };
+
+    const renderSelect = (id, label, value, options, placeholder, autoFocus) => {
+        return (
+            <div style={styles.input} key={id}>
+                <Col span={24} style={styles.inputLabel}>
+                    {label}
+                </Col>
+                <Col span={24} style={styles.inputs}>
+                    <Select
+                        style={{ width: '100%' }}
+                        value={value}
+                        onChange={(newValue) => handleChangeSelect(id, newValue)}
+                        placeholder={placeholder}
+                        autoFocus={autoFocus}
+                    >
+                        {options.map((option) => (
+                            <Option key={option.value} value={option.value}>
+                                {option.label}
+                            </Option>
+                        ))}
+                    </Select>
+                </Col>
+            </div>
+        );
+    };
     const dispatch = useDispatch();
 
     const onClose = useCallback(() => {
@@ -167,7 +217,7 @@ const Layers = ({ width }) => {
             <LeftDrawerContent title="Layers">
                 <div style={styles.topBox}>
                     <div style={styles.containerDiv} className={'containerDiv'}>
-                        {currentStep === 1 &&
+                        {currentStep === 1  && submitSuccessFull === false &&
                         <>
                             <div style={{color: '#021E4F', fontWeight: 700, fontSize: '14px', margin: '15px 2px'}}>{instructionParagraphs}</div>
                             <Search/>
@@ -178,6 +228,26 @@ const Layers = ({ width }) => {
                                 </Row>
                                 {renderInput('mapName', 'Name', mapData.mapName, 'text', 'Site Name', viewSideDetailFields )}
                                 {renderInput('comments', 'Comments', mapData.comments, 'text-area', 'Comments' )}
+
+                                <div onClick={() => SetOptionalField(!optionalField)} style={{display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer'}}>
+                                    <img
+                                        src={optionalFieldDown}
+                                        alt={'optionalFieldDown'}
+                                        width="12"
+                                        height="12"
+                                    />
+                                    <div style={{fontWeight:700, fontSize: 14, fontFamily: 'Roboto', color: '#021E4F', marginTop: 12}}>Site Characteristics (Optional)</div>
+                                </div>
+
+                                {optionalField === true && <div>
+                                    {renderSelect('parkingSpot', 'Parking Spots', mapData.parkingSpot, selectOptions, 'Parking Spots', false)}
+                                    {renderSelect('vecantAnchors', 'Vacant Anchors/Big Box in Shopping Center?', mapData.vecantAnchors, selectOptions, 'Vacant Anchors/Big Box in Shopping Center?', false)}
+                                    {renderSelect('venue', 'Venue Type', mapData.venue, selectOptions, 'Venue Type', false)}
+                                    {renderSelect('locationType', 'Location Type', mapData.locationType, selectOptions, 'Location Type', false)}
+                                    {renderSelect('driveThru', 'Drive-Thru?', mapData.driveThru, selectOptions, 'Drive-Thru?', false)}
+                                    {renderSelect('gla', 'GLA (New Center)', mapData.gla, selectOptions, 'GLA (New Center)', false)}
+                                </div>}
+
 
                             </div> :
 
@@ -196,7 +266,7 @@ const Layers = ({ width }) => {
                         }
 
                         {
-                            currentStep === 2 &&
+                            currentStep === 2 && submitSuccessFull === false &&
                             <>
                                 <div>
                                     <Row>
@@ -209,11 +279,26 @@ const Layers = ({ width }) => {
                             </>
                         }
 
+
+                        {submitSuccessFull === true && <div style={{width: '100%'}}>
+                            <div style={{display: 'flex', alignItems: 'center', flexDirection: 'column', marginTop: 60}}>
+                                <img
+                                    src={submitSuccess}
+                                    alt={'submitSuccess'}
+                                    // style={styles.iconSvg}
+                                    width="64"
+                                    height="64"
+                                />
+                                <div style={{color: '#0087B7' ,marginTop: 9, fontSize: 14, fontWeight: 700, fontFamily: 'Poppins'}}>Thank you for submitting your site</div>
+                                <Button onClick={submitAnotherSite} style={{borderRadius: 4, border: '1px solid #0087B7', background: '#0087B7', fontWeight: 500, fontSize: 14, fontFamily: 'Roboto', color: '#FFF', marginTop: 24}}>Submit Another Site</Button>
+                            </div>
+                        </div>}
+
                     </div>
                 </div>
 
 
-                <div style={styles.bottomBox}>
+                {submitSuccessFull === false && <div style={styles.bottomBox}>
                     <div style={{ marginTop: '16px', width: '100%' }}>
                         <Row>
                             <Col span={18}>
@@ -236,7 +321,7 @@ const Layers = ({ width }) => {
 
 
                     </div>
-                </div>
+                </div>}
                 {/*<LayersTree width={width} />*/}
             </LeftDrawerContent>
         </div>
@@ -245,7 +330,7 @@ const Layers = ({ width }) => {
 
 const styles = {
     container: { display: "flex", flexDirection: "column", height: "100vh" },
-    topBox: { height: "calc(93vh - 70px)", backgroundColor: '#FAFAFC' },
+    topBox: { height: "calc(93vh - 70px)", backgroundColor: '#FAFAFC', overflow: 'auto' },
     bottomBox: { height: "7vh", borderTop: '1px solid #AEB9CA', backgroundColor: '#FFFFFF' },
     containerDiv: { padding: '15px' },
     mapDetailsContainer: {
