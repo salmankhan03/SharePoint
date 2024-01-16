@@ -1,4 +1,4 @@
-import React, {useCallback, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import _ from 'lodash';
 
@@ -19,9 +19,12 @@ const StudyAreas = ({ visible, locationDetail, position, locationName }) => {
         dispatch(closeInfo());
         dispatch(setSelectedMapHideShow(false));
     }, [dispatch]);
+    useEffect(()=>{
+        onClick()
+    },[])
 
     const onClick = (e) => {
-        e.stopPropagation();
+        // e.stopPropagation();
         dispatch(addSiteDetail())
         setButton('remove')
     }

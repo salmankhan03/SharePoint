@@ -4,7 +4,7 @@ import { GoogleMap, DrawingManager } from "@react-google-maps/api";
 
 import SearchInformation from './SearchInformation'
 import SearchMarker from "./SearchMarker";
-import { setAddress, setLocation } from "../../store";
+import { setAddress, setLocation, setSelectedMapHideShow } from "../../store";
 
 const streetViewOptions = {
     addressControl: true,
@@ -38,14 +38,10 @@ const Map = () => {
 
     const onMapClick = useCallback(
         (event) => {
-          // Get the latitude and longitude from the click event
           const selectedPosition ={
             lat: event.latLng.lat(),
             lng : event.latLng.lng(),
          }
-          
-          // Do something with the lat/lng, for example, dispatch an action
-
           const geocoder = new window.google.maps.Geocoder();
           geocoder.geocode({ location: selectedPosition }, (results, status) => {
               if (status === 'OK') {
@@ -59,6 +55,7 @@ const Map = () => {
                         id: results[0].place_id, 
                         lat: selectedPosition.lat, 
                         lng: selectedPosition.lng}))
+                        dispatch(setSelectedMapHideShow(false));
                     
                   }
               } else {

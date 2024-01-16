@@ -63,7 +63,8 @@ const Shortcuts = () => {
                         bottom: 35,
                         display: 'flex',
                         flexDirection: 'column',
-                        alignItems: 'end'
+                        alignItems: 'end',
+                        cursor:"pointer"
                         // right: 15,
                     }}
                 >
@@ -88,8 +89,8 @@ const Shortcuts = () => {
                     <div
                         style={{
                             position: "absolute",
-                            left:  450,
-                            top: '15%',
+                            left:  420,
+                            top: '12%',
                             display: 'flex',
                             flexDirection: 'column',
                             alignItems: 'flex-start',
@@ -100,8 +101,8 @@ const Shortcuts = () => {
                         <div style={styles.container} className="ant-notification-notice">
                             <div style={styles.header}>
                                 <div>
-                                    <h2>Select location</h2>
-                                    <div>Click a point on the map to select a location to submit</div>
+                                    <div className="ant-notification-notice-message" style={{marginBottom:8}}>Select location</div>
+                                    <div className="ant-notification-notice-description">Click a point on the map to select a location to submit</div>
                                 </div>
                                 {/* <div onClick={onClose}>
                                     <CloseOutlined style={styles.closeIcon} />
@@ -136,7 +137,7 @@ const styles = {
     flex: { display: "flex" },
     siteLogo: { fontSize: "25px", fontWeight: "bold" },
     // font: {fontSize: 14, fontWeight: 500, color: "#021E4F", fontFamily: 'Roboto', marginTop: 15 }
-    container: { width: 280, marginTop: 0, fontSize: 12, padding: '6px 12px' },
+    container: { width: 200, marginTop: 0, fontSize: 12, padding: '6px 12px' },
     header: { display: 'flex', justifyContent: 'space-between' },
     closeIcon: { fontSize: 16, color: '#ccc', cursor: 'pointer', marginTop: 6 },
     flex: { display: 'flex' },

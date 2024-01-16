@@ -6,7 +6,7 @@ import {
 
 import { Row, Col } from "antd";
 import { Input as AntInput, Select } from 'antd';
-import { DeleteOutlined, MapOutlined } from '@ant-design/icons';
+import { CaretDownOutlined, CaretRightOutlined, DeleteOutlined, MapOutlined } from '@ant-design/icons';
 
 
 
@@ -214,7 +214,7 @@ const Layers = ({ width }) => {
     const onClose = useCallback(() => {
         dispatch(closeInfo());
     }, [dispatch]);
-    const selectedOnTheMap = ()=>{
+    const selectedOnTheMap = () => {
         setSelectedMapOptions(!selectedMapOptions)
         dispatch(setSelectedMapHideShow(!selectedMapOptions));
     };
@@ -231,8 +231,8 @@ const Layers = ({ width }) => {
                                 <div style={{ color: '#021E4F', fontWeight: 700, fontSize: '14px', margin: '15px 2px' }}>{instructionParagraphs}</div>
                                 <Search />
                                 <div style={{ marginTop: 8, alignItems: 'flex-end', textAlign: 'right' }}>
-                                    <div onClick={selectedOnTheMap} style={{color:'#0087b7'}}>
-                                    <Marker color="#0087b7" size="18" /> Select On the Map
+                                    <div onClick={selectedOnTheMap} style={{ color: '#0087b7', fontSize: 14, cursor: 'pointer' }}>
+                                        <Marker color="#0087b7" size="14" /> Select On the Map
                                     </div>
                                 </div>
 
@@ -241,16 +241,13 @@ const Layers = ({ width }) => {
                                         <Col span={22} style={styles.inputLabel}>{locationDetail}</Col>
                                         <Col span={2} style={{ display: 'flex', justifyContent: 'end', position: 'inherit' }}> <DeleteOutlined onClick={onClose} style={styles.inputLabel} /></Col>
                                     </Row>
-                                    {renderInput('mapName', 'Name', mapData.mapName, 'text', 'Site Name', viewSideDetailFields)}
+                                    {renderInput('mapName', 'Name', locationDetail, 'text', 'Site Name', viewSideDetailFields)}
                                     {renderInput('comments', 'Comments', mapData.comments, 'text-area', 'Comments')}
 
                                     <div onClick={() => SetOptionalField(!optionalField)} style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer' }}>
-                                        <img
-                                            src={optionalFieldDown}
-                                            alt={'optionalFieldDown'}
-                                            width="12"
-                                            height="12"
-                                        />
+                                    {optionalField ?(
+                                       <CaretDownOutlined style={{marginTop:8}} />
+                                        ):(<CaretRightOutlined  style={{marginTop:8}}/>)}
                                         <div style={{ fontWeight: 700, fontSize: 14, fontFamily: 'Roboto', color: '#021E4F', marginTop: 12 }}>Site Characteristics (Optional)</div>
                                     </div>
 

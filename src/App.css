@@ -266,4 +266,8 @@ button.gm-ui-hover-effect {
   box-shadow: 0px 4px 3px 0px #d1cfbb59;
   margin-bottom: 16px;
 }
+/* INPUT */
+.ant-input {
+  cursor: pointer;
+}
 
