@@ -72,7 +72,11 @@ const MapResults = ({ path, search }) => {
                       (results, status) => {
                         if (status === "OK" && results.length > 0) {
                           const location = results[0].geometry.location;
-                          dispatch(setLocation({locationName: item.structured_formatting.main_text, locationDetail: results[0].formatted_address, id: results[0].place_id, lat: location.lat(), lng: location.lng()}))
+                          dispatch(setLocation({locationName: item.structured_formatting.main_text, 
+                            locationDetail: results[0].formatted_address, 
+                            id: results[0].place_id, 
+                            lat: location.lat(), 
+                            lng: location.lng()}))
                         }
                       }
                     );

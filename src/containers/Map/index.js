@@ -4,6 +4,7 @@ import { GoogleMap, DrawingManager } from "@react-google-maps/api";
 
 import SearchInformation from './SearchInformation'
 import SearchMarker from "./SearchMarker";
+import { setAddress, setLocation } from "../../store";
 
 const streetViewOptions = {
     addressControl: true,
@@ -14,8 +15,10 @@ const streetViewOptions = {
 const Map = () => {
     const { center, zoom, position, display } = useSelector((state) => state);
     const mapTypeId = useSelector(state => state.mapTypeId);
+    const searchByButtonClick = useSelector((state) => state.searchByButtonClick);
     const total = useSelector((state) => state);
     const [mapPosition, setMapPosition] = useState(position)
+    const dispatch = useDispatch();
 
     useEffect(() => {
         setMapPosition(position)
@@ -33,6 +36,40 @@ const Map = () => {
         setMap(null);
     }, []);
 
+    const onMapClick = useCallback(
+        (event) => {
+          // Get the latitude and longitude from the click event
+          const selectedPosition ={
+            lat: event.latLng.lat(),
+            lng : event.latLng.lng(),
+         }
+          
+          // Do something with the lat/lng, for example, dispatch an action
+
+          const geocoder = new window.google.maps.Geocoder();
+          geocoder.geocode({ location: selectedPosition }, (results, status) => {
+              if (status === 'OK') {
+                  if (results[0]) {
+                      dispatch(setAddress(results[0].formatted_address))
+                      const location = results[0].geometry.location;
+                    //   console.log("item.structured_formatting.main_text",item.structured_formatting.main_text)
+                      dispatch(setLocation({
+                        locationName:  results[0]?.address_components[0]?.long_name                       , 
+                        locationDetail: results[0].formatted_address, 
+                        id: results[0].place_id, 
+                        lat: selectedPosition.lat, 
+                        lng: selectedPosition.lng}))
+                    
+                  }
+              } else {
+                  console.error('Geocoder failed due to: ' + status);
+              }
+          });
+
+        },
+        []
+      );
+
     const mapProps = {
         mapContainerStyle: { ...styles.map },
         mapTypeId,
@@ -45,6 +82,7 @@ const Map = () => {
             streetViewControl: false,
             disableDefaultUI: true,
         },
+        onClick: searchByButtonClick ? onMapClick : undefined, // Only attach onClick if searchByButtonClick is true
         onLoad,
         onUnmount,
     };

@@ -5,7 +5,7 @@ import _ from 'lodash';
 import InfoBox from './Infobox';
 import InfoCard from '../../components/InfoCard';
 import Summary from '../../components/Summary';
-import {addSiteDetail, closeInfo} from "../../store";
+import {addSiteDetail, closeInfo, setSelectedMapHideShow} from "../../store";
 import Thumbnails from "./Thumbnails";
 import { Button } from "antd";
 import { Row, Col } from "antd";
@@ -17,6 +17,7 @@ const StudyAreas = ({ visible, locationDetail, position, locationName }) => {
     const dispatch = useDispatch();
     const onClose = useCallback(() => {
         dispatch(closeInfo());
+        dispatch(setSelectedMapHideShow(false));
     }, [dispatch]);
 
     const onClick = (e) => {

@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useRef, useState} from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
     Button,
@@ -6,17 +6,20 @@ import {
 
 import { Row, Col } from "antd";
 import { Input as AntInput, Select } from 'antd';
-import { DeleteOutlined } from '@ant-design/icons';
+import { DeleteOutlined, MapOutlined } from '@ant-design/icons';
+
 
 
 import LeftDrawerContent from "../../components/LeftDrawerContent";
 import Search from "../Search";
-import {closeInfo} from "../../store";
+import { center, closeInfo, setSelectedMapHideShow } from "../../store";
 import axios from 'axios';
 import submitSuccess from '../../assets/images/submitSuccess.svg'
 import optionalFieldDown from '../../assets/images/optionalFieldDown.svg'
 
 import { message } from 'antd';
+import Marker from "../../assets/icons/Marker"
+
 
 const { Option } = Select;
 const { TextArea } = AntInput;
@@ -37,13 +40,13 @@ const InputComp = (props) => {
 
 
     return (
-        <div style={{display: 'flex', flexDirection: "column"}}>
+        <div style={{ display: 'flex', flexDirection: "column" }}>
             <Col span={24} style={styles.inputLabel}>
                 {label}
             </Col>
             <Col span={24} style={styles.inputs}>
                 {type === "text" ? <AntInput
-                    style={{position: 'inherit'}}
+                    style={{ position: 'inherit' }}
                     ref={inputRef}
                     autoFocus={autoFocus}
                     // className={`${col_field} ${multiline ? 'input-multiline' : ''}`}
@@ -57,7 +60,7 @@ const InputComp = (props) => {
                     <TextArea
                         rows={4}
                         maxLength={6}
-                        style={{position: 'inherit'}}
+                        style={{ position: 'inherit' }}
                         ref={inputRef}
                         autoFocus={autoFocus}
                         // className={`${col_field} ${multiline ? 'input-multiline' : ''}`}
@@ -78,12 +81,14 @@ const InputComp = (props) => {
 
 const Layers = ({ width }) => {
     const [currentStep, setCurrentStep] = useState(1);
+    const [selectedMapOptions, setSelectedMapOptions] = useState(false);
+
     const { locationDetail, viewSideDetailFields, position } = useSelector((state) => state);
     const validateData = useSelector((state) => state.validateData);
 
     const instructionParagraphs = validateData?.instructions?.replace(/<br\/>/g, '');
 
-    const [mapData, setMapData] = useState({mapName: '', comments: ''});
+    const [mapData, setMapData] = useState({ mapName: '', comments: '' });
     const [submitSuccessFull, SetSubmitSuccessFull] = useState(false)
     const [optionalField, SetOptionalField] = useState(false)
 
@@ -99,7 +104,7 @@ const Layers = ({ width }) => {
         }
     }
 
-    const handleSubmit = async(e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault()
 
         const payload = {
@@ -110,7 +115,7 @@ const Layers = ({ width }) => {
             sites: [
                 {
                     comment: mapData.comments,
-                    site: { latitude: position.lat , longitude: position.lng },
+                    site: { latitude: position.lat, longitude: position.lng },
                     attributes: {
                         test: mapData.mapName,
                     },
@@ -123,18 +128,18 @@ const Layers = ({ width }) => {
             email: mapData.email
         }
 
-            try {
-                const response = await axios.post('https://submitapi.sitewise.com/submit', payload);
-                console.log('API Response:', response);
-                SetSubmitSuccessFull(true)
-                localStorage.setItem('contactInfo', JSON.stringify(contactInfo));
-                message.success('Site Submitted successfully');
-                onClose()
-                setMapData({mapName: '', comments: ''})
-                // setCurrentStep(1)
-            } catch (error) {
-                message.error(error);
-            }
+        try {
+            const response = await axios.post('https://submitapi.sitewise.com/submit', payload);
+            console.log('API Response:', response);
+            SetSubmitSuccessFull(true)
+            localStorage.setItem('contactInfo', JSON.stringify(contactInfo));
+            message.success('Site Submitted successfully');
+            onClose()
+            setMapData({ mapName: '', comments: '' })
+            // setCurrentStep(1)
+        } catch (error) {
+            message.error(error);
+        }
 
     }
 
@@ -209,6 +214,10 @@ const Layers = ({ width }) => {
     const onClose = useCallback(() => {
         dispatch(closeInfo());
     }, [dispatch]);
+    const selectedOnTheMap = ()=>{
+        setSelectedMapOptions(!selectedMapOptions)
+        dispatch(setSelectedMapHideShow(!selectedMapOptions));
+    };
 
     return (
         <div style={styles.container}>
@@ -217,52 +226,58 @@ const Layers = ({ width }) => {
             <LeftDrawerContent title="Layers">
                 <div style={styles.topBox}>
                     <div style={styles.containerDiv} className={'containerDiv'}>
-                        {currentStep === 1  && submitSuccessFull === false &&
-                        <>
-                            <div style={{color: '#021E4F', fontWeight: 700, fontSize: '14px', margin: '15px 2px'}}>{instructionParagraphs}</div>
-                            <Search/>
-                            {viewSideDetailFields === true ? <div style={styles.mapDetailsContainer}>
-                                <Row>
-                                    <Col span={22} style={styles.inputLabel}>{locationDetail}</Col>
-                                    <Col span={2} style={{display: 'flex', justifyContent: 'end', position: 'inherit'}}> <DeleteOutlined onClick={onClose} style={styles.inputLabel} /></Col>
-                                </Row>
-                                {renderInput('mapName', 'Name', mapData.mapName, 'text', 'Site Name', viewSideDetailFields )}
-                                {renderInput('comments', 'Comments', mapData.comments, 'text-area', 'Comments' )}
-
-                                <div onClick={() => SetOptionalField(!optionalField)} style={{display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer'}}>
-                                    <img
-                                        src={optionalFieldDown}
-                                        alt={'optionalFieldDown'}
-                                        width="12"
-                                        height="12"
-                                    />
-                                    <div style={{fontWeight:700, fontSize: 14, fontFamily: 'Roboto', color: '#021E4F', marginTop: 12}}>Site Characteristics (Optional)</div>
-                                </div>
-
-                                {optionalField === true && <div>
-                                    {renderSelect('parkingSpot', 'Parking Spots', mapData.parkingSpot, selectOptions, 'Parking Spots', false)}
-                                    {renderSelect('vecantAnchors', 'Vacant Anchors/Big Box in Shopping Center?', mapData.vecantAnchors, selectOptions, 'Vacant Anchors/Big Box in Shopping Center?', false)}
-                                    {renderSelect('venue', 'Venue Type', mapData.venue, selectOptions, 'Venue Type', false)}
-                                    {renderSelect('locationType', 'Location Type', mapData.locationType, selectOptions, 'Location Type', false)}
-                                    {renderSelect('driveThru', 'Drive-Thru?', mapData.driveThru, selectOptions, 'Drive-Thru?', false)}
-                                    {renderSelect('gla', 'GLA (New Center)', mapData.gla, selectOptions, 'GLA (New Center)', false)}
-                                </div>}
-
-
-                            </div> :
-
-                                <div style={styles.noLocationContainer}>
-                                    <div>
-                                        <Row style={styles.noLocation}>
-                                            <label>No location to show yet</label>
-                                        </Row>
-                                        <Row style={styles.noLocationSearch}>
-                                            <label>please search</label>
-                                        </Row>
+                        {currentStep === 1 && submitSuccessFull === false &&
+                            <>
+                                <div style={{ color: '#021E4F', fontWeight: 700, fontSize: '14px', margin: '15px 2px' }}>{instructionParagraphs}</div>
+                                <Search />
+                                <div style={{ marginTop: 8, alignItems: 'flex-end', textAlign: 'right' }}>
+                                    <div onClick={selectedOnTheMap} style={{color:'#0087b7'}}>
+                                    <Marker color="#0087b7" size="18" /> Select On the Map
                                     </div>
                                 </div>
-                            }
-                        </>
+
+                                {viewSideDetailFields === true ? <div style={styles.mapDetailsContainer}>
+                                    <Row>
+                                        <Col span={22} style={styles.inputLabel}>{locationDetail}</Col>
+                                        <Col span={2} style={{ display: 'flex', justifyContent: 'end', position: 'inherit' }}> <DeleteOutlined onClick={onClose} style={styles.inputLabel} /></Col>
+                                    </Row>
+                                    {renderInput('mapName', 'Name', mapData.mapName, 'text', 'Site Name', viewSideDetailFields)}
+                                    {renderInput('comments', 'Comments', mapData.comments, 'text-area', 'Comments')}
+
+                                    <div onClick={() => SetOptionalField(!optionalField)} style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer' }}>
+                                        <img
+                                            src={optionalFieldDown}
+                                            alt={'optionalFieldDown'}
+                                            width="12"
+                                            height="12"
+                                        />
+                                        <div style={{ fontWeight: 700, fontSize: 14, fontFamily: 'Roboto', color: '#021E4F', marginTop: 12 }}>Site Characteristics (Optional)</div>
+                                    </div>
+
+                                    {optionalField === true && <div>
+                                        {renderSelect('parkingSpot', 'Parking Spots', mapData.parkingSpot, selectOptions, 'Parking Spots', false)}
+                                        {renderSelect('vecantAnchors', 'Vacant Anchors/Big Box in Shopping Center?', mapData.vecantAnchors, selectOptions, 'Vacant Anchors/Big Box in Shopping Center?', false)}
+                                        {renderSelect('venue', 'Venue Type', mapData.venue, selectOptions, 'Venue Type', false)}
+                                        {renderSelect('locationType', 'Location Type', mapData.locationType, selectOptions, 'Location Type', false)}
+                                        {renderSelect('driveThru', 'Drive-Thru?', mapData.driveThru, selectOptions, 'Drive-Thru?', false)}
+                                        {renderSelect('gla', 'GLA (New Center)', mapData.gla, selectOptions, 'GLA (New Center)', false)}
+                                    </div>}
+
+
+                                </div> :
+
+                                    <div style={styles.noLocationContainer}>
+                                        <div>
+                                            <Row style={styles.noLocation}>
+                                                <label>No location to show yet</label>
+                                            </Row>
+                                            <Row style={styles.noLocationSearch}>
+                                                <label>please search</label>
+                                            </Row>
+                                        </div>
+                                    </div>
+                                }
+                            </>
                         }
 
                         {
@@ -272,16 +287,16 @@ const Layers = ({ width }) => {
                                     <Row>
                                         <Col span={24} style={styles.mapDetailHeading}>Contact Information</Col>
                                     </Row>
-                                    {renderInput('name', 'Name', mapData.name, 'text', 'Name' )}
-                                    {renderInput('email', 'Email Address', mapData.email, 'text', 'Email Address' )}
+                                    {renderInput('name', 'Name', mapData.name, 'text', 'Name')}
+                                    {renderInput('email', 'Email Address', mapData.email, 'text', 'Email Address')}
 
                                 </div>
                             </>
                         }
 
 
-                        {submitSuccessFull === true && <div style={{width: '100%'}}>
-                            <div style={{display: 'flex', alignItems: 'center', flexDirection: 'column', marginTop: 60}}>
+                        {submitSuccessFull === true && <div style={{ width: '100%' }}>
+                            <div style={{ display: 'flex', alignItems: 'center', flexDirection: 'column', marginTop: 60 }}>
                                 <img
                                     src={submitSuccess}
                                     alt={'submitSuccess'}
@@ -289,8 +304,8 @@ const Layers = ({ width }) => {
                                     width="64"
                                     height="64"
                                 />
-                                <div style={{color: '#0087B7' ,marginTop: 9, fontSize: 14, fontWeight: 700, fontFamily: 'Poppins'}}>Thank you for submitting your site</div>
-                                <Button onClick={submitAnotherSite} style={{borderRadius: 4, border: '1px solid #0087B7', background: '#0087B7', fontWeight: 500, fontSize: 14, fontFamily: 'Roboto', color: '#FFF', marginTop: 24}}>Submit Another Site</Button>
+                                <div style={{ color: '#0087B7', marginTop: 9, fontSize: 14, fontWeight: 700, fontFamily: 'Poppins' }}>Thank you for submitting your site</div>
+                                <Button onClick={submitAnotherSite} style={{ borderRadius: 4, border: '1px solid #0087B7', background: '#0087B7', fontWeight: 500, fontSize: 14, fontFamily: 'Roboto', color: '#FFF', marginTop: 24 }}>Submit Another Site</Button>
                             </div>
                         </div>}
 
@@ -303,7 +318,7 @@ const Layers = ({ width }) => {
                         <Row>
                             <Col span={18}>
                                 {currentStep === 2 && (
-                                    <Button style={{marginLeft: '15px'}}  onClick={handleBackStep}>Back</Button>
+                                    <Button style={{ marginLeft: '15px' }} onClick={handleBackStep}>Back</Button>
                                 )}
                             </Col>
                             <Col span={6}>
