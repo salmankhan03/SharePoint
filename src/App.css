@@ -175,3 +175,95 @@ button.gm-ui-hover-effect {
     transform: rotate(360deg);
   }
 }
+
+/* Notification */
+.ant-notification {
+  left: 70px !important;
+}
+
+.ant-notification-notice {
+  padding: 4px 16px;
+  background-color: #f2f8fb;
+}
+
+.ant-notification-notice::before {
+  content: '';
+  width: 5px;
+  height: 100%;
+  position: absolute;
+  left: 0;
+  top: 0;
+  background-color: #0087b7;
+}
+
+.ant-notification-notice-message {
+  color: #021e4f;
+  /* // font-weight: bold; */
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 14.06px;
+}
+
+.ant-notification-notice-description {
+  font-size: 12px;
+}
+
+.ant-notification-notice-btn .sitewise-rect-button {
+  border: 1px solid #647893;
+  background-color: #ffffff;
+  color: #647893;
+}
+
+.ant-notification-notice-with-icon .ant-notification-notice-message {
+  margin-left: 36px;
+}
+
+.ant-notification-notice-close {
+  right: 10px;
+}
+
+.ant-notification-notice-icon {
+  margin-left: 0;
+}
+
+.ant-notification-notice-with-icon .ant-notification-notice-description {
+  margin-left: 32px;
+}
+
+.ant-notification-topLeft {
+  left: -400px !important; 
+  /* // notification window is on top of all other components, so make its original position outside the page, and adjust the position later to avoid overlap */
+}
+
+.noti-topLeft {
+  left: 472px;
+  top: 50px;
+}
+
+.noti-topLeft-with-drawer-open {
+  left: 806px;
+  /* // top: -20px;
+  // left: 475px; */
+  top: 50px;
+}
+
+.noti-topLeft-with-geo-drawer-open {
+  left: 920px;
+  top: -20px;
+}
+
+.ant-alert.ant-alert-no-icon {
+  padding: 8px 16px;
+}
+
+.ant-alert-message {
+  font-size: 12px;
+}
+
+.ant-alert-warning {
+  background: #fcfae8e5;
+  border: 1px solid #d3c372bf;
+  box-shadow: 0px 4px 3px 0px #d1cfbb59;
+  margin-bottom: 16px;
+}
+

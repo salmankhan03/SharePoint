@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Button } from "antd";
 import CloseOutlined from "@ant-design/icons/lib/icons/CloseOutlined";
 
-import { setSelectedMapHideShow } from "../../store";
+import { closeInfo, setSelectedMapHideShow } from "../../store";
 
 
 
@@ -18,6 +18,7 @@ const Shortcuts = () => {
     const onClose = () => {
         // dispatch(endMapMeasure())
         dispatch(setSelectedMapHideShow(false));
+        dispatch(closeInfo());
     };
 
     const handleResize = () => {
@@ -87,7 +88,7 @@ const Shortcuts = () => {
                     <div
                         style={{
                             position: "absolute",
-                            left: 450,
+                            left:  450,
                             top: '15%',
                             display: 'flex',
                             flexDirection: 'column',
