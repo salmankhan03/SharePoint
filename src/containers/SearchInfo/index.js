@@ -224,6 +224,10 @@ const Layers = ({ width }) => {
         setSelectedMapOptions(!selectedMapOptions)
         dispatch(setSelectedMapHideShow(!selectedMapOptions));
     };
+    function isValidEmail(email) {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(email);
+      }
 
     return (
         <div style={styles.container}>
@@ -332,7 +336,7 @@ const Layers = ({ width }) => {
                                     onClick={currentStep === 1 ? moveNextStep : handleSubmit}
                                     disabled={
                                         (currentStep === 1 && (!viewSideDetailFields || mapData.mapName === "" || mapData.comments === "")) ||
-                                        (currentStep === 2 && (mapData.name === "" || mapData.email === ""))
+                                        (currentStep === 2 && (mapData.name === "" || mapData.email === "" || !isValidEmail(mapData.email)))
                                     }
                                 >
                                     {currentStep === 1 ? 'Next' : 'Submit'}
