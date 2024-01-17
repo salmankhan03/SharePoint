@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import {useDispatch, useSelector} from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Marker } from '@react-google-maps/api';
 import icon from './icon';
-import {setAddress, setPosition} from "../../store";
+import { setAddress, setPosition } from "../../store";
 
 const SearchMarker = () => {
     const position = useSelector((state) => state.position);
@@ -44,11 +44,6 @@ const SearchMarker = () => {
                     draggable={true}
                     onDragEnd={onMarkerDragEnd}
                 />
-                {locationName && (
-                    <div style={{ position: 'absolute', bottom: '0', left: '50%', transform: 'translateX(-50%)', background: 'white', padding: '5px', borderRadius: '5px' }}>
-                        {locationName}
-                    </div>
-                )}
             </>
         )
     );
