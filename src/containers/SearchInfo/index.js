@@ -59,7 +59,7 @@ const InputComp = (props) => {
                 /> :
                     <TextArea
                         rows={4}
-                        maxLength={6}
+                        // maxLength={6}
                         style={{ position: 'inherit' }}
                         ref={inputRef}
                         autoFocus={autoFocus}
@@ -92,6 +92,12 @@ const Layers = ({ width }) => {
     const [submitSuccessFull, SetSubmitSuccessFull] = useState(false)
     const [optionalField, SetOptionalField] = useState(false)
 
+    useEffect(()=>{
+        setMapData((prevMapData) => ({
+            ...prevMapData,
+            mapName: locationDetail,
+          }));
+    },[locationDetail])
     const handleBackStep = () => {
         if (currentStep === 2) {
             setCurrentStep(1);
@@ -241,7 +247,7 @@ const Layers = ({ width }) => {
                                         <Col span={22} style={styles.inputLabel}>{locationDetail}</Col>
                                         <Col span={2} style={{ display: 'flex', justifyContent: 'end', position: 'inherit' }}> <DeleteOutlined onClick={onClose} style={styles.inputLabel} /></Col>
                                     </Row>
-                                    {renderInput('mapName', 'Name', locationDetail, 'text', 'Site Name', viewSideDetailFields)}
+                                    {renderInput('mapName', 'Name', mapData.mapName, 'text', 'Site Name', viewSideDetailFields)}
                                     {renderInput('comments', 'Comments', mapData.comments, 'text-area', 'Comments')}
 
                                     <div onClick={() => SetOptionalField(!optionalField)} style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer' }}>

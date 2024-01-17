@@ -7,51 +7,51 @@ const pewter = '#cdd4e2';
 
 const { Title } = Typography;
 
-const  InfoCard = ({
+const InfoCard = ({
     title,
     titleLoading,
     onClose,
     position,
     children,
-                       visible
+    visible
 }) => {
 
     return (
         <>
-            { <div className={'infoCard'}>
-            <div
-                style={{
-                    ...styles.header
-                }}
-            >
-                <div style={styles.headerTitle}>
-                    <Title level={4} style={styles.title}>
-                        {title}
-                    </Title>
-                    {titleLoading && (
-                        <span style={styles.spin}>
-                            <Spin size="small" />
-                        </span>
-                    )}
-                </div>
-                <div style={styles.cornerButtons}>
+            {<div className={'infoCard'}>
+                <div
+                    style={{
+                        ...styles.header
+                    }}
+                >
+                    <div style={styles.headerTitle}>
+                        <Title level={4} style={styles.title}>
+                            {title}
+                        </Title>
+                        {titleLoading && (
+                            <span style={styles.spin}>
+                                <Spin size="small" />
+                            </span>
+                        )}
+                    </div>
+                    <div style={styles.cornerButtons}>
 
-                    {onClose && (
-                        <Button
-                            type="link"
-                            className="sitewise-light-button"
-                            onClick={onClose}
-                            style={styles.cornerButton}
-                            disabled={false}
-                        >
-                            <CloseOutlined style={styles.font} />
-                        </Button>
-                    )}
+                        {onClose && (
+                            <Button
+                                type="link"
+                                className="sitewise-light-button"
+                                onClick={onClose}
+                                style={styles.cornerButton}
+                                disabled={false}
+                            >
+                                <CloseOutlined style={styles.font} />
+                            </Button>
+                        )}
+                    </div>
                 </div>
-            </div>
-            {children}
-            {/*{buttons && <PrimaryButtons buttons={buttons} />}*/}
-        </div>}
+                {children}
+                {/*{buttons && <PrimaryButtons buttons={buttons} />}*/}
+            </div>}
         </>
     );
 };
