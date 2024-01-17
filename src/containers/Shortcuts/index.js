@@ -90,7 +90,7 @@ const Shortcuts = () => {
                         style={{
                             position: "absolute",
                             left:  420,
-                            top: '12%',
+                            top: '15%',
                             display: 'flex',
                             flexDirection: 'column',
                             alignItems: 'flex-start',
