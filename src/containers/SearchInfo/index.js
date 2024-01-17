@@ -88,16 +88,16 @@ const Layers = ({ width }) => {
 
     const instructionParagraphs = validateData?.instructions?.replace(/<br\/>/g, '');
 
-    const [mapData, setMapData] = useState({ mapName: '', comments: '' });
+    const [mapData, setMapData] = useState({ mapName: '', comments: '',name:'',email:'' });
     const [submitSuccessFull, SetSubmitSuccessFull] = useState(false)
     const [optionalField, SetOptionalField] = useState(false)
 
-    useEffect(()=>{
+    useEffect(() => {
         setMapData((prevMapData) => ({
             ...prevMapData,
             mapName: locationDetail,
-          }));
-    },[locationDetail])
+        }));
+    }, [locationDetail])
     const handleBackStep = () => {
         if (currentStep === 2) {
             setCurrentStep(1);
@@ -251,9 +251,9 @@ const Layers = ({ width }) => {
                                     {renderInput('comments', 'Comments', mapData.comments, 'text-area', 'Comments')}
 
                                     <div onClick={() => SetOptionalField(!optionalField)} style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer' }}>
-                                    {optionalField ?(
-                                       <CaretDownOutlined style={{marginTop:8}} />
-                                        ):(<CaretRightOutlined  style={{marginTop:8}}/>)}
+                                        {optionalField ? (
+                                            <CaretDownOutlined style={{ marginTop: 8 }} />
+                                        ) : (<CaretRightOutlined style={{ marginTop: 8 }} />)}
                                         <div style={{ fontWeight: 700, fontSize: 14, fontFamily: 'Roboto', color: '#021E4F', marginTop: 12 }}>Site Characteristics (Optional)</div>
                                     </div>
 
@@ -330,7 +330,10 @@ const Layers = ({ width }) => {
                                     type="primary"
                                     className={'sitewise-rect-primary-button'}
                                     onClick={currentStep === 1 ? moveNextStep : handleSubmit}
-                                    disabled={(viewSideDetailFields === true && mapData.mapName !== "" && mapData.comments !== "") ? false : true}
+                                    disabled={
+                                        (currentStep === 1 && (!viewSideDetailFields || mapData.mapName === "" || mapData.comments === "")) ||
+                                        (currentStep === 2 && (mapData.name === "" || mapData.email === ""))
+                                    }
                                 >
                                     {currentStep === 1 ? 'Next' : 'Submit'}
                                 </Button>
