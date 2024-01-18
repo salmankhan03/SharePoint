@@ -87,15 +87,17 @@ const Layers = ({ width }) => {
     const validateData = useSelector((state) => state.validateData);
 
     const instructionParagraphs = validateData?.instructions?.replace(/<br\/>/g, '');
-
+    const storedContactInfo = JSON.parse(localStorage.getItem('contactInfo')) || { name: '', email: '' };
     const [mapData, setMapData] = useState({ mapName: '', comments: '',name:'',email:'' });
     const [submitSuccessFull, SetSubmitSuccessFull] = useState(false)
     const [optionalField, SetOptionalField] = useState(false)
 
     useEffect(() => {
-        setMapData((prevMapData) => ({
+       setMapData((prevMapData) => ({
             ...prevMapData,
             mapName: locationDetail,
+            name: storedContactInfo ? storedContactInfo.name :'',
+            email:storedContactInfo ? storedContactInfo.email :'',
         }));
     }, [locationDetail])
     const handleBackStep = () => {
