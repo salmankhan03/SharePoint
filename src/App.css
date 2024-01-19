@@ -270,4 +270,7 @@ button.gm-ui-hover-effect {
 .ant-input {
   cursor: pointer;
 }
+.ant-input-affix-wrapper {
+  border-style: none;
+}
 
