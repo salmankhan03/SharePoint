@@ -18,7 +18,7 @@ const Shortcuts = () => {
     const onClose = () => {
         // dispatch(endMapMeasure())
         dispatch(setSelectedMapHideShow(false));
-        dispatch(closeInfo());
+        // dispatch(closeInfo());
     };
 
     const handleResize = () => {
