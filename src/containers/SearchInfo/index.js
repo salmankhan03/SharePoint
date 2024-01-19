@@ -337,7 +337,7 @@ const Layers = ({ width }) => {
                                     className={'sitewise-rect-primary-button'}
                                     onClick={currentStep === 1 ? moveNextStep : handleSubmit}
                                     disabled={
-                                        (currentStep === 1 && (!viewSideDetailFields || mapData.mapName === "" || mapData.comments === "")) ||
+                                        (currentStep === 1 && (!viewSideDetailFields || mapData.mapName === "" )) || // comments remove =>  || mapData.comments === ""
                                         (currentStep === 2 && (mapData.name === "" || mapData.email === "" || !isValidEmail(mapData.email)))
                                     }
                                 >
