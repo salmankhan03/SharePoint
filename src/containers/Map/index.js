@@ -78,6 +78,18 @@ const Map = () => {
             zoomControl: false,
             streetViewControl: false,
             disableDefaultUI: true,
+            draggableCursor: searchByButtonClick ? 'crosshair' : 'grab',
+            styles: [
+                {
+                    featureType: "poi",
+                    elementType: "labels",
+                    stylers: [
+                        {
+                            visibility: "off",
+                        },
+                    ],
+                },
+            ],
         },
         onClick: searchByButtonClick ? onMapClick : undefined, // Only attach onClick if searchByButtonClick is true
         onLoad,
