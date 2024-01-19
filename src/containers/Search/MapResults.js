@@ -5,7 +5,7 @@ import "../../App.css";
 
 import SearchResult from "../../components/SearchResult";
 
-import {pressSearchPoint, setLayer, setLocation} from "../../store";
+import {pressSearchPoint, setLayer, setLocation, setSearchProps} from "../../store";
 
 const { Title } = Typography;
 const locale = { emptyText: "No Results" };
@@ -34,6 +34,10 @@ const MapResults = ({ path, search }) => {
 
   const drop = useCallback(item => dispatch(pressSearchPoint({path, item})), [path, dispatch]);
 
+  const handleClick = () => {
+    drop(coordinates);
+    dispatch(setSearchProps("search", ""))
+  };
 
   return (
     <div className="sitewise-skeleton-search">
@@ -43,7 +47,7 @@ const MapResults = ({ path, search }) => {
 
       {(isValidLatitude === true && isValidLongitude  === true) && (
           <div
-              onClick={() => drop(coordinates)}
+              onClick={handleClick}
               className="ant-list-item"
               style={styles.result}
           >{`${coordinates.lat}, ${coordinates.lng}`}</div>
