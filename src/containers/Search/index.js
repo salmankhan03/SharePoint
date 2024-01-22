@@ -63,7 +63,7 @@ const styles = {
     width: 'auto',
     border: `1px solid #AFB6C4`,
     borderRadius: 4,
-    filter: "drop-shadow(0px 2px 5px rgba(44, 56, 73, 0.15))",
+    // filter: "drop-shadow(0px 2px 5px rgba(44, 56, 73, 0.15))",
   },
   icon: { color: "#0087B7", fontSize: 16 },
   closeIcon: { color: "#8295AF", fontSize: 16 },
