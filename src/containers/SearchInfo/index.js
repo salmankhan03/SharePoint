@@ -225,8 +225,8 @@ const Layers = ({ width }) => {
         dispatch(closeInfo());
     }, [dispatch]);
     const selectedOnTheMap = () => {
-        setSelectedMapOptions(!selectedMapOptions)
-        dispatch(setSelectedMapHideShow(!selectedMapOptions));
+        setSelectedMapOptions(true)
+        dispatch(setSelectedMapHideShow(true));
     };
     function isValidEmail(email) {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -246,7 +246,7 @@ const Layers = ({ width }) => {
                                 <Search />
                                 <div style={{ marginTop: 8, alignItems: 'flex-end', textAlign: 'right' }}>
                                     <div onClick={selectedOnTheMap} style={{ color: '#0087b7', fontSize: 14, cursor: 'pointer'  }}>
-                                        <Marker color="#0087b7" size="14" /> Select On the Map {selectedMapOptions ? 'X':''}
+                                        <Marker color="#0087b7" size="14" /> Select On the Map
                                     </div>
                                 </div>
 
