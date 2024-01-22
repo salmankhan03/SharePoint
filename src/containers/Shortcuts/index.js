@@ -88,7 +88,7 @@ const Shortcuts = () => {
                 >
                     <div
                         style={{
-                            position: "absolute",
+                            position: "fixed",
                             left:  420,
                             // top: '15%',
                             display: 'flex',
