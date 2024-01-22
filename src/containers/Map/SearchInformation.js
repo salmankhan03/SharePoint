@@ -5,7 +5,7 @@ import _ from 'lodash';
 import InfoBox from './Infobox';
 import InfoCard from '../../components/InfoCard';
 import Summary from '../../components/Summary';
-import {addSiteDetail, closeInfo, setSelectedMapHideShow} from "../../store";
+import {addSiteDetail, closeInfo, setSelectedMapHideShow,setContactScreenShowHide} from "../../store";
 import Thumbnails from "./Thumbnails";
 import { Button } from "antd";
 import { Row, Col } from "antd";
@@ -14,6 +14,7 @@ const border = '#264475';
 
 const StudyAreas = ({ visible, locationDetail, position, locationName }) => {
     const [button, setButton] = useState('select')
+    const contactScreenShowHide = useSelector((state) => state.contactScreenShowHide);
     const dispatch = useDispatch();
     const onClose = useCallback(() => {
         dispatch(closeInfo());
@@ -31,7 +32,7 @@ const StudyAreas = ({ visible, locationDetail, position, locationName }) => {
 
     const span = 24 / '100%';
     return (
-        <InfoCard title={locationName} onClose={onClose} visible={visible}  position={position}>
+        <InfoCard title={locationName} onClose={onClose} visible={contactScreenShowHide}  position={position}>
             {/*<Thumbnails />*/}
             {/*{<Summary dataSource={locationDetail} />}*/}
             <Col span={span} className={'columnButtons'} style={{ ...styles.columnWithBorder }}>
@@ -41,7 +42,7 @@ const StudyAreas = ({ visible, locationDetail, position, locationName }) => {
                         button === 'select' ? "sitewise-info-details-button" : "sitewise-info-remove-details-button"
                     }
                     onClick={(e) => button === 'select' ? onClick(e) : onClose()}
-                    // disabled={disabled}
+                    disabled={contactScreenShowHide}
                     style={styles.button}
                 >
                     {button === 'select' ? 'Select' : 'Remove' }

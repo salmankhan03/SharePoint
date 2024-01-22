@@ -42,7 +42,7 @@ const InfoCard = ({
                                 className="sitewise-light-button"
                                 onClick={onClose}
                                 style={styles.cornerButton}
-                                disabled={false}
+                                disabled={visible}
                             >
                                 <CloseOutlined style={styles.font} />
                             </Button>

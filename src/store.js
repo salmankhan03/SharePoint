@@ -36,7 +36,8 @@ const initialState = {
     viewSideDetailFields: false,
     validateData: undefined,
     mapTypeId: "roadmap",
-    searchByButtonClick: false
+    searchByButtonClick: false,
+    contactScreenShowHide:false
 };
 
 const mapSlice = createSlice({
@@ -133,6 +134,12 @@ const mapSlice = createSlice({
             return {
                 ...state,
                 searchByButtonClick: action.payload
+            };
+        },
+        setContactScreenShowHide: (state, action) => {
+            return {
+                ...state,
+                contactScreenShowHide: action.payload
             };
         },
     },
@@ -242,6 +249,9 @@ export const setMapTypeId = (path, value) => async (dispatch, getState) => {
 
 export const setSelectedMapHideShow = (value) => async (dispatch) => {
     dispatch(mapSlice.actions.setSelectedMapHideShow(value));
+};
+export const setContactScreenShowHide = (value) => async (dispatch) => {
+    dispatch(mapSlice.actions.setContactScreenShowHide(value));
 };
 
 

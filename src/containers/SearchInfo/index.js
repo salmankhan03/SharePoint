@@ -12,7 +12,7 @@ import { CaretDownOutlined, CaretRightOutlined, DeleteOutlined, MapOutlined } fr
 
 import LeftDrawerContent from "../../components/LeftDrawerContent";
 import Search from "../Search";
-import { center, closeInfo, setSelectedMapHideShow } from "../../store";
+import { center, closeInfo, setSelectedMapHideShow,setContactScreenShowHide } from "../../store";
 import axios from 'axios';
 import submitSuccess from '../../assets/images/submitSuccess.svg'
 import optionalFieldDown from '../../assets/images/optionalFieldDown.svg'
@@ -103,12 +103,14 @@ const Layers = ({ width }) => {
     const handleBackStep = () => {
         if (currentStep === 2) {
             setCurrentStep(1);
+            dispatch(setContactScreenShowHide(false))
         }
     };
 
     const moveNextStep = () => {
         if (currentStep === 1) {
             setCurrentStep(2);
+            dispatch(setContactScreenShowHide(true))
         }
     }
 
