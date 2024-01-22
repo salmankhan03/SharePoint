@@ -1,17 +1,18 @@
 import React from "react";
 import { Spin } from 'antd';
-// import logo from "../assets/images/SW-logo_white.png";
+import logo from "../assets/images/sitewise_logo.png";
 
 const Loading = () => {
     return (
         <div className="loading-page">
             <div style={styles.loading}>
                 <div style={styles.loadingWebLogo}>
-                    {/*<img*/}
-                    {/*    src={logo}*/}
-                    {/*    alt={"sitewise logo"}*/}
-                    {/*    width="300"*/}
-                    {/*/>*/}
+                    <img
+                       src={logo}
+                        alt={"sitewise logo"}
+                        width="122"
+                        height="27"
+                    />
                 </div>
                 <div className="loadingLogo">
                     <Spin size="large" tip="Loading Shared Map..." />
