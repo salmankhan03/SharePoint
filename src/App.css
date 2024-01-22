@@ -274,3 +274,10 @@ button.gm-ui-hover-effect {
   border-style: none;
 }
 
+.gm-style-iw-c {
+border-radius: 4px !important;
+}
+:where(.css-dev-only-do-not-override-dkbvqv).ant-btn-primary:hover {
+  color: #fff;
+  background: #0087B7 !important;
+}
