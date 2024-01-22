@@ -245,8 +245,8 @@ const Layers = ({ width }) => {
                                 <div style={{ color: '#021E4F', fontWeight: 700, fontSize: '14px', margin: '15px 2px' }}>{instructionParagraphs}</div>
                                 <Search />
                                 <div style={{ marginTop: 8, alignItems: 'flex-end', textAlign: 'right' }}>
-                                    <div onClick={selectedOnTheMap} style={{ color: '#0087b7', fontSize: 14, cursor: 'pointer' }}>
-                                        <Marker color="#0087b7" size="14" /> Select On the Map
+                                    <div onClick={selectedOnTheMap} style={{ color: '#0087b7', fontSize: 14, cursor: 'pointer'  }}>
+                                        <Marker color="#0087b7" size="14" /> Select On the Map {selectedMapOptions ? 'X':''}
                                     </div>
                                 </div>
 
