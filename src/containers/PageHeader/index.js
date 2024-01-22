@@ -1,12 +1,12 @@
 import React from 'react';
 import {useSelector} from "react-redux";
-import logo from '../../assets/images/SW-logo_white.png'
+import logo from '../../assets/images/sitewise_logo.png'
 
 const PageHeaders = () => {
     const validateData = useSelector((state) => state.validateData);
     return (
         <div style={styles.pageHeader}>
-            <div style={{ display: 'flex', justifyContent: "space-between", alignItems: 'center', height: '100%',padding: '0 35px' }}>
+            <div style={{ display: 'flex', justifyContent: "space-between", alignItems: 'center', height: '100%',padding: '0 15px' }}>
                 <div style={{color: '#fff', fontSize: '20px', fontWeight: 500, display: 'flex', alignItems: 'center' }}>
                     <img
                         src={logo}
