@@ -61,7 +61,7 @@ const Search = () => {
 const styles = {
   container: {
     width: 'auto',
-    border: `1px solid #AFB6C4`,
+    border: `1px solid #aeb9ca`,
     borderRadius: 4,
     // filter: "drop-shadow(0px 2px 5px rgba(44, 56, 73, 0.15))",
   },
