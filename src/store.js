@@ -75,6 +75,13 @@ const mapSlice = createSlice({
                 viewSideDetailFields: false
             };
         },
+        onHideShowInfo: (state, action) => {
+            console.log(action)
+            return {
+                ...state,
+                display: action.payload,
+            };
+        },
         pressSearchPoint: (state, action) => {
             return {
                 ...state,
@@ -258,6 +265,9 @@ export const validateData = (data) => async (dispatch) => {
 
 export const closeInfo = (value) => async (dispatch, getState) => {
     dispatch(mapSlice.actions.closeInfo(value));
+};
+export const onHideShowInfo = (value) => async (dispatch) => {
+    dispatch(mapSlice.actions.onHideShowInfo(value));
 };
 
 export const addSiteDetail = (value) => async (dispatch, getState) => {

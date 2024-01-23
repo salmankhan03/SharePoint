@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Marker } from '@react-google-maps/api';
 import icon from './icon';
-import { setAddress, setPosition } from "../../store";
+import { onHideShowInfo, setAddress, setPosition } from "../../store";
 
 const SearchMarker = () => {
     const position = useSelector((state) => state.position);
@@ -34,7 +34,9 @@ const SearchMarker = () => {
 
         dispatch(setPosition(newPosition))
     };
-
+    const showInfo= () =>{
+        dispatch(onHideShowInfo(true));
+    }
     return (
         position && (
             <>
@@ -43,6 +45,7 @@ const SearchMarker = () => {
                     icon={icon}
                     draggable={true}
                     onDragEnd={onMarkerDragEnd}
+                    onClick={showInfo}
                 />
             </>
         )

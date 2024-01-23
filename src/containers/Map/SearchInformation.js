@@ -5,7 +5,7 @@ import _ from 'lodash';
 import InfoBox from './Infobox';
 import InfoCard from '../../components/InfoCard';
 import Summary from '../../components/Summary';
-import {addSiteDetail, closeInfo, setSelectedMapHideShow,setContactScreenShowHide} from "../../store";
+import {addSiteDetail, closeInfo, setSelectedMapHideShow,setContactScreenShowHide, onHideShowInfo} from "../../store";
 import Thumbnails from "./Thumbnails";
 import { Button } from "antd";
 import { Row, Col } from "antd";
@@ -23,6 +23,9 @@ const StudyAreas = ({ visible, locationDetail, position, locationName }) => {
     useEffect(()=>{
         onClick()
     },[])
+    const onHide = useCallback(() => {
+        dispatch(onHideShowInfo(false));
+    }, [dispatch]);
 
     const onClick = (e) => {
         // e.stopPropagation();
@@ -32,7 +35,7 @@ const StudyAreas = ({ visible, locationDetail, position, locationName }) => {
 
     const span = 24 / '100%';
     return (
-        <InfoCard title={locationName} onClose={onClose} visible={contactScreenShowHide}  position={position}>
+        <InfoCard title={locationName} onClose={onHide} visible={contactScreenShowHide}  position={position}>
             {/*<Thumbnails />*/}
             {/*{<Summary dataSource={locationDetail} />}*/}
             <Col span={span} className={'columnButtons'} style={{ ...styles.columnWithBorder }}>
