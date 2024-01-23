@@ -1,6 +1,7 @@
 import { configureStore, createSlice } from "@reduxjs/toolkit";
 import _ from "lodash";
 import { message } from "antd";
+import { mapBounds } from "./helpers/mapLocation";
 // import uuid from "uuid";
 
 
@@ -37,7 +38,8 @@ const initialState = {
     validateData: undefined,
     mapTypeId: "roadmap",
     searchByButtonClick: false,
-    contactScreenShowHide:false
+    contactScreenShowHide: false,
+    rotationAngle: 0,
 };
 
 const mapSlice = createSlice({
@@ -90,10 +92,9 @@ const mapSlice = createSlice({
                 viewSideDetailFields: true
             };
         },
-
-
-
-
+        zoom: (state, action) => {
+            return { ...state, zoom: action.payload };
+        },
         setLayer: (state, action) => {
             return {
                 ...state,
@@ -105,8 +106,8 @@ const mapSlice = createSlice({
                 ...state,
                 locationDetail: action.payload.locationDetail,
                 locationName: action.payload.locationName,
-                center: {lat: action.payload.lat, lng: action.payload.lng},
-                position: {lat: action.payload.lat, lng: action.payload.lng},
+                center: { lat: action.payload.lat, lng: action.payload.lng },
+                position: { lat: action.payload.lat, lng: action.payload.lng },
                 selected: action.payload.id,
                 display: true
             };
@@ -142,6 +143,29 @@ const mapSlice = createSlice({
                 contactScreenShowHide: action.payload
             };
         },
+        setClockRotation: (state, action) => {
+            return {
+                ...state,
+                rotationAngle: action.payload,
+            };
+        },
+        setAntiClockRotation: (state, action) => {
+            return {
+                ...state,
+                rotationAngle: action.payload,
+            };
+        },
+        setStateProps: (state, action) => {
+            const { path, value } = action.payload;
+            return {
+                ...state,
+                [path]: value,
+            };
+        },
+        saveMapRef: (state, action) => {
+            return { ...state, ref: action.payload };
+        },
+
     },
 });
 
@@ -223,6 +247,11 @@ export const searchMapLocation = (input) => (dispatch, getState) => {
     });
 };
 
+export const saveMapRef = (map) => async (dispatch, getState) => {
+    // console.log("map ==>",map)
+    dispatch(mapSlice.actions.saveMapRef(map));
+};
+
 export const validateData = (data) => async (dispatch) => {
     dispatch(mapSlice.actions.validateData(data));
 };
@@ -254,6 +283,34 @@ export const setContactScreenShowHide = (value) => async (dispatch) => {
     dispatch(mapSlice.actions.setContactScreenShowHide(value));
 };
 
+export const rotateMapClockwise = (value) => async (dispatch) => {
+    dispatch(mapSlice.actions.setClockRotation(value));
+};
+
+export const rotateMapAntiClockwise = (value) => async (dispatch) => {
+    dispatch(mapSlice.actions.setAntiClockRotation(value));
+};
+
+
+export const setStateProps = (path, value) => (dispatch, getState) => {
+    dispatch(mapSlice.actions.setStateProps({ path, value }));
+};
+
+export const setMapBounds = () => async (dispatch, getState) => {
+    const { ref } = getState();
+    if (ref) {
+        const bounds = mapBounds(ref);
+        dispatch(setStateProps("bounds", bounds));
+    }
+};
+
+export const setMapZoom = () => async (dispatch, getState) => {
+    const ref = getState()?.ref;
+    console.log("ref ==>", ref)
+    if (ref) {
+        dispatch(mapSlice.actions.zoom(ref?.getZoom()));
+    }
+};
 
 
 

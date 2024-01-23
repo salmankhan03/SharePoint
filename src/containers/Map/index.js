@@ -1,10 +1,11 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState,useRef  } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { GoogleMap, DrawingManager } from "@react-google-maps/api";
 
 import SearchInformation from './SearchInformation'
 import SearchMarker from "./SearchMarker";
-import { setAddress, setLocation, setSelectedMapHideShow } from "../../store";
+import { setAddress, setLocation, setSelectedMapHideShow,setMapZoom,setMapBounds,saveMapRef } from "../../store";
+import _ from "lodash";
 
 const streetViewOptions = {
     addressControl: true,
@@ -18,6 +19,10 @@ const Map = () => {
     const searchByButtonClick = useSelector((state) => state.searchByButtonClick);
     const total = useSelector((state) => state);
     const [mapPosition, setMapPosition] = useState(position)
+    const mapRef = useRef(null);
+    const { rotationAngle } = useSelector((state) => state);
+    // console.log("rotationAngle ==>",rotationAngle)
+
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -27,14 +32,35 @@ const Map = () => {
     const [map, setMap] = useState(null);
     const onLoad = useCallback(
         (map) => {
+            dispatch(saveMapRef(map))
             setMap(map);
+            mapRef.current = map;
         },
         [setMap]
     );
+    const onZoomChanged = useCallback(() => dispatch(setMapZoom()), [dispatch]);
+    const onBoundsChanged = useCallback(
+      () => dispatch(setMapBounds()),
+      [dispatch]
+    );
 
-    const onUnmount = useCallback(function callback(map) {
+    useEffect(() => {
+        const map = mapRef.current;
+        if (map) {
+          map.setOptions({
+            gestureHandling: 'greedy',
+            rotateControl: true,
+            streetViewControl: true,
+            tilt: 45,
+            heading: rotationAngle,
+          });
+        }
+      }, [rotationAngle])
+    
+      const onUnmount = useCallback(function callback(map) {
         setMap(null);
-    }, []);
+      }, []);
+
 
     const onMapClick = useCallback(
         (event) => {
@@ -79,6 +105,7 @@ const Map = () => {
             streetViewControl: false,
             disableDefaultUI: true,
             draggableCursor: searchByButtonClick ? 'crosshair' : 'grab',
+            gestureHandling: 'greedy',
             styles: [
                 {
                     featureType: "poi",
@@ -94,6 +121,10 @@ const Map = () => {
         onClick: searchByButtonClick ? onMapClick : undefined, // Only attach onClick if searchByButtonClick is true
         onLoad,
         onUnmount,
+        heading: rotationAngle,
+        onZoomChanged: _.debounce(onZoomChanged, 500),
+        onBoundsChanged: _.debounce(onBoundsChanged, 500),
+
     };
 
     return (

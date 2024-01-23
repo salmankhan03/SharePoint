@@ -1,10 +1,16 @@
 import React, { useEffect, useRef, useState } from "react";
 import MapTypes from "../MapTypes";
 import { useDispatch, useSelector } from "react-redux";
-import { Button } from "antd";
+// import { Button } from "antd";
 import CloseOutlined from "@ant-design/icons/lib/icons/CloseOutlined";
+import RotationClockwiseIcon from "../../assets/icons/RotationClockwiseIcon";
+import RotationRoadIcon from "../../assets/icons/RotationRoadIcon";
+import RotationIcon from "../../assets/icons/RotationIcon";
+import RotationAntiClockwiseIcon from "../../assets/icons/RotationAntiClockwiseIcon";
 
-import { closeInfo, setSelectedMapHideShow } from "../../store";
+
+import { closeInfo, setSelectedMapHideShow,rotateMapClockwise,rotateMapAntiClockwise } from "../../store";
+import PrimarySquareButton from "../../components/PrimarySquareButton";
 
 
 
@@ -13,8 +19,23 @@ const Shortcuts = () => {
 
     const mapTypeId = useSelector((state) => state.mapTypeId);
     const searchByButtonClick = useSelector((state) => state.searchByButtonClick);
+    // const zoom = 12;
+    const zoom = useSelector((state) => state.zoom);
+
+    console.log("zoom",zoom)
+    const { rotationAngle } = useSelector((state) => state);
 
     const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+    const [rotate, setRotate] = useState(false)
+
+    
+const Button = ({ buttonStyle, ...props }) => (
+    <PrimarySquareButton
+      {...props}
+      buttonStyle={{ left: -48, ...buttonStyle }}
+    />
+  );
+
     const onClose = () => {
         // dispatch(endMapMeasure())
         dispatch(setSelectedMapHideShow(false));
@@ -34,6 +55,21 @@ const Shortcuts = () => {
             window.removeEventListener('resize', handleResize);
         };
     }, []);
+
+    
+  const handleOpenRotate = () => {
+    setRotate(!rotate)
+  }
+  const rotateClockwise = () => {
+    console.log("call")
+    const newRotationAngle = rotationAngle + 90;
+    dispatch(rotateMapClockwise(newRotationAngle))
+  };
+
+  const rotateAntiClockwise = () => {
+    const newRotationAngle = rotationAngle - 90;
+    dispatch(rotateMapAntiClockwise(newRotationAngle))
+  };
 
     const dynamicStyle = {
         fontSize: 14,
@@ -64,10 +100,35 @@ const Shortcuts = () => {
                         display: 'flex',
                         flexDirection: 'column',
                         alignItems: 'end',
-                        cursor:"pointer"
+                        cursor: "pointer"
                         // right: 15,
                     }}
                 >
+                    {(zoom > 12 && ( mapTypeId === "hybrid")) &&
+                        <div style={{marginBottom:15}}>
+                            <Button
+                                icon={rotate === true ? RotationRoadIcon : RotationIcon}
+                                onClick={handleOpenRotate}
+                                buttonStyle={styles.openRotation}
+                                iconStyle={styles.world}
+                            />
+                            {rotate === true &&
+                                <>
+                                    <Button
+                                        icon={RotationClockwiseIcon}
+                                        onClick={rotateClockwise}
+                                        buttonStyle={styles.clock}
+                                        iconStyle={styles.world}
+                                    />
+                                    <Button
+                                        icon={RotationAntiClockwiseIcon}
+                                        onClick={rotateAntiClockwise}
+                                        buttonStyle={styles.antiClock}
+                                        iconStyle={styles.world}
+                                    />
+                                </>}
+                        </div>
+                      }
                     <div>
                         <MapTypes />
                     </div>
@@ -89,7 +150,7 @@ const Shortcuts = () => {
                     <div
                         style={{
                             position: "fixed",
-                            left:  420,
+                            left: 420,
                             // top: '15%',
                             display: 'flex',
                             flexDirection: 'column',
@@ -101,7 +162,7 @@ const Shortcuts = () => {
                         <div style={styles.container} className="ant-notification-notice">
                             <div style={styles.header}>
                                 <div>
-                                    <div className="ant-notification-notice-message" style={{marginBottom:8}}>Select location</div>
+                                    <div className="ant-notification-notice-message" style={{ marginBottom: 8 }}>Select location</div>
                                     <div className="ant-notification-notice-description">Click a point on the map to select a location to submit</div>
                                 </div>
                                 {/* <div onClick={onClose}>
@@ -141,9 +202,34 @@ const styles = {
     header: { display: 'flex', justifyContent: 'space-between' },
     closeIcon: { fontSize: 16, color: '#ccc', cursor: 'pointer', marginTop: 6 },
     flex: { display: 'flex' },
-    footer: { marginTop: 10, display: 'flex', justifyContent: 'flex-end', }, 
-    button: { padding: 0, fontWeight: 500, color:'red'},
-    font: { fontSize: 14 }
+    footer: { marginTop: 10, display: 'flex', justifyContent: 'flex-end', },
+    button: { padding: 0, fontWeight: 500, color: 'red' },
+    font: { fontSize: 14 },
+    world: { fontSize: 20, backgroundColor: "white", padding: 4 },
+    openRotation: {
+        top: 70,
+        fontSize: 20,
+        borderRadius: '4px 4px 4px 4px',
+        backgroundColor: "white",
+        padding: 8,
+        cursor: "pointer"
+      },
+      clock: {
+        top: 110,
+        fontSize: 20,
+        // borderRadius: '4px',
+        backgroundColor: "white",
+        padding: 8,
+        cursor: "pointer"
+      },
+      antiClock: {
+        top: 150,
+        fontSize: 20,
+        borderRadius: '4px',
+        backgroundColor: "white",
+        padding: 8,
+        cursor: "pointer"
+      },
 
 };
 
