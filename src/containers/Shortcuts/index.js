@@ -186,9 +186,9 @@ const Button = ({ buttonStyle, ...props }) => (
                             </div>
                             <div style={styles.footer}>
                                 <div style={styles.flex}>
-                                    <Button style={styles.button} type="link" onClick={onClose}>
+                                    <button style={styles.button} type="link" onClick={onClose}>
                                         <u>Close</u>
-                                    </Button>
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -218,7 +218,7 @@ const styles = {
     closeIcon: { fontSize: 16, color: '#ccc', cursor: 'pointer', marginTop: 6 },
     flex: { display: 'flex' },
     footer: { marginTop: 10, display: 'flex', justifyContent: 'flex-end', },
-    button: { padding: 0, fontWeight: 500, color: 'red' },
+    button: { padding: 0, fontWeight: 500, color: 'red',border:'none',backgroundColor:'transparent' },
     font: { fontSize: 14 },
     world: { fontSize: 20, backgroundColor: "white", padding: 4 },
     openRotation: {
