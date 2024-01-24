@@ -359,8 +359,8 @@ const Layers = ({ width }) => {
 
 const styles = {
     container: { display: "flex", flexDirection: "column", height: "100vh" },
-    topBox: { height: "calc(93vh - 70px)", backgroundColor: '#FAFAFC', overflow: 'auto' },
-    bottomBox: { height: "7vh", borderTop: '1px solid #AEB9CA', backgroundColor: '#FFFFFF' },
+    topBox: { height: "calc(100vh - 135px)", backgroundColor: '#FAFAFC', overflow: 'auto' },
+    bottomBox: { height: "65px", borderTop: '1px solid #AEB9CA', backgroundColor: '#FFFFFF' },
     containerDiv: { padding: '15px' },
     mapDetailsContainer: {
         padding: '15px',
