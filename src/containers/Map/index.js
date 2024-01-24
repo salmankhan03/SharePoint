@@ -53,7 +53,7 @@ const Map = () => {
         if (map) {
           map.setOptions({
             gestureHandling: 'greedy',
-            rotateControl: true,
+            // rotateControl: true,
             streetViewControl: true,
             tilt: tilt=== true ? 0 :90,
             heading: rotationAngle,
