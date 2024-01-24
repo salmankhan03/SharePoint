@@ -21,7 +21,11 @@ const Map = () => {
     const [mapPosition, setMapPosition] = useState(position)
     const mapRef = useRef(null);
     const { rotationAngle } = useSelector((state) => state);
-    // console.log("rotationAngle ==>",rotationAngle)
+    const { tilt } = useSelector((state) => state);
+    
+    console.log("tilt ==>",tilt)
+
+    console.log("rotationAngle ==>",rotationAngle)
 
     const dispatch = useDispatch();
 
@@ -51,11 +55,11 @@ const Map = () => {
             gestureHandling: 'greedy',
             rotateControl: true,
             streetViewControl: true,
-            tilt: 45,
+            tilt: tilt=== true ? 0 :90,
             heading: rotationAngle,
           });
         }
-      }, [rotationAngle])
+      }, [rotationAngle,tilt])
     
       const onUnmount = useCallback(function callback(map) {
         setMap(null);
@@ -121,6 +125,7 @@ const Map = () => {
         onClick: searchByButtonClick ? onMapClick : undefined, // Only attach onClick if searchByButtonClick is true
         onLoad,
         onUnmount,
+        tilt:tilt,
         heading: rotationAngle,
         onZoomChanged: _.debounce(onZoomChanged, 500),
         onBoundsChanged: _.debounce(onBoundsChanged, 500),

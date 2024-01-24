@@ -9,7 +9,7 @@ import RotationIcon from "../../assets/icons/RotationIcon";
 import RotationAntiClockwiseIcon from "../../assets/icons/RotationAntiClockwiseIcon";
 
 
-import { closeInfo, setSelectedMapHideShow,rotateMapClockwise,rotateMapAntiClockwise } from "../../store";
+import { closeInfo, setSelectedMapHideShow,rotateMapClockwise,rotateMapAntiClockwise, rotateMapUp, setMapZoom } from "../../store";
 import PrimarySquareButton from "../../components/PrimarySquareButton";
 
 
@@ -24,6 +24,7 @@ const Shortcuts = () => {
 
     console.log("zoom",zoom)
     const { rotationAngle } = useSelector((state) => state);
+    const { tilt } = useSelector((state) => state);
 
     const [windowWidth, setWindowWidth] = useState(window.innerWidth);
     const [rotate, setRotate] = useState(false)
@@ -58,8 +59,21 @@ const Button = ({ buttonStyle, ...props }) => (
 
     
   const handleOpenRotate = () => {
+    console.log("TiltUp Call",rotate)
+    if(rotate === true){
+        rotateUp(true)
+    }else{
+        rotateUp(false)
+    }
     setRotate(!rotate)
   }
+  const rotateUp = (data) => {
+
+    console.log("rotateUp rotateUp call")
+    const newTilt = data;
+    dispatch(rotateMapUp(newTilt))
+  };
+
   const rotateClockwise = () => {
     console.log("call")
     const newRotationAngle = rotationAngle + 90;
@@ -68,6 +82,7 @@ const Button = ({ buttonStyle, ...props }) => (
 
   const rotateAntiClockwise = () => {
     const newRotationAngle = rotationAngle - 90;
+    console.log("newRotationAngle ==>",newRotationAngle)
     dispatch(rotateMapAntiClockwise(newRotationAngle))
   };
 

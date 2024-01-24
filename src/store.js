@@ -40,6 +40,7 @@ const initialState = {
     searchByButtonClick: false,
     contactScreenShowHide: false,
     rotationAngle: 0,
+    tilt:false
 };
 
 const mapSlice = createSlice({
@@ -160,6 +161,12 @@ const mapSlice = createSlice({
             return {
                 ...state,
                 rotationAngle: action.payload,
+            };
+        },
+        rotateMapUp: (state, action) => {
+            return {
+                ...state,
+                tilt: action.payload,
             };
         },
         setStateProps: (state, action) => {
@@ -299,6 +306,9 @@ export const rotateMapClockwise = (value) => async (dispatch) => {
 
 export const rotateMapAntiClockwise = (value) => async (dispatch) => {
     dispatch(mapSlice.actions.setAntiClockRotation(value));
+};
+export const rotateMapUp = (value) => async (dispatch) => {
+    dispatch(mapSlice.actions.rotateMapUp(value));
 };
 
 
