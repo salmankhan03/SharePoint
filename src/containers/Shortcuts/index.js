@@ -114,7 +114,7 @@ const Button = ({ buttonStyle, ...props }) => (
                         bottom: 35,
                         display: 'flex',
                         flexDirection: 'column',
-                        alignItems: 'center',
+                        alignItems: 'flex-end',
                         cursor: "pointer"
                         // right: 15,
                     }}
