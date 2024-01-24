@@ -1,11 +1,11 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import _ from 'lodash';
 
 import InfoBox from './Infobox';
 import InfoCard from '../../components/InfoCard';
 import Summary from '../../components/Summary';
-import {addSiteDetail, closeInfo, setSelectedMapHideShow,setContactScreenShowHide, onHideShowInfo} from "../../store";
+import { addSiteDetail, closeInfo, setSelectedMapHideShow, setContactScreenShowHide, onHideShowInfo } from "../../store";
 import Thumbnails from "./Thumbnails";
 import { Button } from "antd";
 import { Row, Col } from "antd";
@@ -20,9 +20,9 @@ const StudyAreas = ({ visible, locationDetail, position, locationName }) => {
         dispatch(closeInfo());
         dispatch(setSelectedMapHideShow(false));
     }, [dispatch]);
-    useEffect(()=>{
+    useEffect(() => {
         onClick()
-    },[])
+    }, [])
     const onHide = useCallback(() => {
         dispatch(onHideShowInfo(false));
     }, [dispatch]);
@@ -33,22 +33,23 @@ const StudyAreas = ({ visible, locationDetail, position, locationName }) => {
         setButton('remove')
     }
 
+
     const span = 24 / '100%';
     return (
-        <InfoCard title={locationName} onClose={onHide} visible={contactScreenShowHide}  position={position}>
+        <InfoCard title={locationName} onClose={onHide} visible={contactScreenShowHide} position={position}>
             {/*<Thumbnails />*/}
             {/*{<Summary dataSource={locationDetail} />}*/}
             <Col span={span} className={'columnButtons'} style={{ ...styles.columnWithBorder }}>
                 <Button
                     type={'primary'}
                     className={
-                        button === 'select' ? "sitewise-info-details-button" : "sitewise-info-remove-details-button"
+                        button === 'select' ? "sitewise-info-remove-details-button" : "sitewise-info-remove-details-button"
                     }
                     onClick={(e) => button === 'select' ? onClick(e) : onClose()}
                     disabled={contactScreenShowHide}
                     style={styles.button}
                 >
-                    {button === 'select' ? 'Select' : 'Remove' }
+                    {button === 'select' ? 'Select' : 'Remove'}
                 </Button>
             </Col>
         </InfoCard>
@@ -63,7 +64,7 @@ const StudyAreaInfo = () => {
     console.log('display------------------------', display)
     return (
         <InfoBox visible={display} position={position}>
-            <StudyAreas locationDetail={locationDetail} position={position} locationName={locationName}/>
+            <StudyAreas locationDetail={locationDetail} position={position} locationName={locationName} />
         </InfoBox>
     );
 };
