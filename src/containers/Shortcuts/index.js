@@ -213,12 +213,12 @@ const styles = {
     flex: { display: "flex" },
     siteLogo: { fontSize: "25px", fontWeight: "bold" },
     // font: {fontSize: 14, fontWeight: 500, color: "#021E4F", fontFamily: 'Roboto', marginTop: 15 }
-    container: { width: 200, marginTop: 0, fontSize: 12, padding: '6px 12px' },
+    container: { width: 200, marginTop: 0, fontSize: 12, padding: '6px 12px',cursor:'pointer' },
     header: { display: 'flex', justifyContent: 'space-between' },
     closeIcon: { fontSize: 16, color: '#ccc', cursor: 'pointer', marginTop: 6 },
     flex: { display: 'flex' },
     footer: { marginTop: 10, display: 'flex', justifyContent: 'flex-end', },
-    button: { padding: 0, fontWeight: 500, color: 'red',border:'none',backgroundColor:'transparent' },
+    button: { padding: 0, fontWeight: 500, color: 'red',border:'none',backgroundColor:'transparent',cursor:'pointer' },
     font: { fontSize: 14 },
     world: { fontSize: 20, backgroundColor: "white", padding: 4 },
     openRotation: {
