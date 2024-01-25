@@ -12,15 +12,16 @@ import { CaretDownOutlined, CaretRightOutlined, DeleteOutlined, MapOutlined } fr
 
 import LeftDrawerContent from "../../components/LeftDrawerContent";
 import Search from "../Search";
-import { center, closeInfo, setSelectedMapHideShow,setContactScreenShowHide } from "../../store";
+import { center, closeInfo, setSelectedMapHideShow, setContactScreenShowHide } from "../../store";
 import axios from 'axios';
 import submitSuccess from '../../assets/images/submitSuccess.svg'
 import optionalFieldDown from '../../assets/images/optionalFieldDown.svg'
+import { useDropzone } from 'react-dropzone';
 
 import { message } from 'antd';
 import Marker from "../../assets/icons/Marker"
-
-
+import UploadIcon from "../../assets/icons/UploadIcon";
+import TrashIcon from "../../assets/icons/TrashIcon";
 const { Option } = Select;
 const { TextArea } = AntInput;
 
@@ -88,28 +89,30 @@ const Layers = ({ width }) => {
 
     const instructionParagraphs = validateData?.instructions?.replace(/<br\/>/g, '');
     const storedContactInfo = JSON.parse(localStorage.getItem('contactInfo')) || { name: '', email: '' };
-    const [mapData, setMapData] = useState({ mapName: '', comments: '',name:'',email:'' });
+    const [mapData, setMapData] = useState({ mapName: '', comments: '', name: '', email: '' });
     const [submitSuccessFull, SetSubmitSuccessFull] = useState(false)
     const [optionalField, SetOptionalField] = useState(false)
+    const [selectedFiles, setSelectedFiles] = useState([]);
+
 
     useEffect(() => {
-       setMapData((prevMapData) => ({
+        setMapData((prevMapData) => ({
             ...prevMapData,
             mapName: locationDetail,
-            name: storedContactInfo ? storedContactInfo.name :'',
-            email:storedContactInfo ? storedContactInfo.email :'',
+            name: storedContactInfo ? storedContactInfo.name : '',
+            email: storedContactInfo ? storedContactInfo.email : '',
         }));
     }, [locationDetail])
     const handleBackStep = () => {
-        if (currentStep === 2) {
-            setCurrentStep(1);
+        if (currentStep === 3 || currentStep === 2) {
+            setCurrentStep(currentStep - 1);
             dispatch(setContactScreenShowHide(false))
         }
     };
 
     const moveNextStep = () => {
-        if (currentStep === 1) {
-            setCurrentStep(2);
+        if (currentStep === 1 || currentStep === 2) {
+            setCurrentStep(currentStep + 1);
             dispatch(setContactScreenShowHide(true))
         }
     }
@@ -231,7 +234,36 @@ const Layers = ({ width }) => {
     function isValidEmail(email) {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         return emailRegex.test(email);
-      }
+    }
+
+    const onDrop = useCallback((acceptedFiles) => {
+        setSelectedFiles((prevFiles) => [...prevFiles, ...acceptedFiles]);
+    }, []);
+
+    const { getRootProps, getInputProps, isDragActive } = useDropzone({
+        accept: ['image/jpeg', 'image/png', 'application/pdf', 'image/gif'],
+        onDrop,
+    });
+    const removeFile = (fileName) => {
+        setSelectedFiles((prevFiles) => prevFiles.filter((file) => file.name !== fileName));
+    };
+
+    const renderFiles = () => {
+        return selectedFiles.map((file) => (
+            <Row style={{ marginTop: 10 }}>
+                <Col span={18}>
+                    <div style={styles.fileListText}>{file.name}</div>
+                </Col>
+                <Col span={6}>
+                    <div style={styles.textEnd}onClick={() => removeFile(file.name)}>
+                        <TrashIcon size="14" />
+                    </div>
+                </Col>
+            </Row>
+        ));
+    };
+
+
 
     return (
         <div style={styles.container}>
@@ -245,7 +277,7 @@ const Layers = ({ width }) => {
                                 <div style={{ color: '#021E4F', fontWeight: 700, fontSize: '14px', margin: '15px 2px' }}>{instructionParagraphs}</div>
                                 <Search />
                                 <div style={{ marginTop: 8, alignItems: 'flex-end', textAlign: 'right' }}>
-                                    <div onClick={selectedOnTheMap} style={{ color: '#0087b7', fontSize: 14, cursor: 'pointer'  }}>
+                                    <div onClick={selectedOnTheMap} style={{ color: '#0087b7', fontSize: 14, cursor: 'pointer' }}>
                                         <Marker color="#0087b7" size="14" /> Select On the Map
                                     </div>
                                 </div>
@@ -296,6 +328,43 @@ const Layers = ({ width }) => {
                             <>
                                 <div>
                                     <Row>
+                                        <Col span={24} style={styles.fileUploadHeading}>File Upload (optional)</Col>
+                                    </Row>
+                                    <div style={styles.uploadContainer}>
+                                        <div {...getRootProps()} className={`dropzone ${isDragActive ? 'active' : ''}`}>
+                                            <input {...getInputProps()} />
+                                            <p style={styles.textCenter}>  <UploadIcon color="#0087b7" size="14" /> </p>
+                                            <p style={styles.infoText}>
+                                                <i className="fas fa-cloud-upload-alt"></i> Drag and drop files here
+                                            </p>
+                                            <p style={styles.infoText}>or</p>
+                                        </div>
+                                        <Button 
+                                            type="primary"
+                                            style={styles.BrowseButton}
+                                            onClick={() => document.querySelector('input[type="file"]').click()}>
+                                                +  Browse Files 
+                                        </Button>
+                                    </div>
+                                    <div style={{ marginTop: 7, ...styles.fileFormatText }}>
+                                        The following formats can be uploaded: .pdf, .gif, .jpg or .png
+                                    </div>
+                                    <div>
+                                        {selectedFiles.length > 0 && (
+                                            <div>
+                                                {renderFiles()}
+                                            </div>
+                                        )}
+                                    </div>
+
+                                </div>
+                            </>
+                        }
+                        {
+                            currentStep === 3 && submitSuccessFull === false &&
+                            <>
+                                <div>
+                                    <Row>
                                         <Col span={24} style={styles.mapDetailHeading}>Contact Information</Col>
                                     </Row>
                                     {renderInput('name', 'Name', mapData.name, 'text', 'Name')}
@@ -328,7 +397,7 @@ const Layers = ({ width }) => {
                     <div style={{ marginTop: '16px', width: '100%' }}>
                         <Row>
                             <Col span={18}>
-                                {currentStep === 2 && (
+                                {currentStep !== 1 && (
                                     <Button style={{ marginLeft: '15px' }} onClick={handleBackStep}>Back</Button>
                                 )}
                             </Col>
@@ -337,13 +406,13 @@ const Layers = ({ width }) => {
                                     // style={styles.modalButton}
                                     type="primary"
                                     className={'sitewise-rect-primary-button'}
-                                    onClick={currentStep === 1 ? moveNextStep : handleSubmit}
+                                    onClick={currentStep === 1 || currentStep === 2 ? moveNextStep : handleSubmit}
                                     disabled={
-                                        (currentStep === 1 && (!viewSideDetailFields || mapData.mapName === "" )) || // comments remove =>  || mapData.comments === ""
-                                        (currentStep === 2 && (mapData.name === "" || mapData.email === "" || !isValidEmail(mapData.email)))
+                                        (currentStep === 1 && (!viewSideDetailFields || mapData.mapName === "")) || // comments remove =>  || mapData.comments === ""
+                                        (currentStep === 3 && (mapData.name === "" || mapData.email === "" || !isValidEmail(mapData.email)))
                                     }
                                 >
-                                    {currentStep === 1 ? 'Next' : 'Submit'}
+                                    {currentStep === 1 || currentStep === 2 ? 'Next' : 'Submit'}
                                 </Button>
                             </Col>
                         </Row>
@@ -407,7 +476,79 @@ const styles = {
     },
     inputs: {
         position: 'inherit'
+    },
+    uploadContainer: {
+        border: '1px solid #AEB9CA ',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginTop: 20,
+        backgroundColor: '#fff',
+        padding: 20
+    },
+
+    dropzone: {
+        border: '2px dashed #cccccc',
+        borderRadius: 4,
+        padding: 20,
+        textAlign: 'center',
+        cursor: 'pointer',
+        transition: 'border 0.3s ease-in-out',
+    },
+    fileUploadHeading:{
+        fontFamily:'Roboto',
+        fontSize:14,
+        fontWeight:500,
+        lineHeight:'16px',
+        letterSpacing:'0em',
+        textAlign:'left'
+    },
+    fileFormatText:{
+        fontFamily:'Roboto',
+        fontSize:12,
+        fontWeight:400,
+        lineHeight:'14px',
+        letterSpacing:'0em',
+        textAlign:'left'
+    },
+    fileListText:{
+        fontFamily:'Roboto',
+        fontSize:14,
+        fontWeight:500,
+        lineHeight:'16px',
+        letterSpacing:'0em',
+        textAlign:'left'
+    },
+    textCenter: {
+        textAlign: 'center'
+    },
+    font13: {
+        fontSize: 13
+    },
+    textEnd: {
+        textAlign: 'end'
+    },
+    BrowseButton:{
+        fontFamily:'Roboto',
+        fontSize:14,
+        fontWeight:500,
+        lineHeight:'24px',
+        letterSpacing:'0em',
+        textAlign:'center',
+        backgroundColor:'#0087b7'
+    },
+    infoText:{
+        fontFamily:'Roboto',
+        fontSize:14,
+        fontWeight:500,
+        lineHeight:'16px',
+        letterSpacing:'0em',
+        textAlign:'center',
+        color:'#021E4F'
+    
     }
+
 };
 
 export default Layers;
