@@ -94,6 +94,29 @@ const Layers = ({ width }) => {
     const [optionalField, SetOptionalField] = useState(false)
     const [selectedFiles, setSelectedFiles] = useState([]);
 
+    const [siteCharacteristics, SetSiteCharacteristics] = useState([])
+
+    useEffect(() => {
+        for (let index = 0; index < validateData?.attributes.length; index++) {
+            const element = validateData?.attributes[index];
+            if (element?.tyo && element?.tyo.length > 0) {
+                const transformedArray = element?.tyo.filter(item => item !== "").map(item => {
+                    const [value, option] = item.split('|');
+                    return { value, option };
+                });
+                let obj = {
+                    title: element.description,
+                    options: transformedArray,
+                    filedName: element.columnName
+                };
+                SetSiteCharacteristics(prevState => [...prevState, obj]);
+                setMapData((prevMapData) => ({
+                    ...prevMapData,
+                    [element?.columnName]: undefined,
+                }));
+            }
+        }
+    }, [validateData]);
 
     useEffect(() => {
         setMapData((prevMapData) => ({
@@ -119,6 +142,16 @@ const Layers = ({ width }) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault()
+        const characteristicValues = siteCharacteristics.reduce((acc, characteristic) => {
+            const key = characteristic.filedName;
+            const value = mapData[characteristic?.filedName];
+            if (key !== undefined && value !== undefined) {
+                acc[key] = value;
+            }
+
+            return acc;
+        }, {});
+        // console.log("characteristicValues:", characteristicValues);
 
         const payload = {
             accessKey: 'abc',
@@ -127,10 +160,11 @@ const Layers = ({ width }) => {
             id: validateData.id,
             sites: [
                 {
-                    comment: mapData.comments,
                     site: { latitude: position.lat, longitude: position.lng },
+                    name: mapData.mapName,
+                    comment: mapData.comments,
                     attributes: {
-                        test: mapData.mapName,
+                        ...characteristicValues
                     },
                 }
             ]
@@ -141,6 +175,7 @@ const Layers = ({ width }) => {
             email: mapData.email
         }
 
+        // console.log("payload", payload)
         try {
             const response = await axios.post('https://submitapi.sitewise.com/submit', payload);
             console.log('API Response:', response);
@@ -214,7 +249,7 @@ const Layers = ({ width }) => {
                     >
                         {options.map((option) => (
                             <Option key={option.value} value={option.value}>
-                                {option.label}
+                                {option.option}
                             </Option>
                         ))}
                     </Select>
@@ -255,7 +290,7 @@ const Layers = ({ width }) => {
                     <div style={styles.fileListText}>{file.name}</div>
                 </Col>
                 <Col span={6}>
-                    <div style={styles.textEnd}onClick={() => removeFile(file.name)}>
+                    <div style={styles.textEnd} onClick={() => removeFile(file.name)}>
                         <TrashIcon size="14" />
                     </div>
                 </Col>
@@ -297,13 +332,20 @@ const Layers = ({ width }) => {
                                         <div style={{ fontWeight: 700, fontSize: 14, fontFamily: 'Roboto', color: '#021E4F', marginTop: 12 }}>Site Characteristics (Optional)</div>
                                     </div>
 
-                                    {optionalField === true && <div>
-                                        {renderSelect('parkingSpot', 'Parking Spots', mapData.parkingSpot, selectOptions, 'Parking Spots', false)}
-                                        {renderSelect('vecantAnchors', 'Vacant Anchors/Big Box in Shopping Center?', mapData.vecantAnchors, selectOptions, 'Vacant Anchors/Big Box in Shopping Center?', false)}
-                                        {renderSelect('venue', 'Venue Type', mapData.venue, selectOptions, 'Venue Type', false)}
-                                        {renderSelect('locationType', 'Location Type', mapData.locationType, selectOptions, 'Location Type', false)}
-                                        {renderSelect('driveThru', 'Drive-Thru?', mapData.driveThru, selectOptions, 'Drive-Thru?', false)}
-                                        {renderSelect('gla', 'GLA (New Center)', mapData.gla, selectOptions, 'GLA (New Center)', false)}
+                                    {optionalField === true && siteCharacteristics && <div>
+                                        {siteCharacteristics.map((characteristic, index) => {
+                                            return (
+                                                renderSelect(
+                                                    characteristic?.filedName,                //Fild Name
+                                                    characteristic?.title,                    //Label
+                                                    mapData[characteristic?.filedName],       //value
+                                                    characteristic?.options,                  //Options
+                                                    characteristic?.title,                    //PlaceHolder
+                                                    false
+                                                )
+                                            )
+                                        })
+                                        }
                                     </div>}
 
 
@@ -339,11 +381,11 @@ const Layers = ({ width }) => {
                                             </p>
                                             <p style={styles.infoText}>or</p>
                                         </div>
-                                        <Button 
+                                        <Button
                                             type="primary"
                                             style={styles.BrowseButton}
                                             onClick={() => document.querySelector('input[type="file"]').click()}>
-                                                +  Browse Files 
+                                            +  Browse Files
                                         </Button>
                                     </div>
                                     <div style={{ marginTop: 7, ...styles.fileFormatText }}>
@@ -496,29 +538,29 @@ const styles = {
         cursor: 'pointer',
         transition: 'border 0.3s ease-in-out',
     },
-    fileUploadHeading:{
-        fontFamily:'Roboto',
-        fontSize:14,
-        fontWeight:500,
-        lineHeight:'16px',
-        letterSpacing:'0em',
-        textAlign:'left'
+    fileUploadHeading: {
+        fontFamily: 'Roboto',
+        fontSize: 14,
+        fontWeight: 500,
+        lineHeight: '16px',
+        letterSpacing: '0em',
+        textAlign: 'left'
     },
-    fileFormatText:{
-        fontFamily:'Roboto',
-        fontSize:12,
-        fontWeight:400,
-        lineHeight:'14px',
-        letterSpacing:'0em',
-        textAlign:'left'
+    fileFormatText: {
+        fontFamily: 'Roboto',
+        fontSize: 12,
+        fontWeight: 400,
+        lineHeight: '14px',
+        letterSpacing: '0em',
+        textAlign: 'left'
     },
-    fileListText:{
-        fontFamily:'Roboto',
-        fontSize:14,
-        fontWeight:500,
-        lineHeight:'16px',
-        letterSpacing:'0em',
-        textAlign:'left'
+    fileListText: {
+        fontFamily: 'Roboto',
+        fontSize: 14,
+        fontWeight: 500,
+        lineHeight: '16px',
+        letterSpacing: '0em',
+        textAlign: 'left'
     },
     textCenter: {
         textAlign: 'center'
@@ -529,24 +571,24 @@ const styles = {
     textEnd: {
         textAlign: 'end'
     },
-    BrowseButton:{
-        fontFamily:'Roboto',
-        fontSize:14,
-        fontWeight:500,
-        lineHeight:'24px',
-        letterSpacing:'0em',
-        textAlign:'center',
-        backgroundColor:'#0087b7'
+    BrowseButton: {
+        fontFamily: 'Roboto',
+        fontSize: 14,
+        fontWeight: 500,
+        lineHeight: '24px',
+        letterSpacing: '0em',
+        textAlign: 'center',
+        backgroundColor: '#0087b7'
     },
-    infoText:{
-        fontFamily:'Roboto',
-        fontSize:14,
-        fontWeight:500,
-        lineHeight:'16px',
-        letterSpacing:'0em',
-        textAlign:'center',
-        color:'#021E4F'
-    
+    infoText: {
+        fontFamily: 'Roboto',
+        fontSize: 14,
+        fontWeight: 500,
+        lineHeight: '16px',
+        letterSpacing: '0em',
+        textAlign: 'center',
+        color: '#021E4F'
+
     }
 
 };
