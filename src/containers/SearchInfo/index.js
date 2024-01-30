@@ -99,8 +99,11 @@ const Layers = ({ width }) => {
     useEffect(() => {
         for (let index = 0; index < validateData?.attributes.length; index++) {
             const element = validateData?.attributes[index];
-            if (element?.tyo && element?.tyo.length > 0) {
-                const transformedArray = element?.tyo.filter(item => item !== "").map(item => {
+            if (
+                (element?.tyo && element?.tyo.length > 0) || element.columnName === "pco_name" ||
+                element.columnName === "pco_address" || element.columnName === "pco_city" ||
+                element.columnName === "pco_state" || element.columnName === "pco_zipcode") {
+                const transformedArray = element?.tyo?.filter(item => item !== "").map(item => {
                     const [value, option] = item.split('|');
                     return { value, option };
                 });
@@ -116,6 +119,7 @@ const Layers = ({ width }) => {
                 }));
             }
         }
+        // console.log("MAP DATA==>", mapData)
     }, [validateData]);
 
     useEffect(() => {
@@ -142,8 +146,12 @@ const Layers = ({ width }) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault()
+        // const characteristicValues = siteCharacteristics.map((characteristic, index) => ({
+        //     [characteristic.filedName]: mapData[characteristic?.filedName]
+        // }));
         const characteristicValues = siteCharacteristics.reduce((acc, characteristic) => {
             const key = characteristic.filedName;
+            
             const value = mapData[characteristic?.filedName];
             if (key !== undefined && value !== undefined) {
                 acc[key] = value;
@@ -165,7 +173,7 @@ const Layers = ({ width }) => {
                     comment: mapData.comments,
                     attributes: {
                         ...characteristicValues
-                    },
+                    },             
                 }
             ]
         }
@@ -175,7 +183,7 @@ const Layers = ({ width }) => {
             email: mapData.email
         }
 
-        // console.log("payload", payload)
+        console.log("PAY LOAD", payload)
         try {
             const response = await axios.post('https://submitapi.sitewise.com/submit', payload);
             console.log('API Response:', response);
@@ -247,7 +255,7 @@ const Layers = ({ width }) => {
                         placeholder={placeholder}
                         autoFocus={autoFocus}
                     >
-                        {options.map((option) => (
+                        {options?.map((option) => (
                             <Option key={option.value} value={option.value}>
                                 {option.option}
                             </Option>
@@ -331,22 +339,44 @@ const Layers = ({ width }) => {
                                         ) : (<CaretRightOutlined style={{ marginTop: 8 }} />)}
                                         <div style={{ fontWeight: 700, fontSize: 14, fontFamily: 'Roboto', color: '#021E4F', marginTop: 12 }}>Site Characteristics (Optional)</div>
                                     </div>
+                                    {optionalField === true && siteCharacteristics && (
+                                        <div>
+                                            {siteCharacteristics.map((characteristic, index) => {
+                                                console.log("characteristic", characteristic);
+                                                return (
+                                                    <React.Fragment key={index}>
+                                                        {characteristic?.options === undefined ? (
+                                                            <>
+                                                                <div style={styles.input} key={characteristic?.filedName}>                                                    
+                                                                    <Col span={24} style={styles.inputs}>
+                                                                        <InputComp
+                                                                            id={characteristic?.filedName}
+                                                                            label={characteristic?.title}
+                                                                            value={mapData[characteristic?.filedName]}
+                                                                            type="text"
+                                                                            onChange={handleChangeInput}
+                                                                            placeholder={characteristic?.title}
+                                                                            autoFocus={false}
+                                                                        />
+                                                                    </Col>
+                                                                </div>
+                                                            </>
+                                                        ) : (
+                                                            renderSelect(
+                                                                characteristic?.filedName,         // Field Name
+                                                                characteristic?.title,             // Label
+                                                                mapData[characteristic?.filedName], // Value
+                                                                characteristic?.options,           // Options
+                                                                characteristic?.title,             // Placeholder
+                                                                false
+                                                            )
+                                                        )}
+                                                    </React.Fragment>
+                                                );
+                                            })}
+                                        </div>
+                                    )}
 
-                                    {optionalField === true && siteCharacteristics && <div>
-                                        {siteCharacteristics.map((characteristic, index) => {
-                                            return (
-                                                renderSelect(
-                                                    characteristic?.filedName,                //Fild Name
-                                                    characteristic?.title,                    //Label
-                                                    mapData[characteristic?.filedName],       //value
-                                                    characteristic?.options,                  //Options
-                                                    characteristic?.title,                    //PlaceHolder
-                                                    false
-                                                )
-                                            )
-                                        })
-                                        }
-                                    </div>}
 
 
                                 </div> :
