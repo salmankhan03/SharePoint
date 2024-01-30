@@ -119,7 +119,7 @@ const Layers = ({ width }) => {
                 }));
             }
         }
-        // console.log("MAP DATA==>", mapData)
+        console.log("MAP DATA==>", mapData)
     }, [validateData]);
 
     useEffect(() => {
@@ -146,12 +146,13 @@ const Layers = ({ width }) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault()
+        uploadfile()
         // const characteristicValues = siteCharacteristics.map((characteristic, index) => ({
         //     [characteristic.filedName]: mapData[characteristic?.filedName]
         // }));
+        console.log("siteCharacteristics",siteCharacteristics)
         const characteristicValues = siteCharacteristics.reduce((acc, characteristic) => {
             const key = characteristic.filedName;
-            
             const value = mapData[characteristic?.filedName];
             if (key !== undefined && value !== undefined) {
                 acc[key] = value;
@@ -159,7 +160,8 @@ const Layers = ({ width }) => {
 
             return acc;
         }, {});
-        // console.log("characteristicValues:", characteristicValues);
+
+        console.log("characteristicValues:", characteristicValues);
 
         const payload = {
             accessKey: 'abc',
@@ -173,7 +175,11 @@ const Layers = ({ width }) => {
                     comment: mapData.comments,
                     attributes: {
                         ...characteristicValues
-                    },             
+                    },
+                    // "attachmentReferences": [
+                    //     "file1.png",
+                    //     "file2.pdf"
+                    // ]
                 }
             ]
         }
@@ -282,6 +288,31 @@ const Layers = ({ width }) => {
     const onDrop = useCallback((acceptedFiles) => {
         setSelectedFiles((prevFiles) => [...prevFiles, ...acceptedFiles]);
     }, []);
+    async function uploadfile() {
+        console.log(selectedFiles)
+        try {
+            const response = await axios.post('https://submitapi.sitewise.com/attach_urls', selectedFiles);
+            console.log(response, "response")
+            uploadFilesToS3(response.data)
+        } catch (error) {
+            message.error(error);
+        }
+    }
+
+    const uploadFilesToS3 = async (data) => {
+        try {
+            console.log("data", data)
+
+            await Promise.all(
+                data.map(async (file, index) => {
+                    await axios.put(data[index], file);
+                })
+            );
+            console.log('Files uploaded to S3 successfully');
+        } catch (error) {
+            console.error('Error uploading files to S3:', error);
+        }
+    };
 
     const { getRootProps, getInputProps, isDragActive } = useDropzone({
         accept: ['image/jpeg', 'image/png', 'application/pdf', 'image/gif'],
@@ -348,7 +379,7 @@ const Layers = ({ width }) => {
                                                         {characteristic?.options === undefined ? (
                                                             <>
                                                                 <div style={styles.input} key={characteristic?.filedName}>                                                    
-                                                                    <Col span={24} style={styles.inputs}>
+                                                                    <Col span={24} style={styles.inputs}>                                                            
                                                                         <InputComp
                                                                             id={characteristic?.filedName}
                                                                             label={characteristic?.title}
