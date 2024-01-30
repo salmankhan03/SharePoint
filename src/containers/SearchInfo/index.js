@@ -179,7 +179,7 @@ const Layers = ({ width }) => {
     }
     const handleSubmit = async (e) => {
         e.preventDefault()
-        // uploadfile()
+        uploadfile()
 
         console.log("siteCharacteristics", siteCharacteristics)
         const characteristicValues = siteCharacteristics?.reduce((acc, characteristic) => {
@@ -234,19 +234,19 @@ const Layers = ({ width }) => {
             email: mapData.email
         }
 
-        console.log("PAY LOAD", payload)
-        try {
-            const response = await axios.post('https://submitapi.sitewise.com/submit', payload);
-            console.log('API Response:', response);
-            SetSubmitSuccessFull(true)
-            localStorage.setItem('contactInfo', JSON.stringify(contactInfo));
-            message.success('Site Submitted successfully');
-            onClose()
-            setMapData({ mapName: '', comments: '' })
-            // setCurrentStep(1)
-        } catch (error) {
-            message.error(error);
-        }
+        // console.log("PAY LOAD", payload)
+        // try {
+        //     const response = await axios.post('https://submitapi.sitewise.com/submit', payload);
+        //     console.log('API Response:', response);
+        //     SetSubmitSuccessFull(true)
+        //     localStorage.setItem('contactInfo', JSON.stringify(contactInfo));
+        //     message.success('Site Submitted successfully');
+        //     onClose()
+        //     setMapData({ mapName: '', comments: '' })
+        //     // setCurrentStep(1)
+        // } catch (error) {
+        //     message.error(error);
+        // }
 
     }
 
@@ -333,6 +333,52 @@ const Layers = ({ width }) => {
     const onDrop = useCallback((acceptedFiles) => {
         setSelectedFiles((prevFiles) => [...prevFiles, ...acceptedFiles]);
     }, []);
+
+    async function uploadfile() {
+        console.log(selectedFiles)
+        try {
+            // { file:selectedFiles , content-type: 'image/*' }
+            // const payload = [{ file: selectedFiles[0].path, 'content-type': "image/*" }, { file: selectedFiles[1].path, 'content-type': "image/*" }]
+            const payload = selectedFiles.map(file => ({ file: file.path, 'content-type': 'image/*' }));
+
+            const response = await axios.post('https://submitapi.sitewise.com/attach_urls', payload);
+            // console.log(response, "response")
+            uploadFilesToS3(response.data)
+        } catch (error) {
+            message.error(error);
+        }
+    }
+
+    const uploadFilesToS3 = async (data) => {
+        try {
+            // console.log("data", data)
+            // var options = { headers: { 'Content-Type': "image/jpeg", 'x-amz-acl': 'public-read' } };
+
+            // await Promise.all(
+            //     data.map(async (file, index) => {
+            //         await axios.put(data[index], file);
+            //     })
+            // );
+            var options = {
+                headers: {
+                    'Content-Type': 'image/jpeg',
+                    'x-amz-acl': 'public-read'
+                }
+            };
+            //   var params = {Bucket: s3_bucket, Key: filename, Expires: 900000}; 
+
+            await Promise.all(
+                data.map(async (file, index) => {
+                    await axios.put(data[index], file, options);
+                })
+            );
+
+
+            console.log('Files uploaded to S3 successfully');
+        } catch (error) {
+            console.error('Error uploading files to S3:', error);
+        }
+    };
 
     const { getRootProps, getInputProps, isDragActive } = useDropzone({
         accept: ['image/jpeg', 'image/png', 'application/pdf', 'image/gif'],
