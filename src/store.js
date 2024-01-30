@@ -326,7 +326,7 @@ export const setMapBounds = () => async (dispatch, getState) => {
 
 export const setMapZoom = () => async (dispatch, getState) => {
     const ref = getState()?.ref;
-    console.log("ref ==>", ref)
+    // console.log("ref ==>", ref)
     if (ref) {
         dispatch(mapSlice.actions.zoom(ref?.getZoom()));
     }

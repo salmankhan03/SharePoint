@@ -23,9 +23,9 @@ const Map = () => {
     const { rotationAngle } = useSelector((state) => state);
     const { tilt } = useSelector((state) => state);
     
-    console.log("tilt ==>",tilt)
+    // console.log("tilt ==>",tilt)
 
-    console.log("rotationAngle ==>",rotationAngle)
+    // console.log("rotationAngle ==>",rotationAngle)
 
     const dispatch = useDispatch();
 

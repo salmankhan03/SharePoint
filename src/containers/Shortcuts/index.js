@@ -22,7 +22,7 @@ const Shortcuts = () => {
     // const zoom = 12;
     const zoom = useSelector((state) => state.zoom);
 
-    console.log("zoom",zoom)
+    // console.log("zoom",zoom)
     const { rotationAngle } = useSelector((state) => state);
     const { tilt } = useSelector((state) => state);
 

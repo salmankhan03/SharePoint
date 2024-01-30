@@ -75,6 +75,7 @@ const MapResults = ({ path, search }) => {
                       { address: item.description },
                       (results, status) => {
                         if (status === "OK" && results.length > 0) {
+                          console.log("results ==>",results)
                           const location = results[0].geometry.location;
                           dispatch(setLocation({locationName: item.structured_formatting.main_text, 
                             locationDetail: results[0].formatted_address, 
