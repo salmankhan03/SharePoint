@@ -119,16 +119,45 @@ const Layers = ({ width }) => {
                 }));
             }
         }
-        console.log("MAP DATA==>", mapData)
+
     }, [validateData]);
 
     useEffect(() => {
-        setMapData((prevMapData) => ({
-            ...prevMapData,
-            mapName: locationDetail,
-            name: storedContactInfo ? storedContactInfo.name : '',
-            email: storedContactInfo ? storedContactInfo.email : '',
-        }));
+        const data = locationDetail
+        if (data) {
+            const [nameAndCode, address, city, stateAndZipcode] = data?.split(", ");
+
+            const { 1: name, 2: code } = nameAndCode?.match(/(.+) \((.+)\)/) || [];
+            const { 1: state, 2: zipcode } = stateAndZipcode?.match(/([A-Z]+) (\d{5})/) || [];
+
+            const result = {
+                name: name || '',
+                code: code || '',
+                address: address || '',
+                city: city || '',
+                state: state || '',
+                zipcode: zipcode || ''
+            };
+
+            setMapData((prevMapData) => ({
+                ...prevMapData,
+                mapName: locationDetail,
+                name: storedContactInfo?.name || '',
+                email: storedContactInfo?.email || '',
+                pco_name: locationDetail,
+                pco_address: result.address,
+                pco_city: result.city,
+                pco_state: result.state,
+                pco_zipcode: result.zipcode
+            }));
+        } else {
+            setMapData((prevMapData) => ({
+                ...prevMapData,
+                mapName: locationDetail,
+                name: storedContactInfo?.name || '',
+                email: storedContactInfo?.email || '',
+            }));
+        }
     }, [locationDetail])
     const handleBackStep = () => {
         if (currentStep === 3 || currentStep === 2) {
@@ -143,17 +172,33 @@ const Layers = ({ width }) => {
             dispatch(setContactScreenShowHide(true))
         }
     }
-
+    function findResultValue(characteristic, key, siteCharacteristics, mapData) {
+        const targetObject = siteCharacteristics?.find(({ filedName }) => filedName === key);
+        const result = targetObject?.options?.find(({ value }) => value === mapData[characteristic?.filedName]);
+        return result ? `${result.value}|${result.option}` : undefined;
+    }
     const handleSubmit = async (e) => {
         e.preventDefault()
-        uploadfile()
-        // const characteristicValues = siteCharacteristics.map((characteristic, index) => ({
-        //     [characteristic.filedName]: mapData[characteristic?.filedName]
-        // }));
-        console.log("siteCharacteristics",siteCharacteristics)
-        const characteristicValues = siteCharacteristics.reduce((acc, characteristic) => {
+        // uploadfile()
+
+        console.log("siteCharacteristics", siteCharacteristics)
+        const characteristicValues = siteCharacteristics?.reduce((acc, characteristic) => {
+
             const key = characteristic.filedName;
-            const value = mapData[characteristic?.filedName];
+            // const value = mapData[characteristic?.filedName];
+            let value;
+            switch (characteristic.filedName) {
+                case "pco_name":
+                case "pco_address":
+                case "pco_city":
+                case "pco_state":
+                case "pco_zipcode":
+                    value = mapData[characteristic?.filedName];
+                    break;
+                default:
+                    value = findResultValue(characteristic, key, siteCharacteristics, mapData);
+                    break;
+            }
             if (key !== undefined && value !== undefined) {
                 acc[key] = value;
             }
@@ -288,31 +333,6 @@ const Layers = ({ width }) => {
     const onDrop = useCallback((acceptedFiles) => {
         setSelectedFiles((prevFiles) => [...prevFiles, ...acceptedFiles]);
     }, []);
-    async function uploadfile() {
-        console.log(selectedFiles)
-        try {
-            const response = await axios.post('https://submitapi.sitewise.com/attach_urls', selectedFiles);
-            console.log(response, "response")
-            uploadFilesToS3(response.data)
-        } catch (error) {
-            message.error(error);
-        }
-    }
-
-    const uploadFilesToS3 = async (data) => {
-        try {
-            console.log("data", data)
-
-            await Promise.all(
-                data.map(async (file, index) => {
-                    await axios.put(data[index], file);
-                })
-            );
-            console.log('Files uploaded to S3 successfully');
-        } catch (error) {
-            console.error('Error uploading files to S3:', error);
-        }
-    };
 
     const { getRootProps, getInputProps, isDragActive } = useDropzone({
         accept: ['image/jpeg', 'image/png', 'application/pdf', 'image/gif'],
@@ -373,13 +393,12 @@ const Layers = ({ width }) => {
                                     {optionalField === true && siteCharacteristics && (
                                         <div>
                                             {siteCharacteristics.map((characteristic, index) => {
-                                                console.log("characteristic", characteristic);
                                                 return (
                                                     <React.Fragment key={index}>
                                                         {characteristic?.options === undefined ? (
                                                             <>
-                                                                <div style={styles.input} key={characteristic?.filedName}>                                                    
-                                                                    <Col span={24} style={styles.inputs}>                                                            
+                                                                <div style={styles.input} key={characteristic?.filedName}>
+                                                                    <Col span={24} style={styles.inputs}>
                                                                         <InputComp
                                                                             id={characteristic?.filedName}
                                                                             label={characteristic?.title}
