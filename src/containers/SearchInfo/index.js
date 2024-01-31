@@ -85,6 +85,7 @@ const Layers = ({ width }) => {
     const [selectedMapOptions, setSelectedMapOptions] = useState(false);
 
     const { locationDetail, viewSideDetailFields, position } = useSelector((state) => state);
+    const addressDetails = useSelector((state) =>state.addressDetails);
     const validateData = useSelector((state) => state.validateData);
 
     const instructionParagraphs = validateData?.instructions?.replace(/<br\/>/g, '');
@@ -100,7 +101,7 @@ const Layers = ({ width }) => {
         for (let index = 0; index < validateData?.attributes.length; index++) {
             const element = validateData?.attributes[index];
             if (
-                (element?.tyo && element?.tyo.length > 0) || element.columnName === "pco_name" ||
+                (element?.tyo && element?.tyo.length > 0) ||
                 element.columnName === "pco_address" || element.columnName === "pco_city" ||
                 element.columnName === "pco_state" || element.columnName === "pco_zipcode") {
                 const transformedArray = element?.tyo?.filter(item => item !== "").map(item => {
@@ -144,11 +145,11 @@ const Layers = ({ width }) => {
                 mapName: locationDetail,
                 name: storedContactInfo?.name || '',
                 email: storedContactInfo?.email || '',
-                pco_name: locationDetail,
-                pco_address: result.address,
-                pco_city: result.city,
-                pco_state: result.state,
-                pco_zipcode: result.zipcode
+                // pco_name: addressDetails ? addressDetails?.formattedAddress : '',
+                pco_address: addressDetails ? addressDetails?.formattedAddress   : '',
+                pco_city: addressDetails ? addressDetails?.structuredAddress['locality,political'] :'',
+                pco_state: addressDetails ? addressDetails?.structuredAddress['administrative_area_level_1,political'] :'',
+                pco_zipcode: addressDetails ? addressDetails?.structuredAddress?.postal_code :''
             }));
         } else {
             setMapData((prevMapData) => ({
@@ -188,7 +189,7 @@ const Layers = ({ width }) => {
             // const value = mapData[characteristic?.filedName];
             let value;
             switch (characteristic.filedName) {
-                case "pco_name":
+                // case "pco_name":
                 case "pco_address":
                 case "pco_city":
                 case "pco_state":
@@ -343,7 +344,7 @@ const Layers = ({ width }) => {
 
             const response = await axios.post('https://submitapi.sitewise.com/attach_urls', payload);
             // console.log(response, "response")
-            uploadFilesToS3(response.data)
+            // uploadFilesToS3(response.data)
         } catch (error) {
             message.error(error);
         }

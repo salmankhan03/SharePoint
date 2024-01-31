@@ -1,11 +1,11 @@
-import React, {useCallback} from "react";
+import React, { useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Typography, List } from "antd";
 import "../../App.css";
 
 import SearchResult from "../../components/SearchResult";
 
-import {pressSearchPoint, setLayer, setLocation, setSearchProps} from "../../store";
+import { pressSearchPoint, setAddressDetails, setLayer, setLocation, setSearchProps } from "../../store";
 
 const { Title } = Typography;
 const locale = { emptyText: "No Results" };
@@ -32,12 +32,35 @@ const MapResults = ({ path, search }) => {
   const isValidLatitude = latitudePattern.test(parseFloat(values[0]));
   const isValidLongitude = longitudePattern.test(parseFloat(values[1]));
 
-  const drop = useCallback(item => dispatch(pressSearchPoint({path, item})), [path, dispatch]);
+  const drop = useCallback(item => dispatch(pressSearchPoint({ path, item })), [path, dispatch]);
 
   const handleClick = () => {
     drop(coordinates);
     dispatch(setSearchProps("search", ""))
   };
+
+  const formatAddress = input => {
+    const structuredAddress = input?.address_components?.reduce(
+        (result, item) => ({ ...result, [item.types]: item.short_name }),
+        {}
+    );
+    let formattedAddress = '';
+    if (structuredAddress['street_number']) {
+        formattedAddress = formattedAddress + structuredAddress['street_number'] + ' ';
+    }
+    if (structuredAddress['route']) {
+        formattedAddress = formattedAddress + structuredAddress['route'] + ', ';
+    }
+    if (structuredAddress['locality,political']) {
+        formattedAddress = formattedAddress + structuredAddress['locality,political'] + ' ';
+    }
+    if (structuredAddress['administrative_area_level_1,political']) {
+        formattedAddress =
+            formattedAddress + structuredAddress['administrative_area_level_1,political'];
+    }
+    return { structuredAddress, formattedAddress};
+};
+
 
   return (
     <div className="sitewise-skeleton-search">
@@ -45,12 +68,12 @@ const MapResults = ({ path, search }) => {
         Address / Locations Found
       </Title>
 
-      {(isValidLatitude === true && isValidLongitude  === true) && (
-          <div
-              onClick={handleClick}
-              className="ant-list-item"
-              style={styles.result}
-          >{`${coordinates.lat}, ${coordinates.lng}`}</div>
+      {(isValidLatitude === true && isValidLongitude === true) && (
+        <div
+          onClick={handleClick}
+          className="ant-list-item"
+          style={styles.result}
+        >{`${coordinates.lat}, ${coordinates.lng}`}</div>
       )}
 
       {(isValidLatitude === false || isValidLongitude === false) &&
@@ -75,13 +98,16 @@ const MapResults = ({ path, search }) => {
                       { address: item.description },
                       (results, status) => {
                         if (status === "OK" && results.length > 0) {
-                          console.log("results ==>",results)
+                          const addresses = results ? formatAddress(results[0]) : undefined;
+                          dispatch(setAddressDetails(addresses))
                           const location = results[0].geometry.location;
-                          dispatch(setLocation({locationName: item.structured_formatting.main_text, 
-                            locationDetail: results[0].formatted_address, 
-                            id: results[0].place_id, 
-                            lat: location.lat(), 
-                            lng: location.lng()}))
+                          dispatch(setLocation({
+                            locationName: item.structured_formatting.main_text,
+                            locationDetail: results[0].formatted_address,
+                            id: results[0].place_id,
+                            lat: location.lat(),
+                            lng: location.lng()
+                          }))
                         }
                       }
                     );

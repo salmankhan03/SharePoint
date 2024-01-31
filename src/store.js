@@ -40,7 +40,8 @@ const initialState = {
     searchByButtonClick: false,
     contactScreenShowHide: false,
     rotationAngle: 0,
-    tilt:false
+    tilt:false,
+    addressDetails:{}
 };
 
 const mapSlice = createSlice({
@@ -118,6 +119,12 @@ const mapSlice = createSlice({
                 position: { lat: action.payload.lat, lng: action.payload.lng },
                 selected: action.payload.id,
                 display: true
+            };
+        },
+        setAddressDetails: (state, action) => {
+            return {
+                ...state,
+                addressDetails:action.payload
             };
         },
 
@@ -283,6 +290,9 @@ export const addSiteDetail = (value) => async (dispatch, getState) => {
 
 export const setLocation = (value) => async (dispatch) => {
     dispatch(mapSlice.actions.setLocation(value));
+};
+export const setAddressDetails = (value) => async (dispatch) => {
+    dispatch(mapSlice.actions.setAddressDetails(value));
 };
 
 export const setLayer = (field, value) => async (dispatch) => {

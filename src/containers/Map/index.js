@@ -4,7 +4,7 @@ import { GoogleMap, DrawingManager } from "@react-google-maps/api";
 
 import SearchInformation from './SearchInformation'
 import SearchMarker from "./SearchMarker";
-import { setAddress, setLocation, setSelectedMapHideShow,setMapZoom,setMapBounds,saveMapRef } from "../../store";
+import { setAddress, setLocation, setSelectedMapHideShow,setMapZoom,setMapBounds,saveMapRef,setAddressDetails } from "../../store";
 import _ from "lodash";
 
 const streetViewOptions = {
@@ -64,7 +64,28 @@ const Map = () => {
       const onUnmount = useCallback(function callback(map) {
         setMap(null);
       }, []);
-
+      const formatAddress = input => {  
+        const structuredAddress = input?.address_components?.reduce(
+            (result, item) => ({ ...result, [item.types]: item.short_name }),
+            {}
+        );
+        let formattedAddress = '';
+        if (structuredAddress['street_number']) {
+            formattedAddress = formattedAddress + structuredAddress['street_number'] + ' ';
+        }
+        if (structuredAddress['route']) {
+            formattedAddress = formattedAddress + structuredAddress['route'] + ', ';
+        }
+        if (structuredAddress['locality,political']) {
+            formattedAddress = formattedAddress + structuredAddress['locality,political'] + ' ';
+        }
+        if (structuredAddress['administrative_area_level_1,political']) {
+            formattedAddress =
+                formattedAddress + structuredAddress['administrative_area_level_1,political'];
+        }
+        return { structuredAddress, formattedAddress};
+    };
+    
 
     const onMapClick = useCallback(
         (event) => {
@@ -78,7 +99,9 @@ const Map = () => {
                   if (results[0]) {
                       dispatch(setAddress(results[0].formatted_address))
                       const location = results[0].geometry.location;
-                    //   console.log("item.structured_formatting.main_text",item.structured_formatting.main_text)
+                      const addresses = results ? formatAddress(results[0]) : undefined;
+                      dispatch(setAddressDetails(addresses))
+                      // console.log("item.structured_formatting.main_text",item.structured_formatting.main_text)
                       dispatch(setLocation({
                         locationName:  results[0]?.address_components[0]?.long_name                       , 
                         locationDetail: results[0].formatted_address, 
