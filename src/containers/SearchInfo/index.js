@@ -100,10 +100,10 @@ const Layers = ({ width }) => {
     useEffect(() => {
         for (let index = 0; index < validateData?.attributes.length; index++) {
             const element = validateData?.attributes[index];
-            if (
-                (element?.tyo && element?.tyo.length > 0) ||
-                element.columnName === "pco_address" || element.columnName === "pco_city" ||
-                element.columnName === "pco_state" || element.columnName === "pco_zipcode") {
+            // if ((element?.tyo && element?.tyo.length > 0) ||
+            //     element.columnName === "pco_address" || element.columnName === "pco_city" ||
+            //     element.columnName === "pco_state" || element.columnName === "pco_zipcode") {
+                if (element?.columnName !== "pco_name"){
                 const transformedArray = element?.tyo?.filter(item => item !== "").map(item => {
                     const [value, option] = item.split('|');
                     return { value, option };
@@ -120,6 +120,7 @@ const Layers = ({ width }) => {
                 }));
             }
         }
+        // }
 
     }, [validateData]);
 
@@ -194,6 +195,8 @@ const Layers = ({ width }) => {
                 case "pco_city":
                 case "pco_state":
                 case "pco_zipcode":
+                case  "pco_exclude_sister":
+                case  "pco_include_sister":
                     value = mapData[characteristic?.filedName];
                     break;
                 default:
