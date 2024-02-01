@@ -211,7 +211,7 @@ const Layers = ({ width }) => {
         }, {});
 
         console.log("characteristicValues:", characteristicValues);
-
+         let submitfiles = selectedFiles.map(file => file.path);
         const payload = {
             accessKey: 'abc',
             comment: mapData.email,
@@ -225,10 +225,7 @@ const Layers = ({ width }) => {
                     attributes: {
                         ...characteristicValues
                     },
-                    // "attachmentReferences": [
-                    //     "file1.png",
-                    //     "file2.pdf"
-                    // ]
+                    "attachmentReferences": submitfiles
                 }
             ]
         }
@@ -238,19 +235,19 @@ const Layers = ({ width }) => {
             email: mapData.email
         }
 
-        // console.log("PAY LOAD", payload)
-        // try {
-        //     const response = await axios.post('https://submitapi.sitewise.com/submit', payload);
-        //     console.log('API Response:', response);
-        //     SetSubmitSuccessFull(true)
-        //     localStorage.setItem('contactInfo', JSON.stringify(contactInfo));
-        //     message.success('Site Submitted successfully');
-        //     onClose()
-        //     setMapData({ mapName: '', comments: '' })
-        //     // setCurrentStep(1)
-        // } catch (error) {
-        //     message.error(error);
-        // }
+        console.log("PAY LOAD", payload)
+        try {
+            const response = await axios.post('https://submitapi.sitewise.com/submit', payload);
+            console.log('API Response:', response);
+            SetSubmitSuccessFull(true)
+            localStorage.setItem('contactInfo', JSON.stringify(contactInfo));
+            message.success('Site Submitted successfully');
+            onClose()
+            setMapData({ mapName: '', comments: '' })
+            // setCurrentStep(1)
+        } catch (error) {
+            message.error(error);
+        }
 
     }
 
@@ -347,7 +344,7 @@ const Layers = ({ width }) => {
 
             const response = await axios.post('https://submitapi.sitewise.com/attach_urls', payload);
             // console.log(response, "response")
-            // uploadFilesToS3(response.data)
+            uploadFilesToS3(response.data)
         } catch (error) {
             message.error(error);
         }
