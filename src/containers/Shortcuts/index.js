@@ -11,6 +11,7 @@ import RotationAntiClockwiseIcon from "../../assets/icons/RotationAntiClockwiseI
 
 import { closeInfo, setSelectedMapHideShow,rotateMapClockwise,rotateMapAntiClockwise, rotateMapUp, setMapZoom } from "../../store";
 import PrimarySquareButton from "../../components/PrimarySquareButton";
+import logo from '../../assets/images/sitewise_logo.png'
 
 
 
@@ -147,7 +148,15 @@ const Button = ({ buttonStyle, ...props }) => (
                     <div>
                         <MapTypes />
                     </div>
-                    <div style={dynamicStyle}>Powered By Sitewise</div>
+                    <div style={dynamicStyle}>Powered By
+                        <img
+                            src={logo}
+                            alt={"sitewise logo"}
+                            width="80"
+                            height="12"
+                            style={{paddingLeft: 5}}
+                        />
+                    </div>
 
                 </div>
             </div>
@@ -216,7 +225,6 @@ const styles = {
     container: { width: 200, marginTop: 0, fontSize: 12, padding: '6px 12px',cursor:'pointer' },
     header: { display: 'flex', justifyContent: 'space-between' },
     closeIcon: { fontSize: 16, color: '#ccc', cursor: 'pointer', marginTop: 6 },
-    flex: { display: 'flex' },
     footer: { marginTop: 10, display: 'flex', justifyContent: 'flex-end', },
     button: { padding: 0, fontWeight: 500, color: 'red',border:'none',backgroundColor:'transparent',cursor:'pointer' },
     font: { fontSize: 14 },
