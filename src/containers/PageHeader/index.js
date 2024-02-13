@@ -40,6 +40,7 @@ const PageHeaders = () => {
                     />
                     <div style={{
                         marginLeft: '25px',
+                        marginTop: 8,
                         fontFamily: fontFamilys ? fontFamilys : '',
                         color: fontColor ? fontColor : 'white'
                     }}>{validateData?.title}</div>

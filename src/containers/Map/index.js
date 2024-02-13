@@ -105,7 +105,7 @@ const Map = () => {
                       console.log('results[0]?.address_components[0]?.long_name-----------------', results[0]?.address_components[0]?.long_name   )
                       // console.log("item.structured_formatting.main_text",item.structured_formatting.main_text)
                       dispatch(setLocation({
-                        locationName:  results[0]?.address_components[0]?.long_name                       , 
+                        locationName:  results[0]?.formatted_address                       ,
                         locationDetail: results[0].formatted_address, 
                         id: results[0].place_id, 
                         lat: selectedPosition.lat, 
