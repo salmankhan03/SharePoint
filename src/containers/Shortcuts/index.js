@@ -12,6 +12,7 @@ import RotationAntiClockwiseIcon from "../../assets/icons/RotationAntiClockwiseI
 import { closeInfo, setSelectedMapHideShow,rotateMapClockwise,rotateMapAntiClockwise, rotateMapUp, setMapZoom } from "../../store";
 import PrimarySquareButton from "../../components/PrimarySquareButton";
 import logo from '../../assets/images/sitewise_logo_navy_border_88px.png';
+import whiteLogo from '../../assets/images/sitewise_white_border_88.png';
 
 
 
@@ -151,7 +152,7 @@ const Button = ({ buttonStyle, ...props }) => (
                             <Button
                                 icon={rotate === true ? RotationRoadIcon : RotationIcon}
                                 onClick={handleOpenRotate}
-                                buttonStyle={styles.openRotation}
+                                buttonStyle={rotate === true ? styles.openRoadRotation : styles.openRotation }
                                 iconStyle={styles.world}
                             />
                             {rotate === true &&
@@ -175,13 +176,19 @@ const Button = ({ buttonStyle, ...props }) => (
                         <MapTypes />
                     </div>
                     <div style={dynamicStyle}>Powered by
-                        <img
+                       {mapTypeId === 'roadmap' ? <img
                             src={logo}
                             alt={"sitewise logo"}
                             width="88"
                             height="17"
                             style={{paddingLeft: 5}}
-                        />
+                        /> : <img
+                           src={whiteLogo}
+                           alt={"sitewise logo"}
+                           width="88"
+                           height="17"
+                           style={{paddingLeft: 5}}
+                       />}
                     </div>
 
                 </div>
@@ -272,10 +279,18 @@ const styles = {
         padding: 8,
         cursor: "pointer"
       },
+    openRoadRotation: {
+        top: 70,
+        fontSize: 20,
+        borderRadius: '4px 4px 0px 0px',
+        backgroundColor: "white",
+        padding: 8,
+        cursor: "pointer"
+      },
       clock: {
         top: 110,
         fontSize: 20,
-        // borderRadius: '4px',
+        borderRadius: '0px',
         backgroundColor: "white",
         padding: 8,
         cursor: "pointer"
@@ -283,7 +298,7 @@ const styles = {
       antiClock: {
         top: 150,
         fontSize: 20,
-        borderRadius: '4px',
+        borderRadius: '0px 0px 4px 4px',
         backgroundColor: "white",
         padding: 8,
         cursor: "pointer"

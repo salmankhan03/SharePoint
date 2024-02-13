@@ -7,6 +7,7 @@ import { onHideShowInfo, setAddress, setAddressDetails, setPosition } from "../.
 const SearchMarker = () => {
     const position = useSelector((state) => state.position);
     const [locationName, setLocationName] = useState(null);
+    const [checkDrag, setCheckDrag] = useState(false);
 
     const dispatch = useDispatch();
     const formatAddress = input => {
@@ -29,10 +30,10 @@ const SearchMarker = () => {
                 formattedAddress + structuredAddress['administrative_area_level_1,political'];
         }
         return { structuredAddress, formattedAddress};
-    }; 
+    };
 
     useEffect(() => {
-        if (position) {
+        if (position && checkDrag === true) {
             const geocoder = new window.google.maps.Geocoder();
             geocoder.geocode({ location: position }, (results, status) => {
                 if (status === 'OK') {
@@ -41,6 +42,7 @@ const SearchMarker = () => {
                         dispatch(setAddressDetails(addresses))
                         dispatch(setAddress(results[0].formatted_address))
                         setLocationName(results[0].formatted_address);
+                        setCheckDrag(false)
                     }
                 } else {
                     console.error('Geocoder failed due to: ' + status);
@@ -54,6 +56,7 @@ const SearchMarker = () => {
             lat: e.latLng.lat(),
             lng: e.latLng.lng(),
         };
+        setCheckDrag(true)
 
         dispatch(setPosition(newPosition))
     };

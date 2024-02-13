@@ -109,10 +109,24 @@ const Layers = ({ width }) => {
     const storedContactInfo = JSON.parse(localStorage.getItem('contactInfo')) || { name: '', email: '' };
     const [mapData, setMapData] = useState({ mapName: '', comments: '', name: '', email: '' });
     const [submitSuccessFull, SetSubmitSuccessFull] = useState(false)
-    const [optionalField, SetOptionalField] = useState(false)
+    const [optionalField, SetOptionalField] = useState(true)
     const [selectedFiles, setSelectedFiles] = useState([]);
 
     const [siteCharacteristics, SetSiteCharacteristics] = useState([])
+    const [timeStamp, setTimeStamp] = useState(false)
+    const timestampRef = useRef('');
+
+    useEffect(() => {
+        if (!timestampRef.current) {
+            timestampRef.current = Date.now();
+        } else{
+            if(timeStamp === true){
+                timestampRef.current = Date.now();
+                setTimeStamp(false)
+            }
+        }
+    }, [timeStamp]);
+
 
 
     useEffect(()=>{
@@ -269,7 +283,7 @@ const Layers = ({ width }) => {
             return acc;
         }, {});
         // console.log("characteristicValues",characteristicValues)
-        let submitfiles = selectedFiles.map(file => `submitter/1234567890/${file.path}`);
+        let submitfiles = selectedFiles.map(file => `submitter/${timestampRef.current}/${file.path}`);
         const payload = {
             accessKey: 'abc',
             comment: mapData.email,
@@ -302,6 +316,8 @@ const Layers = ({ width }) => {
             message.success('Site Submitted successfully');
             onClose()
             setMapData({ mapName: '', comments: '' })
+            setSelectedFiles([])
+            setTimeStamp(true)
             // setCurrentStep(1)
         } catch (error) {
             message.error(error);
@@ -392,13 +408,23 @@ const Layers = ({ width }) => {
     }
 
     const onDrop = useCallback((acceptedFiles) => {
-        setSelectedFiles((prevFiles) => [...prevFiles, ...acceptedFiles]);
+        const filesWithTimestamp = acceptedFiles.map(file => ({
+            ...file,
+            lastModified: file.lastModified,
+            lastModifiedDate: file.lastModifiedDate,
+            name: file.name,
+            type: file.type,
+            size: file.size,
+            path: `submitter/${timestampRef.current}/${file.path}`
+        }));
+
+        setSelectedFiles((prevFiles) => [...prevFiles, ...filesWithTimestamp]);
     }, []);
 
     async function uploadfile() {
         try {
             const payload = selectedFiles.map(file => ({
-                fileName: `submitter/1234567890/${file.path}`,
+                fileName: `${file.path}`,
                 contentType: file.type
             }));
 
