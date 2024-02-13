@@ -210,8 +210,7 @@ const Layers = ({ width }) => {
             return acc;
         }, {});
 
-        console.log("characteristicValues:", characteristicValues);
-         let submitfiles = selectedFiles.map(file => file.path);
+        let submitfiles = selectedFiles.map(file => `submitter/1234567890/${file.path}`);
         const payload = {
             accessKey: 'abc',
             comment: mapData.email,
@@ -225,7 +224,7 @@ const Layers = ({ width }) => {
                     attributes: {
                         ...characteristicValues
                     },
-                    "attachmentReferences": submitfiles
+                    uploads: submitfiles
                 }
             ]
         }
