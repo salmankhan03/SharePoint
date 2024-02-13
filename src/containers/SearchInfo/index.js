@@ -247,10 +247,16 @@ const Layers = ({ width }) => {
     function findResultValue(characteristic, key, siteCharacteristics, mapData) {
         const targetObject = siteCharacteristics?.find(({ filedName }) => filedName === key);
         const result = targetObject?.options?.find(({ value }) => value === mapData[characteristic?.filedName]);
-        return result ? targetObject?.columnType === 1 ? JSON.parse(result?.value) : //Integer Value Pass
-                        targetObject?.columnType === 0 ? result.option : //String Value Pass
-                        targetObject?.columnType === 2 `${result.value}|${result.option}` //Float Value Pass
-                        : undefined;
+        return result ?
+            (targetObject?.columnType === 2 ?
+                    JSON.parse(result?.value) : // Integer Value Pass
+                    targetObject?.columnType === 0 ?
+                        result.option : // String Value Pass
+                        targetObject?.columnType === 2 ?
+                            parseFloat(result?.value).toFixed(1) : // Float Value Pass
+                            undefined
+            )
+            : undefined;
     }
     const handleSubmit = async (e) => {
         e.preventDefault()
@@ -423,19 +429,21 @@ const Layers = ({ width }) => {
 
     async function uploadfile() {
         try {
-            const payload = selectedFiles.map(file => ({
-                fileName: `${file.path}`,
-                contentType: file.type
-            }));
+            if(selectedFiles.length > 0){
+                const payload = selectedFiles.map(file => ({
+                    fileName: `${file.path}`,
+                    contentType: file.type
+                }));
 
-            const response = await axios.post('https://submitapi.sitewise.com/attach_urls', payload);
+                const response = await axios.post('https://submitapi.sitewise.com/attach_urls', payload);
 
-            const combinedData = response.data.map((url, index) => ({
-                url,
-                contentType: payload[index].contentType
-            }));
+                const combinedData = response.data.map((url, index) => ({
+                    url,
+                    contentType: payload[index].contentType
+                }));
 
-            await uploadFilesToS3(combinedData)
+                await uploadFilesToS3(combinedData)
+            }
         } catch (error) {
             message.error(error);
         }
