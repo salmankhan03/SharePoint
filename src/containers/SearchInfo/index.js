@@ -336,15 +336,20 @@ const Layers = ({ width }) => {
     }, []);
 
     async function uploadfile() {
-        console.log(selectedFiles)
         try {
-            // { file:selectedFiles , content-type: 'image/*' }
-            // const payload = [{ file: selectedFiles[0].path, 'content-type': "image/*" }, { file: selectedFiles[1].path, 'content-type': "image/*" }]
-            const payload = selectedFiles.map(file => ({ file: file.path, 'content-type': 'image/*' }));
+            const payload = selectedFiles.map(file => ({
+                fileName: `submitter/1234567890/${file.path}`,
+                contentType: file.type
+            }));
 
             const response = await axios.post('https://submitapi.sitewise.com/attach_urls', payload);
-            // console.log(response, "response")
-            uploadFilesToS3(response.data)
+
+            const combinedData = response.data.map((url, index) => ({
+                url,
+                contentType: payload[index].contentType
+            }));
+
+            await uploadFilesToS3(combinedData)
         } catch (error) {
             message.error(error);
         }
@@ -352,28 +357,19 @@ const Layers = ({ width }) => {
 
     const uploadFilesToS3 = async (data) => {
         try {
-            // console.log("data", data)
-            // var options = { headers: { 'Content-Type': "image/jpeg", 'x-amz-acl': 'public-read' } };
-
-            // await Promise.all(
-            //     data.map(async (file, index) => {
-            //         await axios.put(data[index], file);
-            //     })
-            // );
-            var options = {
-                headers: {
-                    'Content-Type': 'image/jpeg',
-                    'x-amz-acl': 'public-read'
-                }
-            };
-            //   var params = {Bucket: s3_bucket, Key: filename, Expires: 900000}; 
 
             await Promise.all(
-                data.map(async (file, index) => {
-                    await axios.put(data[index], file, options);
+
+                data.map(async (url) => {
+                    const options = {
+                        headers: {
+                            'Content-Type': url.contentType
+                        }
+                    };
+
+                    await axios.put(url.url, null, options);
                 })
             );
-
 
             console.log('Files uploaded to S3 successfully');
         } catch (error) {
