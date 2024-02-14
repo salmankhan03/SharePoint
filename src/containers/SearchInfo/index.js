@@ -658,7 +658,9 @@ const Layers = ({ width }) => {
                                                fontFamily: fontFamilys ? fontFamilys :'',
                                                color : fontColor ? fontColor : '',
                                             }}>
-                                                <label>please search</label>
+                                                <label style={{
+                                                    color: '#AEB9CA'
+                                                }}>please search</label>
                                             </Row>
                                         </div>
                                     </div>
