@@ -41,7 +41,8 @@ const initialState = {
     contactScreenShowHide: false,
     rotationAngle: 0,
     tilt:false,
-    addressDetails:{}
+    addressDetails:{},
+    attributeData: {}
 };
 
 const mapSlice = createSlice({
@@ -187,6 +188,9 @@ const mapSlice = createSlice({
         },
         saveMapRef: (state, action) => {
             return { ...state, ref: action.payload };
+        },
+        setAttributesData: (state, action) => {
+            return { ...state, attributeData: action.payload };
         },
 
     },
@@ -342,6 +346,10 @@ export const setMapZoom = () => async (dispatch, getState) => {
     if (ref) {
         dispatch(mapSlice.actions.zoom(ref?.getZoom()));
     }
+};
+
+export const setAttributesData = (value) => (dispatch, getState) => {
+    dispatch(mapSlice.actions.setAttributesData(value));
 };
 
 

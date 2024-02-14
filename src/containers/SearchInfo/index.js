@@ -12,7 +12,13 @@ import { CaretDownOutlined, CaretRightOutlined, DeleteOutlined, MapOutlined } fr
 
 import LeftDrawerContent from "../../components/LeftDrawerContent";
 import Search from "../Search";
-import { center, closeInfo, setSelectedMapHideShow, setContactScreenShowHide } from "../../store";
+import {
+    center,
+    closeInfo,
+    setSelectedMapHideShow,
+    setContactScreenShowHide,
+    setAttributesData
+} from "../../store";
 import axios from 'axios';
 import submitSuccess from '../../assets/images/submitSuccess.svg'
 import optionalFieldDown from '../../assets/images/optionalFieldDown.svg'
@@ -94,6 +100,7 @@ const Layers = ({ width }) => {
     const { locationDetail, viewSideDetailFields, position } = useSelector((state) => state);
     const addressDetails = useSelector((state) =>state.addressDetails);
     const validateData = useSelector((state) => state.validateData);
+    const attributeData = useSelector((state) => state.attributeData);
     const [fontFamilys, setFontFamilys] = useState()
     const [fontColor, setFontColor] = useState()
     const [hovered, setHovered] = useState(false);
@@ -107,7 +114,7 @@ const Layers = ({ width }) => {
 
     const instructionParagraphs = validateData?.instructions?.replace(/<br\/>/g, '');
     const storedContactInfo = JSON.parse(localStorage.getItem('contactInfo')) || { name: '', email: '' };
-    const [mapData, setMapData] = useState({ mapName: '', comments: '', name: '', email: '' });
+    const [mapData, setMapData] = useState(attributeData );
     const [submitSuccessFull, SetSubmitSuccessFull] = useState(false)
     const [optionalField, SetOptionalField] = useState(true)
     const [selectedFiles, setSelectedFiles] = useState([]);
@@ -248,13 +255,14 @@ const Layers = ({ width }) => {
     function findResultValue(characteristic, key, siteCharacteristics, mapData) {
         const targetObject = siteCharacteristics?.find(({ filedName }) => filedName === key);
         const result = targetObject?.options?.find(({ value }) => value === mapData[characteristic?.filedName]);
-        return result ?
+        const data =  result ?
             (targetObject?.columnType === 1 ? JSON.parse(result?.value) : // Integer Value Pass
              targetObject?.columnType === 0 ? result.option : // String Value Pass
              targetObject?.columnType === 2 ? parseFloat(result?.value).toFixed(1) : // Float Value Pass
                             undefined
             )
             : undefined;
+        return data;
     }
     const handleSubmit = async (e) => {
         e.preventDefault()
@@ -268,13 +276,13 @@ const Layers = ({ width }) => {
             let value;
             switch (characteristic.filedName) {
                 // case "pco_name":
-                case "pco_address":
-                case "pco_city":
-                case "pco_state":
-                case "pco_zipcode":
-                case  "pco_exclude_sister":
-                case  "pco_include_sister":
-                    value = mapData[characteristic?.filedName];
+                case characteristic.filedName:
+                // case "pco_city":
+                // case "pco_state":
+                // case "pco_zipcode":
+                // case  "pco_exclude_sister":
+                // case  "pco_include_sister":
+                    value = mapData[characteristic?.filedName] ;
                     break;
                 default:
                     value = findResultValue(characteristic, key, siteCharacteristics, mapData);
@@ -322,6 +330,7 @@ const Layers = ({ width }) => {
             setMapData({ mapName: '', comments: '' })
             setSelectedFiles([])
             setTimeStamp(true)
+            dispatch(setAttributesData(mapData));
             // setCurrentStep(1)
         } catch (error) {
             message.error(error);
@@ -331,6 +340,7 @@ const Layers = ({ width }) => {
 
     const submitAnotherSite = () => {
         SetSubmitSuccessFull(false)
+        setCheckValidation(true)
         setCurrentStep(1);
     }
 
@@ -619,7 +629,7 @@ const Layers = ({ width }) => {
                                                             renderSelect(
                                                                 characteristic?.filedName,         // Field Name
                                                                 characteristic?.title,             // Label
-                                                                mapData[characteristic?.filedName], // Value
+                                                                mapData[characteristic?.filedName] ? mapData[characteristic?.filedName] : attributeData[characteristic?.filedName], // Value
                                                                 characteristic?.options,           // Options
                                                                 characteristic?.title,             // Placeholder
                                                                 false,
