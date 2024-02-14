@@ -99,6 +99,7 @@ const Layers = ({ width }) => {
     const [hovered, setHovered] = useState(false);
     const [backHovered, setBackHovered] = useState(false);
     const [browsebtnHovered, setBrowsebtnHovered] = useState(false);
+    const [successbtnHovered, setSuccessbtnHovered] = useState(false);
     const [btnBackgroundColor, setBtnBackgroundColor] = useState()
     const [btnFamily, setBtnFamily] = useState()
     const [btnHoverColor, setBtnHoverColor] = useState()
@@ -478,6 +479,12 @@ const Layers = ({ width }) => {
     const handleBrowseMouseLeave = () => {
         setBrowsebtnHovered(false);
     };
+    const handleSuccesskMouseEnter = () => {
+        setSuccessbtnHovered(true);
+    };
+    const handleSuccessMouseLeave = () => {
+        setSuccessbtnHovered(false);
+    };
 
 
 
@@ -696,8 +703,32 @@ const Layers = ({ width }) => {
                                     width="64"
                                     height="64"
                                 />
-                                <div style={{ color: '#0087B7', marginTop: 9, fontSize: 14, fontWeight: 700, fontFamily: 'Poppins' }}>Thank you for submitting your site</div>
-                                <Button onClick={submitAnotherSite} style={{ borderRadius: 4, border: '1px solid #0087B7', background: '#0087B7', fontWeight: 500, fontSize: 14, fontFamily: 'Roboto', color: '#FFF', marginTop: 24 }}>Submit Another Site</Button>
+                                <div style={{ 
+                                     fontFamily:fontFamilys? fontFamilys :'Poppins',
+                                     color: fontColor ? fontColor: '#0087B7',
+                                     marginTop: 9, 
+                                     fontSize: 14, 
+                                     fontWeight: 700, 
+                                    }}>Thank you for submitting your site</div>
+                                <Button onClick={submitAnotherSite} 
+                                 onMouseEnter={handleSuccesskMouseEnter}
+                                 onMouseLeave={handleSuccessMouseLeave}
+                                style={{ 
+
+                                    fontFamily: btnFamily ? (successbtnHovered ? btnHoverFamily : btnFamily) : '' ,
+                                    backgroundColor: btnBackgroundColor ? (successbtnHovered ? btnHoverColor : 'white') : (successbtnHovered ? '#0087b7' : 'white') ,
+                                    color: btnBackgroundColor ? (successbtnHovered ? 'white': (btnBackgroundColor ? btnBackgroundColor : 'black')) : (successbtnHovered ? 'white' : '#0087b7') ,
+                                    borderColor:btnBackgroundColor ? (successbtnHovered ? "white" : (btnBackgroundColor ? btnBackgroundColor : 'transparent')):(successbtnHovered ? 'white' : '#0087b7'),
+                                    border: btnBackgroundColor ?  '1px solid' +btnBackgroundColor:  '1px solid #0087b7',
+                                    borderRadius:'6px' ,
+                                    borderRadius: 4, 
+                                    // border: '1px solid #0087B7', 
+                                    // background: '#0087B7', 
+                                    fontWeight: 500, 
+                                    fontSize: 14, 
+                                    // fontFamily: 'Roboto', 
+                                    // color: '#FFF', 
+                                    marginTop: 24 }}>Submit Another Site</Button>
                             </div>
                         </div>}
 
