@@ -286,7 +286,7 @@ const Layers = ({ width }) => {
             return acc;
         }, {});
         // console.log("characteristicValues",characteristicValues)
-        let submitfiles = selectedFiles.map(file => `submitter/${timestampRef.current}/${file.path}`);
+        let submitfiles = selectedFiles.map(file => `${file.path}`);// submitter/${timestampRef.current}/
         const payload = {
             accessKey: 'abc',
             comment: mapData.email,
