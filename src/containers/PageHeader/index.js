@@ -4,16 +4,15 @@ import { useSelector } from "react-redux";
 const PageHeaders = () => {
     const validateData = useSelector((state) => state.validateData);
     const [fontFamilys, setFontFamilys] = useState()
-    const [fontColor, setFontColor] = useState()
-    const pageHeaderStyle = {
-        ...styles.pageHeader,
-        backgroundColor: validateData?.siteStyle?.backgroundColor || styles.pageHeader.backgroundColor,
-    };
+    const [fontColor, setFontColor] = useState();
+    const [backGroundColor,setBackGroundColor]= useState()
 
     useEffect(() => {
-        if (validateData?.siteStyle?.fontHeader) {
+        if (validateData?.siteStyle) {
             const regex = /font-style:\s*([^;]*);?\s*font-color:\s*([^;]*)/;
+            const backgroundRegex = /background-color:\s*([^;]*)/; //Style
             const matches = validateData?.siteStyle?.fontHeader?.match(regex);
+            const bGColorMatch = validateData?.siteStyle?.backgroundStyle?.match(backgroundRegex);  
             if (matches) {
                 const fontFamily = matches[1].trim();
                 const fontColor = matches[2].trim();
@@ -26,11 +25,16 @@ const PageHeaders = () => {
                     setFontColor(fontColor);
                 }
             }
+            if (bGColorMatch) {
+                const bgColor = bGColorMatch[1].trim();
+                console.log("bgColor",bgColor)
+                setBackGroundColor() 
+            }
         }
-    }, [])
+    }, [validateData    ])
 
     return (
-        <div style={pageHeaderStyle}>
+        <div style={{...styles.pageHeader, backgroundColor: backGroundColor ? backGroundColor :'#021E4F'}}>
             <div style={{ display: 'flex', justifyContent: "space-between", height: '100%', padding: '0px 15px' }}>
                 <div style={{ color: '#fff', fontSize: '20px', fontWeight: 500, display: 'flex', alignItems: 'center' }}>
                     <img
@@ -56,7 +60,6 @@ const PageHeaders = () => {
 const styles = {
     pageHeader: {
         height: '70px',
-        backgroundColor: '#021E4F'
     }
 };
 
