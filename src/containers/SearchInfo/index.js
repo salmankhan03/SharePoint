@@ -340,7 +340,6 @@ const Layers = ({ width }) => {
 
     const submitAnotherSite = () => {
         SetSubmitSuccessFull(false)
-        setCheckValidation(true)
         setCurrentStep(1);
     }
 
