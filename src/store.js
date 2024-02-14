@@ -89,6 +89,7 @@ const mapSlice = createSlice({
                 ...state,
                 position: action.payload.item,
                 center: action.payload.item,
+                zoom: 17,
                 display: true,
                 locationName: `${action.payload.item.lat}, ${action.payload.item.lng}`,
                 locationDetail: null,
@@ -116,6 +117,7 @@ const mapSlice = createSlice({
                 locationDetail: action.payload.locationDetail,
                 locationName: action.payload.locationName,
                 center: { lat: action.payload.lat, lng: action.payload.lng },
+                zoom: 15,
                 position: { lat: action.payload.lat, lng: action.payload.lng },
                 selected: action.payload.id,
                 display: true

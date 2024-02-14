@@ -377,7 +377,9 @@ const Layers = ({ width }) => {
     };
 
     const { getRootProps, getInputProps, isDragActive } = useDropzone({
-        accept: ['image/jpeg', 'image/png', 'application/pdf', 'image/gif'],
+        accept: ['image/jpeg', 'image/png', 'application/pdf', 'image/gif', 'image/svg+xml'],
+        maxSize: 52428800,
+        maxFiles: 5,
         onDrop,
     });
     const removeFile = (fileName) => {
@@ -492,7 +494,7 @@ const Layers = ({ width }) => {
                             <>
                                 <div>
                                     <Row>
-                                        <Col span={24} style={styles.fileUploadHeading}>File Upload (optional)</Col>
+                                        <Col span={24} style={styles.fileUploadHeading}>Attach Files (optional)</Col>
                                     </Row>
                                     <div style={styles.uploadContainer}>
                                         <div {...getRootProps()} className={`dropzone ${isDragActive ? 'active' : ''}`}>

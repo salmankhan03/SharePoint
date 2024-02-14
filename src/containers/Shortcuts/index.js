@@ -11,7 +11,7 @@ import RotationAntiClockwiseIcon from "../../assets/icons/RotationAntiClockwiseI
 
 import { closeInfo, setSelectedMapHideShow,rotateMapClockwise,rotateMapAntiClockwise, rotateMapUp, setMapZoom } from "../../store";
 import PrimarySquareButton from "../../components/PrimarySquareButton";
-import logo from '../../assets/images/sitewise_logo.png'
+import logo from '../../assets/images/sitewise_logo_navy_border_88px.png';
 
 
 
@@ -89,10 +89,10 @@ const Button = ({ buttonStyle, ...props }) => (
 
     const dynamicStyle = {
         fontSize: 14,
-        fontWeight: 500,
+        fontWeight: 100,
         fontFamily: 'Roboto',
         marginTop: 15,
-        color: mapTypeId === 'roadmap' ? '#021E4F' : '#fff'
+        color: mapTypeId === 'roadmap' ? '#000' : '#fff'
     };
 
 
@@ -148,12 +148,12 @@ const Button = ({ buttonStyle, ...props }) => (
                     <div>
                         <MapTypes />
                     </div>
-                    <div style={dynamicStyle}>Powered By
+                    <div style={dynamicStyle}>Powered by
                         <img
                             src={logo}
                             alt={"sitewise logo"}
-                            width="80"
-                            height="12"
+                            width="88"
+                            height="17"
                             style={{paddingLeft: 5}}
                         />
                     </div>

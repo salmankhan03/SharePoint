@@ -130,6 +130,7 @@ const Map = () => {
             fullscreenControl: false,
             zoomControl: false,
             streetViewControl: false,
+            clickableIcons: false,
             disableDefaultUI: true,
             draggableCursor: searchByButtonClick ? 'crosshair' : 'grab',
             gestureHandling: 'greedy',
@@ -139,7 +140,7 @@ const Map = () => {
                     elementType: "labels",
                     stylers: [
                         {
-                            visibility: "off",
+                            visibility: "on",
                         },
                     ],
                 },

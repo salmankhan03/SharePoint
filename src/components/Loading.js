@@ -18,7 +18,7 @@ const Loading = () => {
                     <Spin size="large" tip="Loading Shared Map..." />
                 </div>
                 <div>
-                    <div style={styles.loadingDesc}>Loading Site Submit Map...</div>
+                    <div style={styles.loadingDesc}>Loading Site Submit...</div>
                 </div>
             </div>
         </div>

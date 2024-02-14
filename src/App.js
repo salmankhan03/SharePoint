@@ -20,15 +20,15 @@ const App = () => {
                 const sessionToken = urlParams.get("accessKey");
                 setLoading(true);
 
-                if (!sessionToken) {
-                    setIsValidSession(false);
-                    return;
+                const domainName = urlParams.get('domain')
+
+                if (domainName === null) {
+                    // get the url
+                    domainName = window.location.href;
                 }
 
-                const domainName = "submit-sites.sitewise.com"
-
                 const payload = {
-                    accessKey: sessionToken,
+                    accessKey: sessionToken ?? "",
                     domainName: domainName
                 };
 

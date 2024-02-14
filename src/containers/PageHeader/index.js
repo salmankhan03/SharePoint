@@ -18,7 +18,7 @@ const PageHeaders = () => {
                         alt={"sitewise logo"}
                         width="150"
                     />
-                    <div style={{marginLeft:'25px'}}>Site Submit to {validateData?.title}</div>
+                    <div style={{marginLeft:'25px'}}>{validateData?.title}</div>
                 </div>
                 <div style={{display: 'flex'}}>
 
