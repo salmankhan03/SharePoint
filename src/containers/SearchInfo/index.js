@@ -248,12 +248,9 @@ const Layers = ({ width }) => {
         const targetObject = siteCharacteristics?.find(({ filedName }) => filedName === key);
         const result = targetObject?.options?.find(({ value }) => value === mapData[characteristic?.filedName]);
         return result ?
-            (targetObject?.columnType === 2 ?
-                    JSON.parse(result?.value) : // Integer Value Pass
-                    targetObject?.columnType === 0 ?
-                        result.option : // String Value Pass
-                        targetObject?.columnType === 2 ?
-                            parseFloat(result?.value).toFixed(1) : // Float Value Pass
+            (targetObject?.columnType === 1 ? JSON.parse(result?.value) : // Integer Value Pass
+             targetObject?.columnType === 0 ? result.option : // String Value Pass
+             targetObject?.columnType === 2 ? parseFloat(result?.value).toFixed(1) : // Float Value Pass
                             undefined
             )
             : undefined;
