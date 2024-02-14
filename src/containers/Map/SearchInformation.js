@@ -5,7 +5,7 @@ import _ from 'lodash';
 import InfoBox from './Infobox';
 import InfoCard from '../../components/InfoCard';
 import Summary from '../../components/Summary';
-import { addSiteDetail, closeInfo, setSelectedMapHideShow, setContactScreenShowHide, onHideShowInfo } from "../../store";
+import { addSiteDetail, closeInfo, setSelectedMapHideShow, setContactScreenShowHide, onHideShowInfo, validateData } from "../../store";
 import Thumbnails from "./Thumbnails";
 import { Button } from "antd";
 import { Row, Col } from "antd";
@@ -15,6 +15,12 @@ const border = '#264475';
 const StudyAreas = ({ visible, locationDetail, position, locationName }) => {
     const [button, setButton] = useState('select')
     const contactScreenShowHide = useSelector((state) => state.contactScreenShowHide);
+    const validateData = useSelector((state) => state.validateData);
+    const [hovered, setHovered] = useState(false);
+    const [btnBackgroundColor, setBtnBackgroundColor] = useState()
+    const [btnFamily, setBtnFamily] = useState()
+    const [btnHoverColor, setBtnHoverColor] = useState()
+    const [btnHoverFamily, setBtnHoverFamily] = useState()
     const dispatch = useDispatch();
     const onClose = useCallback(() => {
         dispatch(closeInfo());
@@ -22,6 +28,40 @@ const StudyAreas = ({ visible, locationDetail, position, locationName }) => {
     }, [dispatch]);
     useEffect(() => {
         onClick()
+        if (validateData?.siteStyle) {
+            const styleRegex = /font-style:\s*([^;]*)/;
+            const bgColorRegex = /background-color:\s*([^;]*)/;
+        
+            const extractStyle = (styleString, regex) => {
+                const match = styleString.match(regex);
+                return match ? match[1].trim() : null;
+            };
+        
+            const buttonStyle = validateData?.siteStyle?.buttonStyle;
+            const buttonHoverStyle = validateData?.siteStyle?.buttonHover;
+        
+            const btnBackgroundColor = extractStyle(buttonStyle, bgColorRegex);
+            const btnFontFamily = extractStyle(buttonStyle, styleRegex);
+            const btnHoverBackgroundColor = extractStyle(buttonHoverStyle, bgColorRegex);
+            const btnHoverFontFamily = extractStyle(buttonHoverStyle, styleRegex);
+        
+            if (btnBackgroundColor) {
+                setBtnBackgroundColor(btnBackgroundColor);
+            }
+        
+            if (btnFontFamily) {
+                setBtnFamily(btnFontFamily);
+            }
+        
+            if (btnHoverBackgroundColor) {
+                setBtnHoverColor(btnHoverBackgroundColor);
+            }
+        
+            if (btnHoverFontFamily) {
+                setBtnHoverFamily(btnHoverFontFamily);
+            }
+        }
+        
     }, [])
     const onHide = useCallback(() => {
         dispatch(onHideShowInfo(false));
@@ -33,6 +73,12 @@ const StudyAreas = ({ visible, locationDetail, position, locationName }) => {
         setButton('remove')
     }
 
+    const handleMouseEnter = () => {
+        setHovered(true);
+    };
+    const handleMouseLeave = () => {
+        setHovered(false);
+    };
 
     const span = 24 / '100%';
     return (
@@ -41,13 +87,23 @@ const StudyAreas = ({ visible, locationDetail, position, locationName }) => {
             {/*{<Summary dataSource={locationDetail} />}*/}
             <Col span={span} className={'columnButtons'} style={{ ...styles.columnWithBorder }}>
                 <Button
-                    type={'primary'}
-                    className={
-                        button === 'select' ? "sitewise-info-remove-details-button" : "sitewise-info-remove-details-button"
-                    }
                     onClick={(e) => button === 'select' ? onClick(e) : onClose()}
                     disabled={contactScreenShowHide}
-                    style={styles.button}
+                    onMouseEnter={handleMouseEnter}
+                    onMouseLeave={handleMouseLeave}
+                    style={{
+                        ...styles.button,
+                        fontFamily: btnFamily ? (hovered ? btnHoverFamily : btnFamily) : '' ,
+                        backgroundColor: btnBackgroundColor ?  (contactScreenShowHide ? 'white'  : (hovered ? btnHoverColor : 'white')) : (hovered ? '#0087b7' : 'white'),
+                        color: btnBackgroundColor ? (contactScreenShowHide ? '#ccc' : (hovered ? 'white': (btnBackgroundColor ? btnBackgroundColor : 'black'))) : (hovered ? 'white' : '#0087b7') ,
+                        borderColor:btnBackgroundColor ?(contactScreenShowHide ? '#ccc' : (hovered ? "white" : (btnBackgroundColor ? btnBackgroundColor : 'transparent'))):(hovered ? 'white' : '#0087b7'),
+                        border: btnBackgroundColor ?  '1px solid' +btnBackgroundColor:  '1px solid #0087b7',
+                        borderRadius:'6px'
+
+                    }}
+                    className={
+                        btnBackgroundColor ? "" : "sitewise-info-remove-details-button"
+                    }
                 >
                     {button === 'select' ? 'Select' : 'Remove'}
                 </Button>
@@ -62,6 +118,7 @@ const StudyAreaInfo = () => {
     const locationDetail = useSelector((state) => state.locationDetail);
     const { display } = useSelector((state) => state);
     console.log('display------------------------', display)
+    console.log('locationName------------------------', locationName)
     return (
         <InfoBox visible={display} position={position}>
             <StudyAreas locationDetail={locationDetail} position={position} locationName={locationName} />

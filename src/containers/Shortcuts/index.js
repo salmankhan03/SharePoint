@@ -12,6 +12,7 @@ import RotationAntiClockwiseIcon from "../../assets/icons/RotationAntiClockwiseI
 import { closeInfo, setSelectedMapHideShow,rotateMapClockwise,rotateMapAntiClockwise, rotateMapUp, setMapZoom } from "../../store";
 import PrimarySquareButton from "../../components/PrimarySquareButton";
 import logo from '../../assets/images/sitewise_logo_navy_border_88px.png';
+import whiteLogo from '../../assets/images/sitewise_white_border_88.png';
 
 
 
@@ -22,7 +23,9 @@ const Shortcuts = () => {
     const searchByButtonClick = useSelector((state) => state.searchByButtonClick);
     // const zoom = 12;
     const zoom = useSelector((state) => state.zoom);
-
+    const validateData = useSelector((state) => state.validateData);
+    const [fontFamilys, setFontFamilys] = useState()
+    const [fontColor, setFontColor] = useState()
     // console.log("zoom",zoom)
     const { rotationAngle } = useSelector((state) => state);
     const { tilt } = useSelector((state) => state);
@@ -37,6 +40,30 @@ const Button = ({ buttonStyle, ...props }) => (
       buttonStyle={{ left: -48, ...buttonStyle }}
     />
   );
+  useEffect(()=>{
+    if (validateData?.siteStyle?.fontGeneral) {
+        const styleRegex = /font-style:\s*([^;]*)/;
+        const colorRegex = /font-color:\s*([^;]*)/;
+    
+        const extractStyle = (styleString, regex) => {
+            const match = styleString.match(regex);
+            return match ? match[1].trim() : null;
+        };
+    
+        const fontGeneralStyle = validateData?.siteStyle?.fontGeneral;
+        const fontFamily = extractStyle(fontGeneralStyle, styleRegex);
+        const fontColor = extractStyle(fontGeneralStyle, colorRegex);
+    
+        if (fontFamily) {
+            setFontFamilys(fontFamily);
+        }
+    
+        if (fontColor) {
+            setFontColor(fontColor);
+        }
+    }
+    
+},[])
 
     const onClose = () => {
         // dispatch(endMapMeasure())
@@ -125,7 +152,7 @@ const Button = ({ buttonStyle, ...props }) => (
                             <Button
                                 icon={rotate === true ? RotationRoadIcon : RotationIcon}
                                 onClick={handleOpenRotate}
-                                buttonStyle={styles.openRotation}
+                                buttonStyle={rotate === true ? styles.openRoadRotation : styles.openRotation }
                                 iconStyle={styles.world}
                             />
                             {rotate === true &&
@@ -149,13 +176,19 @@ const Button = ({ buttonStyle, ...props }) => (
                         <MapTypes />
                     </div>
                     <div style={dynamicStyle}>Powered by
-                        <img
+                       {mapTypeId === 'roadmap' ? <img
                             src={logo}
                             alt={"sitewise logo"}
                             width="88"
                             height="17"
                             style={{paddingLeft: 5}}
-                        />
+                        /> : <img
+                           src={whiteLogo}
+                           alt={"sitewise logo"}
+                           width="88"
+                           height="17"
+                           style={{paddingLeft: 5}}
+                       />}
                     </div>
 
                 </div>
@@ -186,8 +219,17 @@ const Button = ({ buttonStyle, ...props }) => (
                         <div style={styles.container} className="ant-notification-notice">
                             <div style={styles.header}>
                                 <div>
-                                    <div className="ant-notification-notice-message" style={{ marginBottom: 8 }}>Select location</div>
-                                    <div className="ant-notification-notice-description">Click a point on the map to select a location to submit</div>
+                                    <div className="ant-notification-notice-message" 
+                                        style={{ marginBottom: 8, 
+                                                fontFamily:fontFamilys?fontFamilys:'', 
+                                                // color:fontColor?fontColor:'',
+                                            }}
+                                    >Select location</div>
+                                    <div className="ant-notification-notice-description"
+                                    style={{ marginBottom: 8, 
+                                        fontFamily:fontFamilys?fontFamilys:'', 
+                                        // color:fontColor?fontColor:'',
+                                    }}>Click a point on the map to select a location to submit</div>
                                 </div>
                                 {/* <div onClick={onClose}>
                                     <CloseOutlined style={styles.closeIcon} />
@@ -237,10 +279,18 @@ const styles = {
         padding: 8,
         cursor: "pointer"
       },
+    openRoadRotation: {
+        top: 70,
+        fontSize: 20,
+        borderRadius: '4px 4px 0px 0px',
+        backgroundColor: "white",
+        padding: 8,
+        cursor: "pointer"
+      },
       clock: {
         top: 110,
         fontSize: 20,
-        // borderRadius: '4px',
+        borderRadius: '0px',
         backgroundColor: "white",
         padding: 8,
         cursor: "pointer"
@@ -248,7 +298,7 @@ const styles = {
       antiClock: {
         top: 150,
         fontSize: 20,
-        borderRadius: '4px',
+        borderRadius: '0px 0px 4px 4px',
         backgroundColor: "white",
         padding: 8,
         cursor: "pointer"

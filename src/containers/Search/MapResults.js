@@ -24,7 +24,6 @@ const MapResults = ({ path, search }) => {
     lng: parseFloat(values[1])
   };
 
-
   const latitudePattern = /^-?([1-8]?[0-9](\.[0-9]+)?|90(\.0+)?)$/;
 
   const longitudePattern = /^-?((1[0-7]|[1-9])?[0-9](\.[0-9]+)?|180(\.0+)?)$/;
@@ -102,7 +101,7 @@ const MapResults = ({ path, search }) => {
                           dispatch(setAddressDetails(addresses))
                           const location = results[0].geometry.location;
                           dispatch(setLocation({
-                            locationName: item.structured_formatting.main_text,
+                            locationName: item.description,
                             locationDetail: results[0].formatted_address,
                             id: results[0].place_id,
                             lat: location.lat(),
