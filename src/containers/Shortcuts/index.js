@@ -22,7 +22,9 @@ const Shortcuts = () => {
     const searchByButtonClick = useSelector((state) => state.searchByButtonClick);
     // const zoom = 12;
     const zoom = useSelector((state) => state.zoom);
-
+    const validateData = useSelector((state) => state.validateData);
+    const [fontFamilys, setFontFamilys] = useState()
+    const [fontColor, setFontColor] = useState()
     // console.log("zoom",zoom)
     const { rotationAngle } = useSelector((state) => state);
     const { tilt } = useSelector((state) => state);
@@ -37,6 +39,30 @@ const Button = ({ buttonStyle, ...props }) => (
       buttonStyle={{ left: -48, ...buttonStyle }}
     />
   );
+  useEffect(()=>{
+    if (validateData?.siteStyle?.fontGeneral) {
+        const styleRegex = /font-style:\s*([^;]*)/;
+        const colorRegex = /font-color:\s*([^;]*)/;
+    
+        const extractStyle = (styleString, regex) => {
+            const match = styleString.match(regex);
+            return match ? match[1].trim() : null;
+        };
+    
+        const fontGeneralStyle = validateData?.siteStyle?.fontGeneral;
+        const fontFamily = extractStyle(fontGeneralStyle, styleRegex);
+        const fontColor = extractStyle(fontGeneralStyle, colorRegex);
+    
+        if (fontFamily) {
+            setFontFamilys(fontFamily);
+        }
+    
+        if (fontColor) {
+            setFontColor(fontColor);
+        }
+    }
+    
+},[])
 
     const onClose = () => {
         // dispatch(endMapMeasure())
@@ -186,8 +212,17 @@ const Button = ({ buttonStyle, ...props }) => (
                         <div style={styles.container} className="ant-notification-notice">
                             <div style={styles.header}>
                                 <div>
-                                    <div className="ant-notification-notice-message" style={{ marginBottom: 8 }}>Select location</div>
-                                    <div className="ant-notification-notice-description">Click a point on the map to select a location to submit</div>
+                                    <div className="ant-notification-notice-message" 
+                                        style={{ marginBottom: 8, 
+                                                fontFamily:fontFamilys?fontFamilys:'', 
+                                                // color:fontColor?fontColor:'',
+                                            }}
+                                    >Select location</div>
+                                    <div className="ant-notification-notice-description"
+                                    style={{ marginBottom: 8, 
+                                        fontFamily:fontFamilys?fontFamilys:'', 
+                                        // color:fontColor?fontColor:'',
+                                    }}>Click a point on the map to select a location to submit</div>
                                 </div>
                                 {/* <div onClick={onClose}>
                                     <CloseOutlined style={styles.closeIcon} />
