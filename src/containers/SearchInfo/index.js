@@ -747,7 +747,6 @@ const Layers = ({ width }) => {
                                     borderColor:btnBackgroundColor ? (successbtnHovered ? "white" : (btnBackgroundColor ? btnBackgroundColor : 'transparent')):(successbtnHovered ? 'white' : '#0087b7'),
                                     border: btnBackgroundColor ?  '1px solid' +btnBackgroundColor:  '1px solid #0087b7',
                                     borderRadius:'6px' ,
-                                    borderRadius: 4, 
                                     // border: '1px solid #0087B7', 
                                     // background: '#0087B7', 
                                     fontWeight: 500, 
