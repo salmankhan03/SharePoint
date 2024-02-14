@@ -186,7 +186,7 @@ const Layers = ({ width }) => {
                 SetSiteCharacteristics(prevState => [...prevState, obj]);
                 setMapData((prevMapData) => ({
                     ...prevMapData,
-                    [element?.columnName]: undefined,
+                    [element?.columnName]: element?.tyo && element.dv ? element.dv:  undefined // DV value set
                 }));
             }
         }
