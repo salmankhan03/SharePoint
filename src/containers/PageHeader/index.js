@@ -28,7 +28,7 @@ const PageHeaders = () => {
             if (bGColorMatch) {
                 const bgColor = bGColorMatch[1].trim();
                 console.log("bgColor",bgColor)
-                setBackGroundColor() 
+                setBackGroundColor(bgColor) 
             }
         }
     }, [validateData    ])
