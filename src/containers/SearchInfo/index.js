@@ -59,7 +59,7 @@ const InputComp = (props) => {
                 {label}
             </Col>
             <Col span={24} style={styles.inputs}>
-                {type === "text" ? <AntInput
+                {type === "text" || type === "number" ? <AntInput
                     style={{ position: 'inherit' }}
                     ref={inputRef}
                     autoFocus={autoFocus}
@@ -289,7 +289,7 @@ const Layers = ({ width }) => {
                     break;
             }
             if (key !== undefined && value !== undefined) {
-                acc[key] = value;
+                acc[key] = characteristic?.columnType === 1 ? JSON.parse(value) : characteristic?.columnType === 2 ? parseFloat(value).toFixed(1) :value ;
             }
 
             return acc;
@@ -613,7 +613,7 @@ const Layers = ({ width }) => {
                                                                             id={characteristic?.filedName}
                                                                             label={characteristic?.title}
                                                                             value={mapData[characteristic?.filedName]}
-                                                                            type="text"
+                                                                            type={characteristic?.columnType === 1 ? "number" :"text"}
                                                                             onChange={handleChangeInput}
                                                                             placeholder={characteristic?.title}
                                                                             autoFocus={false}
