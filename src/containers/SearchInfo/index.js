@@ -131,8 +131,8 @@ const Layers = ({ width }) => {
 
     useEffect(()=>{
         if(validateData?.siteStyle){
-            const regex = /font-style:\s*([^;]*)/; //Style
-            const regex1 = /font-color:\s*([^;]*)/; //font-color
+            const regex = /font-family:\s*([^;]*)/; //Style
+            const regex1 = /color:\s*([^;]*)/; //font-color
             const buttonnRegex = /background-color:\s*([^;]*)/; //btn BGCOLOR
             const styleMatch = validateData?.siteStyle?.fontGeneral?.match(regex);         
             const fontColorMatch = validateData?.siteStyle?.fontGeneral?.match(regex1); 
@@ -181,6 +181,7 @@ const Layers = ({ width }) => {
                     title: element.description,
                     options: transformedArray,
                     filedName: element.columnName,
+                    defaultValue: element.dv,
                     columnType:element.columnType
                 };
                 SetSiteCharacteristics(prevState => [...prevState, obj]);
@@ -257,7 +258,7 @@ const Layers = ({ width }) => {
     }
     const handleSubmit = async (e) => {
         e.preventDefault()
-        uploadfile()
+        await uploadfile()
 
         console.log("siteCharacteristics", siteCharacteristics)
         const characteristicValues = siteCharacteristics?.reduce((acc, characteristic) => {
@@ -418,6 +419,7 @@ const Layers = ({ width }) => {
             name: file.name,
             type: file.type,
             size: file.size,
+            file: file,
             path: `submitter/${timestampRef.current}/${file.path}`
         }));
 
@@ -435,7 +437,8 @@ const Layers = ({ width }) => {
                 const response = await axios.post('https://submitapi.sitewise.com/attach_urls', payload);
 
                 const combinedData = response.data.map((url, index) => ({
-                    url,
+                    url,                    
+                    file: selectedFiles[index].file,
                     contentType: payload[index].contentType
                 }));
 
@@ -448,23 +451,37 @@ const Layers = ({ width }) => {
 
     const uploadFilesToS3 = async (data) => {
         try {
-
             await Promise.all(
-
-                data.map(async (url) => {
-                    const options = {
-                        headers: {
-                            'Content-Type': url.contentType
-                        }
-                    };
-
-                    await axios.put(url.url, null, options);
+                data.map((file) => {
+                    return new Promise((resolve, reject) => {
+                        const options = {
+                            headers: {
+                                'Content-Type': file.contentType
+                            }
+                        };
+    
+                        let reader = new FileReader();
+    
+                        reader.readAsArrayBuffer(file.file);
+    
+                        reader.onload = async () => {
+                            let arrayBuffer = reader.result;
+    
+                            try {
+                                await axios.put(file.url, arrayBuffer, options);
+                                console.log('after save!');
+                                resolve();
+                            } catch (error) {
+                                reject(error);
+                            }
+                        };
+    
+                        reader.onerror = (error) => reject(error);
+                    });
                 })
             );
-
-            console.log('Files uploaded to S3 successfully');
         } catch (error) {
-            console.error('Error uploading files to S3:', error);
+            console.error(error);
         }
     };
 

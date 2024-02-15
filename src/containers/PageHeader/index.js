@@ -9,7 +9,7 @@ const PageHeaders = () => {
 
     useEffect(() => {
         if (validateData?.siteStyle) {
-            const regex = /font-style:\s*([^;]*);?\s*font-color:\s*([^;]*)/;
+            const regex = /font-family:\s*([^;]*);?\s*color:\s*([^;]*)/;
             const backgroundRegex = /background-color:\s*([^;]*)/; //Style
             const matches = validateData?.siteStyle?.fontHeader?.match(regex);
             const bGColorMatch = validateData?.siteStyle?.backgroundStyle?.match(backgroundRegex);  

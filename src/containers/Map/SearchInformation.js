@@ -29,7 +29,7 @@ const StudyAreas = ({ visible, locationDetail, position, locationName }) => {
     useEffect(() => {
         onClick()
         if (validateData?.siteStyle) {
-            const styleRegex = /font-style:\s*([^;]*)/;
+            const styleRegex = /font-family:\s*([^;]*)/;
             const bgColorRegex = /background-color:\s*([^;]*)/;
         
             const extractStyle = (styleString, regex) => {
