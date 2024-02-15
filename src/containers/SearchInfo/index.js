@@ -654,12 +654,10 @@ const Layers = ({ width }) => {
                                                      color : fontColor ? fontColor : '',
                                                 }}>No location to show yet</label>
                                             </Row>
-                                            <Row style={{...styles.noLocationSearch,
-                                               fontFamily: fontFamilys ? fontFamilys :'',
-                                               color : fontColor ? fontColor : '',
-                                            }}>
+                                            <Row style={{...styles.noLocationSearch,}}>
                                                 <label style={{
-                                                    color: '#AEB9CA'
+                                                       fontFamily: fontFamilys ? fontFamilys :'',
+                                                       color : fontColor ? fontColor : '',
                                                 }}>please search</label>
                                             </Row>
                                         </div>
