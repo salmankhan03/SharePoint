@@ -131,7 +131,7 @@ const Layers = ({ width }) => {
     useEffect(() => {
         const initialData = {};
         validateAttributeData?.forEach((attribute) => {
-            initialData[attribute.columnName] = attribute.tyo ? getDefaultOption(attribute) : '';
+            initialData[attribute.columnName] = attribute.tyo ? getDefaultOption(attribute) : attribute.dv;
         });
 
         setFormData(initialData);
