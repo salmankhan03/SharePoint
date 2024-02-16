@@ -123,6 +123,33 @@ const Layers = ({ width }) => {
     const [timeStamp, setTimeStamp] = useState(false)
     const timestampRef = useRef('');
 
+    const validateAttributeData = validateData?.attributes
+
+    const [formData, setFormData] = useState({});
+    const [checkSubmit, setCheckSubmit] = useState(false);
+
+    useEffect(() => {
+        const initialData = {};
+        validateAttributeData?.forEach((attribute) => {
+            initialData[attribute.columnName] = attribute.tyo ? getDefaultOption(attribute) : '';
+        });
+
+        setFormData(initialData);
+        setCheckSubmit(false)
+    }, [validateAttributeData, checkSubmit]);
+
+    const getDefaultOption = (attribute) => {
+        if (attribute.tyo && attribute.tyo.length > 0) {
+            const [defaultValue] = attribute.tyo.find(option => option.startsWith(attribute.dv))?.split('|') || [attribute.dv];
+            return defaultValue;
+        }
+        return attribute.dv || '';
+    };
+
+    const handleInputChange = (columnName, value) => {
+        setFormData(prevData => ({ ...prevData, [columnName]: value }));
+    };
+
     useEffect(() => {
         if (!timestampRef.current) {
             timestampRef.current = Date.now();
@@ -267,33 +294,23 @@ const Layers = ({ width }) => {
     const handleSubmit = async (e) => {
         e.preventDefault()
         await uploadfile()
+        const formDataCopy = { ...formData };
 
-        console.log("siteCharacteristics", siteCharacteristics)
-        const characteristicValues = siteCharacteristics?.reduce((acc, characteristic) => {
+        validateAttributeData.forEach(attribute => {
+            const { columnName, columnType } = attribute;
+            const value = formDataCopy[columnName];
 
-            const key = characteristic.filedName;
-            // const value = mapData[characteristic?.filedName];
-            let value;
-            switch (characteristic.filedName) {
-                // case "pco_name":
-                case characteristic.filedName:
-                // case "pco_city":
-                // case "pco_state":
-                // case "pco_zipcode":
-                // case  "pco_exclude_sister":
-                // case  "pco_include_sister":
-                    value = mapData[characteristic?.filedName] ;
-                    break;
-                default:
-                    value = findResultValue(characteristic, key, siteCharacteristics, mapData);
-                    break;
+            if (value !== "") {
+                if (columnType === 1) {
+                    formDataCopy[columnName] = JSON.parse(value);
+                } else if (columnType === 2) {
+                    formDataCopy[columnName] = parseFloat(value).toFixed(1);
+                } else if (columnType === 0) {
+                    formDataCopy[columnName] = String(value);
+                }
             }
-            if (key !== undefined && value !== undefined) {
-                acc[key] = characteristic?.columnType === 1 ? JSON.parse(value) : characteristic?.columnType === 2 ? parseFloat(value).toFixed(1) :value ;
-            }
+        });
 
-            return acc;
-        }, {});
         // console.log("characteristicValues",characteristicValues)
         let submitfiles = selectedFiles.map(file => `${file.path}`);// submitter/${timestampRef.current}/
         const payload = {
@@ -306,9 +323,7 @@ const Layers = ({ width }) => {
                     site: { latitude: position.lat, longitude: position.lng },
                     name: mapData.mapName,
                     comment: mapData.comments,
-                    attributes: {
-                        ...characteristicValues
-                    },
+                    attributes: formDataCopy,
                     uploads: submitfiles
                 }
             ]
@@ -331,6 +346,7 @@ const Layers = ({ width }) => {
             setSelectedFiles([])
             setTimeStamp(true)
             dispatch(setAttributesData(mapData));
+            setFormData({});
             // setCurrentStep(1)
         } catch (error) {
             message.error(error);
@@ -340,6 +356,7 @@ const Layers = ({ width }) => {
 
     const submitAnotherSite = () => {
         SetSubmitSuccessFull(false)
+        setCheckSubmit(true)
         setCurrentStep(1);
     }
 
@@ -595,55 +612,67 @@ const Layers = ({ width }) => {
                                         ) : (<CaretRightOutlined style={{ marginTop: 8 }} />)}
                                         <div style={{ 
                                             fontWeight: 700, fontSize: 14,
-                                            //  fontFamily: 'Roboto', 
                                             fontFamily: fontFamilys ? fontFamilys : 'Roboto' ,
                                             color:fontColor ? fontColor : '#021E4F', 
                                              marginTop: 12 }}>Site Characteristics (Optional)</div>
                                     </div>
-                                    {optionalField === true && siteCharacteristics && (
-                                        <div>
-                                            {siteCharacteristics.map((characteristic, index) => {
-                                                return (
-                                                    <React.Fragment key={index}>
-                                                        {characteristic?.options === undefined ? (
-                                                            <>
-                                                                <div style={styles.input} key={characteristic?.filedName}>
-                                                                    <Col span={24} style={styles.inputs}>
-                                                                        <InputComp
-                                                                            id={characteristic?.filedName}
-                                                                            label={characteristic?.title}
-                                                                            value={mapData[characteristic?.filedName]}
-                                                                            type={characteristic?.columnType === 1 ? "number" :"text"}
-                                                                            onChange={handleChangeInput}
-                                                                            placeholder={characteristic?.title}
-                                                                            autoFocus={false}
-                                                                            fontStyle={fontFamilys}
-                                                                            fontColor={fontColor}
-                                                                            
-                                                                        />
-                                                                    </Col>
-                                                                </div>
-                                                            </>
-                                                        ) : (
-                                                            renderSelect(
-                                                                characteristic?.filedName,         // Field Name
-                                                                characteristic?.title,             // Label
-                                                                mapData[characteristic?.filedName] ? mapData[characteristic?.filedName] : attributeData[characteristic?.filedName], // Value
-                                                                characteristic?.options,           // Options
-                                                                characteristic?.title,             // Placeholder
-                                                                false,
-                                                                
+                                        {validateAttributeData.map(attribute => (
+                                            <div key={attribute.columnName}>
+                                                {attribute.tyo ? (
 
-                                                            )
-                                                        )}
-                                                    </React.Fragment>
-                                                );
-                                            })}
-                                        </div>
-                                    )}
+                                                    <div style={styles.input}>
+                                                        <Col span={24} style={{...styles.inputLabel,fontFamily:fontFamilys?fontFamilys:'',color:fontColor?fontColor:''}}>
+                                                            {attribute.description}
+                                                        </Col>
+                                                        <Col span={24} style={styles.inputs}>
+                                                            <Select
+                                                                style={{ width: '100%',fontFamily:fontFamilys?fontFamilys:'' }}
+                                                                value={formData[attribute.columnName]}
+                                                                onChange={(e) => handleInputChange(attribute.columnName, e)}
+                                                                placeholder={attribute.description}
+                                                                autoFocus={false}
+                                                            >
+                                                                {attribute.tyo?.map((option) => {
+                                                                    const [value, label] = option.split('|');
+                                                                    return (
+                                                                        <option key={value} value={value} style={{fontFamily:fontFamilys?fontFamilys:''}}>
+                                                                        {label}
+                                                                        </option>
+                                                                    );
+                                                                })}
+                                                            </Select>
+                                                        </Col>
+                                                    </div>
 
+                                                ) : (
 
+                                                    <div style={{ display: 'flex', flexDirection: "column" }}>
+                                                        <Col
+                                                            span={24}
+                                                            style={{
+                                                                ...styles.inputLabel,
+                                                                fontFamily:fontFamilys ? fontFamilys:'', //+'!important'
+                                                                color:fontColor? fontColor:'',
+                                                            }}
+                                                        >
+                                                            {attribute.description}
+                                                        </Col>
+                                                        <Col span={24} style={styles.inputs}>
 
+                                                            {<AntInput
+                                                                    style={{ position: 'inherit' }}
+                                                                    autoFocus={false}
+                                                                    placeholder={attribute.description}
+                                                                    type={attribute?.columnType === 1 ? "number" :"text"}
+                                                                    value={formData[attribute.columnName]}
+                                                                    onChange={(e) => handleInputChange(attribute.columnName, e.target.value)}
+                                                                />
+                                                            }
+                                                        </Col>
+                                                    </div>
+                                                )}
+                                            </div>
+                                        ))}
                                 </div> :
 
                                     <div style={styles.noLocationContainer}>
