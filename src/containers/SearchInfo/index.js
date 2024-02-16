@@ -200,51 +200,10 @@ const Layers = ({ width }) => {
             }
         }
     },[])
-    useEffect(() => {
-        for (let index = 0; index < validateData?.attributes.length; index++) {
-            const element = validateData?.attributes[index];
-            // if ((element?.tyo && element?.tyo.length > 0) ||
-            //     element.columnName === "pco_address" || element.columnName === "pco_city" ||
-            //     element.columnName === "pco_state" || element.columnName === "pco_zipcode") {
-                if (element?.columnName !== "pco_name"){
-                const transformedArray = element?.tyo?.filter(item => item !== "").map(item => {
-                    const [value, option] = item.split('|');
-                    return { value, option };
-                });
-                let obj = {
-                    title: element.description,
-                    options: transformedArray,
-                    filedName: element.columnName,
-                    defaultValue: element.dv,
-                    columnType:element.columnType
-                };
-                SetSiteCharacteristics(prevState => [...prevState, obj]);
-                setMapData((prevMapData) => ({
-                    ...prevMapData,
-                    [element?.columnName]: element?.tyo && element.dv ? element.dv:  undefined // DV value set
-                }));
-            }
-        }
-        // }
-
-    }, [validateData]);
 
     useEffect(() => {
         const data = locationDetail
         if (data) {
-            const [nameAndCode, address, city, stateAndZipcode] = data?.split(", ");
-
-            const { 1: name, 2: code } = nameAndCode?.match(/(.+) \((.+)\)/) || [];
-            const { 1: state, 2: zipcode } = stateAndZipcode?.match(/([A-Z]+) (\d{5})/) || [];
-
-            const result = {
-                name: name || '',
-                code: code || '',
-                address: address || '',
-                city: city || '',
-                state: state || '',
-                zipcode: zipcode || ''
-            };
 
             setMapData((prevMapData) => ({
                 ...prevMapData,
@@ -279,18 +238,7 @@ const Layers = ({ width }) => {
             dispatch(setContactScreenShowHide(true))
         }
     }
-    function findResultValue(characteristic, key, siteCharacteristics, mapData) {
-        const targetObject = siteCharacteristics?.find(({ filedName }) => filedName === key);
-        const result = targetObject?.options?.find(({ value }) => value === mapData[characteristic?.filedName]);
-        const data =  result ?
-            (targetObject?.columnType === 1 ? JSON.parse(result?.value) : // Integer Value Pass
-             targetObject?.columnType === 0 ? result.option : // String Value Pass
-             targetObject?.columnType === 2 ? parseFloat(result?.value).toFixed(1) : // Float Value Pass
-                            undefined
-            )
-            : undefined;
-        return data;
-    }
+
     const handleSubmit = async (e) => {
         e.preventDefault()
         await uploadfile()
@@ -311,8 +259,8 @@ const Layers = ({ width }) => {
             }
         });
 
-        // console.log("characteristicValues",characteristicValues)
-        let submitfiles = selectedFiles.map(file => `${file.path}`);// submitter/${timestampRef.current}/
+
+        let submitfiles = selectedFiles.map(file => `${file.path}`);
         const payload = {
             accessKey: 'abc',
             comment: mapData.email,
@@ -334,7 +282,6 @@ const Layers = ({ width }) => {
             email: mapData.email
         }
 
-        console.log("PAY LOAD", payload)
         try {
             const response = await axios.post('https://submitapi.sitewise.com/submit', payload);
             console.log('API Response:', response);
@@ -347,7 +294,6 @@ const Layers = ({ width }) => {
             setTimeStamp(true)
             dispatch(setAttributesData(mapData));
             setFormData({});
-            // setCurrentStep(1)
         } catch (error) {
             message.error(error);
         }
@@ -385,44 +331,6 @@ const Layers = ({ width }) => {
         );
     };
 
-    const selectOptions = [
-        { value: 'option1', label: 'Option 1' },
-        { value: 'option2', label: 'Option 2' },
-        { value: 'option3', label: 'Option 3' },
-        // ... add more options as needed
-    ];
-
-    const handleChangeSelect = (key, value) => {
-        setMapData((prevData) => ({
-            ...prevData,
-            [key]: value,
-        }));
-    };
-
-    const renderSelect = (id, label, value, options, placeholder, autoFocus) => {
-        return (
-            <div style={styles.input} key={id}>
-                <Col span={24} style={{...styles.inputLabel,fontFamily:fontFamilys?fontFamilys:'',color:fontColor?fontColor:''}}>
-                    {label}
-                </Col>
-                <Col span={24} style={styles.inputs}>
-                    <Select
-                        style={{ width: '100%',fontFamily:fontFamilys?fontFamilys:'' }}
-                        value={value}
-                        onChange={(newValue) => handleChangeSelect(id, newValue)}
-                        placeholder={placeholder}
-                        autoFocus={autoFocus}
-                    >
-                        {options?.map((option) => (
-                            <Option key={option.value} value={option.value} style={{fontFamily:fontFamilys?fontFamilys:''}}>
-                                {option.option}
-                            </Option>
-                        ))}
-                    </Select>
-                </Col>
-            </div>
-        );
-    };
     const dispatch = useDispatch();
 
     const onClose = useCallback(() => {
