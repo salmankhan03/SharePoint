@@ -571,7 +571,7 @@ const Layers = ({ width }) => {
                                                                     style={{ position: 'inherit' }}
                                                                     autoFocus={false}
                                                                     placeholder={attribute.description}
-                                                                    type={attribute?.columnType === 1 ? "number" :"text"}
+                                                                    type={attribute?.columnType === 0 ? "text" :"number" }
                                                                     value={formData[attribute.columnName]}
                                                                     onChange={(e) => handleInputChange(attribute.columnName, e.target.value)}
                                                                 />
