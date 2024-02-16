@@ -40,7 +40,7 @@ const Map = () => {
             setMap(map);
             mapRef.current = map;
         },
-        [setMap]
+        [setMap, dispatch]
     );
     const onZoomChanged = useCallback(() => dispatch(setMapZoom()), [dispatch]);
     const onBoundsChanged = useCallback(

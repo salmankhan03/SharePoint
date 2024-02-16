@@ -7,8 +7,15 @@ import { mapBounds } from "./helpers/mapLocation";
 
 // import MeasureTool from "measuretool-googlemaps-v3";
 
-
-
+const keyDragZoom = {
+    key: 'shift',
+    boxStyle: {
+        border: '1px dashed black',
+        backgroundColor: '#8798AD',
+        opacity: 0.5
+    },
+    veilStyle: { backgroundColor: '#8798AD', opacity: 0 }
+};
 export const center = { lat: 47.47941, lng: -122.196712 };
 export const zoom = 8;
 
@@ -277,6 +284,7 @@ export const searchMapLocation = (input) => (dispatch, getState) => {
 export const saveMapRef = (map) => async (dispatch, getState) => {
     // console.log("map ==>",map)
     dispatch(mapSlice.actions.saveMapRef(map));
+    map.enableKeyDragZoom(keyDragZoom);
 };
 
 export const validateData = (data) => async (dispatch) => {
