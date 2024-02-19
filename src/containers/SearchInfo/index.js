@@ -27,6 +27,7 @@ import { useDropzone } from 'react-dropzone';
 import { message } from 'antd';
 import Marker from "../../assets/icons/Marker"
 import UploadIcon from "../../assets/icons/UploadIcon";
+import SuccessIcon from "../../assets/icons/SuccessIcon";
 import TrashIcon from "../../assets/icons/TrashIcon";
 const { Option } = Select;
 const { TextArea } = AntInput;
@@ -108,6 +109,7 @@ const Layers = ({ width }) => {
     const [browsebtnHovered, setBrowsebtnHovered] = useState(false);
     const [successbtnHovered, setSuccessbtnHovered] = useState(false);
     const [btnBackgroundColor, setBtnBackgroundColor] = useState()
+    const [headerBgColor, setHeaderBgColor] = useState()
     const [btnFamily, setBtnFamily] = useState()
     const [btnHoverColor, setBtnHoverColor] = useState()
     const [btnHoverFamily, setBtnHoverFamily] = useState()
@@ -173,7 +175,8 @@ const Layers = ({ width }) => {
             const btnBGColorMatch = validateData?.siteStyle?.buttonStyle?.match(buttonnRegex);  
             const btnFamilyMatch = validateData?.siteStyle?.buttonStyle?.match(regex);    
             const btnHoverMatch = validateData?.siteStyle?.buttonHover?.match(buttonnRegex);  
-            const btnHoverFamilyMatch = validateData?.siteStyle?.buttonHover?.match(regex);  
+            const btnHoverFamilyMatch = validateData?.siteStyle?.buttonHover?.match(regex); 
+            const headerBgColorMatch = validateData?.siteStyle?.backgroundStyle?.match(buttonnRegex);
             if (styleMatch) {
                 const fontsFamily = styleMatch[1].trim();
                     setFontFamilys(fontsFamily) //General fonts Style
@@ -197,6 +200,10 @@ const Layers = ({ width }) => {
             if (btnFamilyMatch) {
                 const btnFamilyValue = btnFamilyMatch[1].trim();
                 setBtnFamily(btnFamilyValue) //Btn fonts Style
+            }
+            if(headerBgColorMatch){
+                const headerbgColorValue = headerBgColorMatch[1].trim();
+                setHeaderBgColor(headerbgColorValue)
             }
         }
     },[])
@@ -293,6 +300,8 @@ const Layers = ({ width }) => {
             setSelectedFiles([])
             setTimeStamp(true)
             dispatch(setAttributesData(mapData));
+            setCurrentStep(1);
+            dispatch(setContactScreenShowHide(false))
             setFormData({});
         } catch (error) {
             message.error(error);
@@ -523,8 +532,8 @@ const Layers = ({ width }) => {
                                             fontFamily: fontFamilys ? fontFamilys : 'Roboto' ,
                                             color:fontColor ? fontColor : '#021E4F', 
                                              marginTop: 12 }}>Site Characteristics (Optional)</div>
-                                    </div>
-                                        {validateAttributeData.map(attribute => (
+                                    </div>                                                            
+                                        {optionalField && validateAttributeData?.map(attribute => (
                                             <div key={attribute.columnName}>
                                                 {attribute.tyo ? (
 
@@ -622,7 +631,7 @@ const Layers = ({ width }) => {
                                     <div style={styles.uploadContainer}>
                                         <div {...getRootProps()} className={`dropzone ${isDragActive ? 'active' : ''}`}>
                                             <input {...getInputProps()} />
-                                            <p style={styles.textCenter}>  <UploadIcon color="#0087b7" size="14" /> </p>
+                                            <p style={styles.textCenter}>  <UploadIcon color={headerBgColor ? headerBgColor : ''} size="14" /> </p>
                                             <p style={{
                                                 ...styles.infoText,
                                                 fontFamily:fontFamilys? fontFamilys:'',
@@ -690,13 +699,7 @@ const Layers = ({ width }) => {
 
                         {submitSuccessFull === true && <div style={{ width: '100%' }}>
                             <div style={{ display: 'flex', alignItems: 'center', flexDirection: 'column', marginTop: 60 }}>
-                                <img
-                                    src={submitSuccess}
-                                    alt={'submitSuccess'}
-                                    // style={styles.iconSvg}
-                                    width="64"
-                                    height="64"
-                                />
+                                <SuccessIcon color={headerBgColor ? headerBgColor : ''} size="14" />
                                 <div style={{ 
                                      fontFamily:fontFamilys? fontFamilys :'Poppins',
                                      color: fontColor ? fontColor: '#0087B7',
