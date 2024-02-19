@@ -47,8 +47,8 @@ const initialState = {
     searchByButtonClick: false,
     contactScreenShowHide: false,
     rotationAngle: 0,
-    tilt:false,
-    addressDetails:{},
+    tilt: false,
+    addressDetails: {},
     attributeData: {}
 };
 
@@ -134,7 +134,7 @@ const mapSlice = createSlice({
         setAddressDetails: (state, action) => {
             return {
                 ...state,
-                addressDetails:action.payload
+                addressDetails: action.payload
             };
         },
 
@@ -284,7 +284,7 @@ export const searchMapLocation = (input) => (dispatch, getState) => {
 export const saveMapRef = (map) => async (dispatch, getState) => {
     // console.log("map ==>",map)
     dispatch(mapSlice.actions.saveMapRef(map));
-    map.enableKeyDragZoom(keyDragZoom);
+    map?.enableKeyDragZoom(keyDragZoom);
 };
 
 export const validateData = (data) => async (dispatch) => {
