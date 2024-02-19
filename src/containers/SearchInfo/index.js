@@ -616,7 +616,14 @@ const Layers = ({ width }) => {
                                             color: fontColor ? fontColor: '', 
                                         }}
                                         >
-                                            Attach Files (optional)
+                                            Attach Files (Optional)<br/>
+                                            <span  style={{ 
+                                            marginTop: 7, 
+                                            ...styles.fileFormatText,  
+                                            fontFamily:fontFamilys? fontFamilys :'',
+                                            color: fontColor ? fontColor: '',  }}>
+                                                For example, attach a site plan, shopping center info sheet, etc.
+                                            </span>                                            
                                         </Col>
                                     </Row>
                                     <div style={styles.uploadContainer}>
@@ -652,15 +659,17 @@ const Layers = ({ width }) => {
                                             onClick={() => document.querySelector('input[type="file"]').click()}>
                                             +  Browse Files
                                         </Button>
-                                    </div>
-                                    <div style={{ 
+                                        <br />
+                                        <div style={{ 
                                             marginTop: 7, 
                                             ...styles.fileFormatText,  
                                             fontFamily:fontFamilys? fontFamilys :'',
                                             color: fontColor ? fontColor: '',  }}>
                                         The following formats can be uploaded: .pdf, .gif, .jpg or .png
+                                        </div>
                                     </div>
-                                    <div>
+                                   
+                                    <div style={{marginTop: 14}}>
                                         {selectedFiles.length > 0 && (
                                             <div>
                                                 {renderFiles()}

@@ -25,6 +25,7 @@ const Shortcuts = () => {
     const zoom = useSelector((state) => state.zoom);
     const validateData = useSelector((state) => state.validateData);
     const [fontFamilys, setFontFamilys] = useState()
+    const [backgroundColor, setBackGroundColor] = useState()
     const [fontColor, setFontColor] = useState()
     // console.log("zoom",zoom)
     const { rotationAngle } = useSelector((state) => state);
@@ -42,8 +43,9 @@ const Button = ({ buttonStyle, ...props }) => (
   );
   useEffect(()=>{
     if (validateData?.siteStyle?.fontGeneral) {
-        const styleRegex = /font-style:\s*([^;]*)/;
-        const colorRegex = /font-color:\s*([^;]*)/;
+        const styleRegex = /font-family:\s*([^;]*)/;
+        const backgroundRegex = /background-color:\s*([^;]*)/;
+        const colorRegex = /color:\s*([^;]*)/;
     
         const extractStyle = (styleString, regex) => {
             const match = styleString.match(regex);
@@ -53,9 +55,14 @@ const Button = ({ buttonStyle, ...props }) => (
         const fontGeneralStyle = validateData?.siteStyle?.fontGeneral;
         const fontFamily = extractStyle(fontGeneralStyle, styleRegex);
         const fontColor = extractStyle(fontGeneralStyle, colorRegex);
+        const backgroundColor = extractStyle(validateData?.siteStyle?.backgroundStyle, backgroundRegex);
     
         if (fontFamily) {
             setFontFamilys(fontFamily);
+        }
+
+        if (backgroundColor) {
+            setBackGroundColor(backgroundColor);
         }
     
         if (fontColor) {
@@ -201,7 +208,7 @@ const Button = ({ buttonStyle, ...props }) => (
                         flexDirection: "column",
                         position: "absolute",
                         top: 80,
-                        transition: "all 0.2s",
+                        transition: "all 0.2s"
                     }}
                 >
                     <div
@@ -213,7 +220,7 @@ const Button = ({ buttonStyle, ...props }) => (
                             flexDirection: 'column',
                             alignItems: 'flex-start',
                             // right: 15,
-                            backgroundColor: '#f2f8fb'
+                            backgroundColor: backgroundColor?backgroundColor:'#f2f8fb'
                         }}
                     >
                         <div style={styles.container} className="ant-notification-notice">
@@ -221,15 +228,17 @@ const Button = ({ buttonStyle, ...props }) => (
                                 <div>
                                     <div className="ant-notification-notice-message" 
                                         style={{ marginBottom: 8, 
+                                                fontSize: 14,
                                                 fontFamily:fontFamilys?fontFamilys:'', 
-                                                // color:fontColor?fontColor:'',
+                                                color:fontColor?fontColor:'',
                                             }}
                                     >Select location</div>
                                     <div className="ant-notification-notice-description"
                                     style={{ marginBottom: 8, 
+                                        fontSize: 14,
                                         fontFamily:fontFamilys?fontFamilys:'', 
-                                        // color:fontColor?fontColor:'',
-                                    }}>Click a point on the map to select a location to submit</div>
+                                        color:fontColor?fontColor:'',
+                                    }}>Click a point on the map to select a location</div>
                                 </div>
                                 {/* <div onClick={onClose}>
                                     <CloseOutlined style={styles.closeIcon} />
