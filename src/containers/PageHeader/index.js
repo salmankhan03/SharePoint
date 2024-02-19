@@ -9,29 +9,30 @@ const PageHeaders = () => {
 
     useEffect(() => {
         if (validateData?.siteStyle) {
-            const regex = /font-family:\s*([^;]*);?\s*color:\s*([^;]*)/;
+            const colorRegex = /color:\s*([^;]*)/;
+            const styleRegex = /font-style:\s*([^;]*)/;
             const backgroundRegex = /background-color:\s*([^;]*)/; //Style
-            const matches = validateData?.siteStyle?.fontHeader?.match(regex);
+            const matches = validateData?.siteStyle?.fontHeader?.match(styleRegex);
+            const matches1 = validateData?.siteStyle?.fontHeader?.match(colorRegex);
             const bGColorMatch = validateData?.siteStyle?.backgroundStyle?.match(backgroundRegex);  
             if (matches) {
-                const fontFamily = matches[1].trim();
-                const fontColor = matches[2].trim();
-
+                const fontFamily = matches[1]?.trim();
                 if (fontFamily) {
                     setFontFamilys(fontFamily);
                 }
-
+            }
+            if (matches1) {
+                const fontColor = matches[1]?.trim();
                 if (fontColor) {
                     setFontColor(fontColor);
                 }
             }
             if (bGColorMatch) {
                 const bgColor = bGColorMatch[1].trim();
-                console.log("bgColor",bgColor)
                 setBackGroundColor(bgColor) 
             }
         }
-    }, [validateData    ])
+    }, [validateData])
 
     return (
         <div style={{...styles.pageHeader, backgroundColor: backGroundColor ? backGroundColor :'#021E4F'}}>
