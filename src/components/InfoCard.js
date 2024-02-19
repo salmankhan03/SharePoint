@@ -13,9 +13,10 @@ const InfoCard = ({
     onClose,
     position,
     children,
-    visible
+    visible,
+    fontFamily,
+    fontColor
 }) => {
-
     return (
         <>
             {<div className={'infoCard'}>
@@ -25,7 +26,7 @@ const InfoCard = ({
                     }}
                 >
                     <div style={styles.headerTitle}>
-                        <Title level={4} style={styles.title}>
+                        <Title level={4} style={{...styles.title,fontFamily:fontFamily?fontFamily:'', color:fontColor? fontColor:''}}>
                             {title}
                         </Title>
                         {titleLoading && (

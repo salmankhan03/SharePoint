@@ -19,6 +19,8 @@ const StudyAreas = ({ visible, locationDetail, position, locationName }) => {
     const [hovered, setHovered] = useState(false);
     const [btnBackgroundColor, setBtnBackgroundColor] = useState()
     const [btnFamily, setBtnFamily] = useState()
+    const [fontFamily, setFontFamily] = useState()
+    const [fontColor, setFontColor] = useState()
     const [btnHoverColor, setBtnHoverColor] = useState()
     const [btnHoverFamily, setBtnHoverFamily] = useState()
     const dispatch = useDispatch();
@@ -29,7 +31,8 @@ const StudyAreas = ({ visible, locationDetail, position, locationName }) => {
     useEffect(() => {
         onClick()
         if (validateData?.siteStyle) {
-            const styleRegex = /font-family:\s*([^;]*)/;
+            const styleRegex = /font-style:\s*([^;]*)/;
+            const colorRegex = /color:\s*([^;]*)/;
             const bgColorRegex = /background-color:\s*([^;]*)/;
         
             const extractStyle = (styleString, regex) => {
@@ -39,12 +42,14 @@ const StudyAreas = ({ visible, locationDetail, position, locationName }) => {
         
             const buttonStyle = validateData?.siteStyle?.buttonStyle;
             const buttonHoverStyle = validateData?.siteStyle?.buttonHover;
-        
+            const fontFamily = validateData?.siteStyle?.fontGeneral;
+            const fontColor = validateData?.siteStyle?.fontGeneral;
             const btnBackgroundColor = extractStyle(buttonStyle, bgColorRegex);
             const btnFontFamily = extractStyle(buttonStyle, styleRegex);
             const btnHoverBackgroundColor = extractStyle(buttonHoverStyle, bgColorRegex);
             const btnHoverFontFamily = extractStyle(buttonHoverStyle, styleRegex);
-        
+            const generelFontFamily = extractStyle(fontFamily, styleRegex);
+            const generelfontsColor = extractStyle(fontColor, colorRegex);
             if (btnBackgroundColor) {
                 setBtnBackgroundColor(btnBackgroundColor);
             }
@@ -59,6 +64,12 @@ const StudyAreas = ({ visible, locationDetail, position, locationName }) => {
         
             if (btnHoverFontFamily) {
                 setBtnHoverFamily(btnHoverFontFamily);
+            }
+            if(generelFontFamily){
+                setFontFamily(generelFontFamily);
+            }
+            if(generelfontsColor){
+                setFontColor(generelfontsColor)
             }
         }
         
@@ -82,7 +93,7 @@ const StudyAreas = ({ visible, locationDetail, position, locationName }) => {
 
     const span = 24 / '100%';
     return (
-        <InfoCard title={locationName} onClose={onHide} visible={contactScreenShowHide} position={position}>
+        <InfoCard title={locationName} onClose={onHide} visible={contactScreenShowHide} position={position} fontFamily={fontFamily} fontColor={fontColor}>
             {/*<Thumbnails />*/}
             {/*{<Summary dataSource={locationDetail} />}*/}
             <Col span={span} className={'columnButtons'} style={{ ...styles.columnWithBorder }}>
