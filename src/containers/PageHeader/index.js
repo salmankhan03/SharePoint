@@ -22,7 +22,7 @@ const PageHeaders = () => {
                 }
             }
             if (matches1) {
-                const fontColor = matches[1]?.trim();
+                const fontColor = matches1[1]?.trim();
                 if (fontColor) {
                     setFontColor(fontColor);
                 }
