@@ -56,6 +56,9 @@ const mapSlice = createSlice({
     name: "mapReducer",
     initialState,
     reducers: {
+        setCurrentUserLocation: (state, action) => {
+            return { ...state, center: action.payload };
+        },
         validateData: (state, action) => {
             return { ...state, validateData: action.payload };
         },
@@ -358,6 +361,10 @@ export const setMapZoom = () => async (dispatch, getState) => {
 
 export const setAttributesData = (value) => (dispatch, getState) => {
     dispatch(mapSlice.actions.setAttributesData(value));
+};
+
+export const setCurrentUserLocation = (value) => (dispatch, getState) => {
+    dispatch(mapSlice.actions.setCurrentUserLocation(value));
 };
 
 

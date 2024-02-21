@@ -4,7 +4,16 @@ import { GoogleMap, DrawingManager } from "@react-google-maps/api";
 
 import SearchInformation from './SearchInformation'
 import SearchMarker from "./SearchMarker";
-import { setAddress, setLocation, setSelectedMapHideShow,setMapZoom,setMapBounds,saveMapRef,setAddressDetails } from "../../store";
+import {
+    setAddress,
+    setLocation,
+    setSelectedMapHideShow,
+    setMapZoom,
+    setMapBounds,
+    saveMapRef,
+    setAddressDetails,
+    setCurrentUserLocation
+} from "../../store";
 import _ from "lodash";
 
 const streetViewOptions = {
@@ -14,7 +23,7 @@ const streetViewOptions = {
 };
 
 const Map = () => {
-    const { center, zoom, position, display } = useSelector((state) => state);
+    const { center, zoom, position, display, ref } = useSelector((state) => state);
     const mapTypeId = useSelector(state => state.mapTypeId);
     const searchByButtonClick = useSelector((state) => state.searchByButtonClick);
     const total = useSelector((state) => state);
@@ -28,6 +37,34 @@ const Map = () => {
     // console.log("rotationAngle ==>",rotationAngle)
 
     const dispatch = useDispatch();
+
+    const requestLocationPermission = () => {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    const { latitude, longitude } = position.coords;
+                    const center = {
+                        lat: latitude,
+                        lng: longitude,
+                    };
+                    dispatch(setCurrentUserLocation(center));
+                    if (ref) {
+                        ref.panTo(center);
+                    }
+                },
+                (error) => {
+                    console.error("Error getting current location:", error);
+                }
+            );
+        } else {
+            console.error("Geolocation is not supported by this browser.");
+        }
+    };
+
+    useEffect(() => {
+        // Request location permission when the component mounts
+        requestLocationPermission();
+    }, []);
 
     useEffect(() => {
         setMapPosition(position)
