@@ -103,10 +103,10 @@ button.gm-ui-hover-effect {
   padding: 6px 4px 6px 16px;
 }
 
-.ant-input:focus {
-  border-color: #0087b7;
-  box-shadow: inset 0 0 0 1px #0087b7;
-}
+/*.ant-input:focus {*/
+/*  border-color: #0087b7;*/
+/*  box-shadow: inset 0 0 0 1px #0087b7;*/
+/*}*/
 
 .sitewise-rect-primary-button {
   border-color: #0087b7;

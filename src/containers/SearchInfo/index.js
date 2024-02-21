@@ -523,16 +523,17 @@ const Layers = ({ width }) => {
                                     {renderInput('mapName', 'Name', mapData.mapName, 'text', 'Site Name', viewSideDetailFields)}
                                     {renderInput('comments', 'Comments', mapData.comments, 'text-area', 'Comments')}
 
-                                    <div onClick={() => SetOptionalField(!optionalField)} style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer' }}>
-                                        {optionalField ? (
-                                            <CaretDownOutlined style={{ marginTop: 8 }} />
-                                        ) : (<CaretRightOutlined style={{ marginTop: 8 }} />)}
-                                        <div style={{ 
-                                            fontWeight: 700, fontSize: 14,
-                                            fontFamily: fontFamilys ? fontFamilys : 'Roboto' ,
-                                            color:fontColor ? fontColor : '#021E4F', 
-                                             marginTop: 12 }}>Site Characteristics (Optional)</div>
-                                    </div>                                                            
+                                    {validateAttributeData.length > 0 && <div>
+                                        <div onClick={() => SetOptionalField(true)} style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer' }}>
+                                            {optionalField ? (
+                                                <CaretDownOutlined style={{ marginTop: 8 }} />
+                                            ) : (<CaretRightOutlined style={{ marginTop: 8 }} />)}
+                                            <div style={{
+                                                fontWeight: 700, fontSize: 14,
+                                                fontFamily: fontFamilys ? fontFamilys : 'Roboto' ,
+                                                color:fontColor ? fontColor : '#021E4F',
+                                                marginTop: 12 }}>Site Characteristics (Optional)</div>
+                                        </div>
                                         {optionalField && validateAttributeData?.map(attribute => (
                                             <div key={attribute.columnName}>
                                                 {attribute.tyo ? (
@@ -553,7 +554,7 @@ const Layers = ({ width }) => {
                                                                     const [value, label] = option.split('|');
                                                                     return (
                                                                         <option key={value} value={value} style={{fontFamily:fontFamilys?fontFamilys:''}}>
-                                                                        {label}
+                                                                            {label}
                                                                         </option>
                                                                     );
                                                                 })}
@@ -577,19 +578,20 @@ const Layers = ({ width }) => {
                                                         <Col span={24} style={styles.inputs}>
 
                                                             {<AntInput
-                                                                    style={{ position: 'inherit' }}
-                                                                    autoFocus={false}
-                                                                    placeholder={attribute.description}
-                                                                    type={attribute?.columnType === 0 ? "text" :"number" }
-                                                                    value={formData[attribute.columnName]}
-                                                                    onChange={(e) => handleInputChange(attribute.columnName, e.target.value)}
-                                                                />
+                                                                style={{ position: 'inherit' }}
+                                                                autoFocus={false}
+                                                                placeholder={attribute.description}
+                                                                type={attribute?.columnType === 0 ? "text" :"number" }
+                                                                value={formData[attribute.columnName]}
+                                                                onChange={(e) => handleInputChange(attribute.columnName, e.target.value)}
+                                                            />
                                                             }
                                                         </Col>
                                                     </div>
                                                 )}
                                             </div>
                                         ))}
+                                    </div>}
                                 </div> :
 
                                     <div style={styles.noLocationContainer}>
