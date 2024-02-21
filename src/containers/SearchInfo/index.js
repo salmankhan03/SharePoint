@@ -525,9 +525,6 @@ const Layers = ({ width }) => {
 
                                     {validateAttributeData.length > 0 && <div>
                                         <div onClick={() => SetOptionalField(true)} style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer' }}>
-                                            {optionalField ? (
-                                                <CaretDownOutlined style={{ marginTop: 8 }} />
-                                            ) : (<CaretRightOutlined style={{ marginTop: 8 }} />)}
                                             <div style={{
                                                 fontWeight: 700, fontSize: 14,
                                                 fontFamily: fontFamilys ? fontFamilys : 'Roboto' ,
