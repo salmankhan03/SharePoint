@@ -33,7 +33,7 @@ const { Option } = Select;
 const { TextArea } = AntInput;
 
 const InputComp = (props) => {
-    const { id, label, multiline, disabled, is_input_pw, showPassword, type, inputProps, value, onChange, placeholder, autoFocus,fontStyle,fontColor, hoverBG, ...rest } = props;
+    const { id, label, multiline, disabled, is_input_pw, showPassword, type, inputProps, value, onChange, placeholder, autoFocus, fontStyle, fontColor, hoverBG, ...rest } = props;
     const handleChange = event => onChange(id, event.target.value)
 
     const inputRef = useRef(null);
@@ -48,12 +48,12 @@ const InputComp = (props) => {
 
     return (
         <div style={{ display: 'flex', flexDirection: "column" }}>
-            <Col 
-                span={24} 
+            <Col
+                span={24}
                 style={{
                     ...styles.inputLabel,
-                    fontFamily:fontStyle ? fontStyle:'', //+'!important'
-                    color:fontColor? fontColor:'',
+                    fontFamily: fontStyle ? fontStyle : '', //+'!important'
+                    color: fontColor ? fontColor : '',
                 }}
             >
                 {label}
@@ -113,7 +113,7 @@ const Layers = ({ width }) => {
     const [selectedMapOptions, setSelectedMapOptions] = useState(false);
 
     const { locationDetail, viewSideDetailFields, position } = useSelector((state) => state);
-    const addressDetails = useSelector((state) =>state.addressDetails);
+    const addressDetails = useSelector((state) => state.addressDetails);
     const validateData = useSelector((state) => state.validateData);
     const attributeData = useSelector((state) => state.attributeData);
     const [fontFamilys, setFontFamilys] = useState()
@@ -130,7 +130,7 @@ const Layers = ({ width }) => {
 
     const instructionParagraphs = validateData?.instructions?.replace(/<br\/>/g, '');
     const storedContactInfo = JSON.parse(localStorage.getItem('contactInfo')) || { name: '', email: '' };
-    const [mapData, setMapData] = useState(attributeData );
+    const [mapData, setMapData] = useState(attributeData);
     const [submitSuccessFull, SetSubmitSuccessFull] = useState(false)
     const [optionalField, SetOptionalField] = useState(true)
     const [selectedFiles, setSelectedFiles] = useState([]);
@@ -170,8 +170,8 @@ const Layers = ({ width }) => {
     useEffect(() => {
         if (!timestampRef.current) {
             timestampRef.current = Date.now();
-        } else{
-            if(timeStamp === true){
+        } else {
+            if (timeStamp === true) {
                 timestampRef.current = Date.now();
                 setTimeStamp(false)
             }
@@ -180,18 +180,18 @@ const Layers = ({ width }) => {
 
 
 
-    useEffect(()=>{
-        if(validateData?.siteStyle){
+    useEffect(() => {
+        if (validateData?.siteStyle) {
             const regex = /font-family:\s*([^;]*)/; //Style
             const regex1 = /color:\s*([^;]*)/; //font-color
             const buttonnRegex = /background-color:\s*([^;]*)/; //btn BGCOLOR
             const backgroundRegex = /background-color:\s*([^;]*)/;
-            const styleMatch = validateData?.siteStyle?.fontGeneral?.match(regex);         
-            const fontColorMatch = validateData?.siteStyle?.fontGeneral?.match(regex1); 
-            const btnBGColorMatch = validateData?.siteStyle?.buttonStyle?.match(buttonnRegex);  
-            const btnFamilyMatch = validateData?.siteStyle?.buttonStyle?.match(regex);    
-            const btnHoverMatch = validateData?.siteStyle?.buttonHover?.match(buttonnRegex);  
-            const btnHoverFamilyMatch = validateData?.siteStyle?.buttonHover?.match(regex); 
+            const styleMatch = validateData?.siteStyle?.fontGeneral?.match(regex);
+            const fontColorMatch = validateData?.siteStyle?.fontGeneral?.match(regex1);
+            const btnBGColorMatch = validateData?.siteStyle?.buttonStyle?.match(buttonnRegex);
+            const btnFamilyMatch = validateData?.siteStyle?.buttonStyle?.match(regex);
+            const btnHoverMatch = validateData?.siteStyle?.buttonHover?.match(buttonnRegex);
+            const btnHoverFamilyMatch = validateData?.siteStyle?.buttonHover?.match(regex);
             const headerBgColorMatch = validateData?.siteStyle?.backgroundStyle?.match(buttonnRegex);
 
             const extractStyle = (styleString, regex) => {
@@ -203,9 +203,9 @@ const Layers = ({ width }) => {
 
             if (styleMatch) {
                 const fontsFamily = styleMatch[1].trim();
-                    setFontFamilys(fontsFamily) //General fonts Style
+                setFontFamilys(fontsFamily) //General fonts Style
             }
-            if(fontColorMatch){
+            if (fontColorMatch) {
                 const fontscolor = fontColorMatch[1].trim();
                 setFontColor(fontscolor) //General fonts color
             }
@@ -225,7 +225,7 @@ const Layers = ({ width }) => {
                 const btnFamilyValue = btnFamilyMatch[1].trim();
                 setBtnFamily(btnFamilyValue) //Btn fonts Style
             }
-            if(headerBgColorMatch){
+            if (headerBgColorMatch) {
                 const headerbgColorValue = headerBgColorMatch[1].trim();
                 setHeaderBgColor(headerbgColorValue)
             }
@@ -233,7 +233,7 @@ const Layers = ({ width }) => {
                 setBackGroundColor(backgroundColor);
             }
         }
-    },[])
+    }, [])
 
     useEffect(() => {
         const data = locationDetail
@@ -245,10 +245,10 @@ const Layers = ({ width }) => {
                 name: storedContactInfo?.name || '',
                 email: storedContactInfo?.email || '',
                 // pco_name: addressDetails ? addressDetails?.formattedAddress : '',
-                pco_address: addressDetails ? addressDetails?.formattedAddress   : '',
-                pco_city: addressDetails ? addressDetails?.structuredAddress['locality,political'] :'',
-                pco_state: addressDetails ? addressDetails?.structuredAddress['administrative_area_level_1,political'] :'',
-                pco_zipcode: addressDetails ? addressDetails?.structuredAddress?.postal_code :''
+                pco_address: addressDetails ? addressDetails?.formattedAddress : '',
+                pco_city: addressDetails ? addressDetails?.structuredAddress['locality,political'] : '',
+                pco_state: addressDetails ? addressDetails?.structuredAddress['administrative_area_level_1,political'] : '',
+                pco_zipcode: addressDetails ? addressDetails?.structuredAddress?.postal_code : ''
             }));
         } else {
             setMapData((prevMapData) => ({
@@ -399,7 +399,7 @@ const Layers = ({ width }) => {
 
     async function uploadfile() {
         try {
-            if(selectedFiles.length > 0){
+            if (selectedFiles.length > 0) {
                 const payload = selectedFiles.map(file => ({
                     fileName: `${file.path}`,
                     contentType: file.type
@@ -408,7 +408,7 @@ const Layers = ({ width }) => {
                 const response = await axios.post('https://submitapi.sitewise.com/attach_urls', payload);
 
                 const combinedData = response.data.map((url, index) => ({
-                    url,                    
+                    url,
                     file: selectedFiles[index].file,
                     contentType: payload[index].contentType
                 }));
@@ -430,14 +430,14 @@ const Layers = ({ width }) => {
                                 'Content-Type': file.contentType
                             }
                         };
-    
+
                         let reader = new FileReader();
-    
+
                         reader.readAsArrayBuffer(file.file);
-    
+
                         reader.onload = async () => {
                             let arrayBuffer = reader.result;
-    
+
                             try {
                                 await axios.put(file.url, arrayBuffer, options);
                                 console.log('after save!');
@@ -446,7 +446,7 @@ const Layers = ({ width }) => {
                                 reject(error);
                             }
                         };
-    
+
                         reader.onerror = (error) => reject(error);
                     });
                 })
@@ -470,7 +470,7 @@ const Layers = ({ width }) => {
         return selectedFiles.map((file) => (
             <Row style={{ marginTop: 10 }}>
                 <Col span={18}>
-                    <div style={{...styles.fileListText,fontFamily:fontFamilys?fontFamilys:'',color:fontColor?fontColor:''}}>{file.name}</div>
+                    <div style={{ ...styles.fileListText, fontFamily: fontFamilys ? fontFamilys : '', color: fontColor ? fontColor : '' }}>{file.name}</div>
                 </Col>
                 <Col span={6}>
                     <div style={styles.textEnd} onClick={() => removeFile(file.name)}>
@@ -516,32 +516,33 @@ const Layers = ({ width }) => {
                     <div style={styles.containerDiv} className={'containerDiv'}>
                         {currentStep === 1 && submitSuccessFull === false &&
                             <>
-                                <div style={{ 
-                                    fontFamily: fontFamilys ? fontFamilys :'',
-                                    color : fontColor ? fontColor : '#021E4F',
-                                    fontWeight: 700, 
-                                    fontSize: '14px', 
-                                    margin: '15px 2px' 
-                                    }}>{instructionParagraphs}</div>
-                                <Search backgroundColor={backgroundColor}/>
+                                <div style={{
+                                    fontFamily: fontFamilys ? fontFamilys : '',
+                                    color: fontColor ? fontColor : '#021E4F',
+                                    fontWeight: 700,
+                                    fontSize: '14px',
+                                    margin: '15px 2px'
+                                }}>{instructionParagraphs}</div>
+                                <Search backgroundColor={backgroundColor} />
                                 <div style={{ marginTop: 8, alignItems: 'flex-end', textAlign: 'right' }}>
-                                    <div 
-                                        onClick={selectedOnTheMap} 
-                                        style={{ 
-                                            fontFamily: fontFamilys ? fontFamilys :'',
-                                            color : fontColor ? fontColor : '#0087b7',
-                                            fontSize: 14, cursor: 'pointer' }}>
-                                            <Marker color={fontColor ? fontColor : '#0087b7'} size="14" /> Select On the Map
+                                    <div
+                                        onClick={selectedOnTheMap}
+                                        style={{
+                                            fontFamily: fontFamilys ? fontFamilys : '',
+                                            color: fontColor ? fontColor : '#0087b7',
+                                            fontSize: 14, cursor: 'pointer'
+                                        }}>
+                                        <Marker color={fontColor ? fontColor : '#0087b7'} size="14" /> Select On the Map
                                     </div>
                                 </div>
 
                                 {viewSideDetailFields === true ? <div style={styles.mapDetailsContainer}>
                                     <Row>
-                                        <Col span={22} 
+                                        <Col span={22}
                                             style={{
                                                 ...styles.inputLabel,
-                                                fontFamily:fontFamilys? fontFamilys:'',
-                                                color: fontColor ?  fontColor :'',
+                                                fontFamily: fontFamilys ? fontFamilys : '',
+                                                color: fontColor ? fontColor : '',
                                             }}
                                         >
                                             {locationDetail}
@@ -555,21 +556,22 @@ const Layers = ({ width }) => {
                                         <div onClick={() => SetOptionalField(true)} style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer' }}>
                                             <div style={{
                                                 fontWeight: 700, fontSize: 14,
-                                                fontFamily: fontFamilys ? fontFamilys : 'Roboto' ,
-                                                color:fontColor ? fontColor : '#021E4F',
-                                                marginTop: 12 }}>Site Characteristics (Optional)</div>
+                                                fontFamily: fontFamilys ? fontFamilys : 'Roboto',
+                                                color: fontColor ? fontColor : '#021E4F',
+                                                marginTop: 12
+                                            }}>Site Characteristics (Optional)</div>
                                         </div>
                                         {optionalField && validateAttributeData?.map(attribute => (
                                             <div key={attribute.columnName}>
                                                 {attribute.tyo ? (
 
                                                     <div style={styles.input}>
-                                                        <Col span={24} style={{...styles.inputLabel,fontFamily:fontFamilys?fontFamilys:'',color:fontColor?fontColor:''}}>
+                                                        <Col span={24} style={{ ...styles.inputLabel, fontFamily: fontFamilys ? fontFamilys : '', color: fontColor ? fontColor : '' }}>
                                                             {attribute.description}
                                                         </Col>
                                                         <Col span={24} style={styles.inputs}>
                                                             <Select
-                                                                style={{ width: '100%',fontFamily:fontFamilys?fontFamilys:'' }}
+                                                                style={{ width: '100%', fontFamily: fontFamilys ? fontFamilys : '' }}
                                                                 value={formData[attribute.columnName]}
                                                                 onChange={(e) => handleInputChange(attribute.columnName, e)}
                                                                 placeholder={attribute.description}
@@ -578,7 +580,7 @@ const Layers = ({ width }) => {
                                                                 {attribute.tyo?.map((option) => {
                                                                     const [value, label] = option.split('|');
                                                                     return (
-                                                                        <option key={value} value={value}  style={{
+                                                                        <option key={value} value={value} style={{
                                                                             fontFamily: fontFamilys ? fontFamilys : '',
                                                                             backgroundColor: formData[attribute.columnName] === value ? '#F1F3F4' : 'inherit',
                                                                         }}>
@@ -614,8 +616,8 @@ const Layers = ({ width }) => {
                                                             span={24}
                                                             style={{
                                                                 ...styles.inputLabel,
-                                                                fontFamily:fontFamilys ? fontFamilys:'', //+'!important'
-                                                                color:fontColor? fontColor:'',
+                                                                fontFamily: fontFamilys ? fontFamilys : '', //+'!important'
+                                                                color: fontColor ? fontColor : '',
                                                             }}
                                                         >
                                                             {attribute.description}
@@ -626,7 +628,7 @@ const Layers = ({ width }) => {
                                                                 style={{ position: 'inherit' }}
                                                                 autoFocus={false}
                                                                 placeholder={attribute.description}
-                                                                type={attribute?.columnType === 0 ? "text" :"number" }
+                                                                type={attribute?.columnType === 0 ? "text" : "number"}
                                                                 value={formData[attribute.columnName]}
                                                                 onChange={(e) => handleInputChange(attribute.columnName, e.target.value)}
                                                                 className={'searchInfoInput'}
@@ -657,14 +659,14 @@ const Layers = ({ width }) => {
                                         <div>
                                             <Row style={styles.noLocation}>
                                                 <label style={{
-                                                     fontFamily: fontFamilys ? fontFamilys :'',
-                                                     color : fontColor ? fontColor : '',
+                                                    fontFamily: fontFamilys ? fontFamilys : '',
+                                                    color: fontColor ? fontColor : '',
                                                 }}>No location to show yet</label>
                                             </Row>
-                                            <Row style={{...styles.noLocationSearch,}}>
+                                            <Row style={{ ...styles.noLocationSearch, }}>
                                                 <label style={{
-                                                       fontFamily: fontFamilys ? fontFamilys :'',
-                                                       color : fontColor ? fontColor : '',
+                                                    fontFamily: fontFamilys ? fontFamilys : '',
+                                                    color: fontColor ? fontColor : '',
                                                 }}>please search</label>
                                             </Row>
                                         </div>
@@ -678,22 +680,23 @@ const Layers = ({ width }) => {
                             <>
                                 <div>
                                     <Row>
-                                        <Col 
-                                            span={24} 
+                                        <Col
+                                            span={24}
                                             style={{
-                                            ...styles.fileUploadHeading,
-                                            fontFamily:fontFamilys? fontFamilys :'',
-                                            color: fontColor ? fontColor: '', 
-                                        }}
+                                                ...styles.fileUploadHeading,
+                                                fontFamily: fontFamilys ? fontFamilys : '',
+                                                color: fontColor ? fontColor : '',
+                                            }}
                                         >
-                                            Attach Files (Optional)<br/>
-                                            <span  style={{ 
-                                            marginTop: 7, 
-                                            ...styles.fileFormatText,  
-                                            fontFamily:fontFamilys? fontFamilys :'',
-                                            color: fontColor ? fontColor: '',  }}>
+                                            Attach Files (Optional)<br />
+                                            <span style={{
+                                                marginTop: 7,
+                                                ...styles.fileFormatText,
+                                                fontFamily: fontFamilys ? fontFamilys : '',
+                                                color: fontColor ? fontColor : '',
+                                            }}>
                                                 For example, attach a site plan, shopping center info sheet, etc.
-                                            </span>                                            
+                                            </span>
                                         </Col>
                                     </Row>
                                     <div style={styles.uploadContainer}>
@@ -702,16 +705,16 @@ const Layers = ({ width }) => {
                                             <p style={styles.textCenter}>  <UploadIcon color={headerBgColor ? headerBgColor : ''} size="14" /> </p>
                                             <p style={{
                                                 ...styles.infoText,
-                                                fontFamily:fontFamilys? fontFamilys:'',
-                                                color:fontColor ? fontColor:'',
-                                                }}>
+                                                fontFamily: fontFamilys ? fontFamilys : '',
+                                                color: fontColor ? fontColor : '',
+                                            }}>
                                                 <i className="fas fa-cloud-upload-alt"></i> Drag and drop files here
                                             </p>
                                             <p style={{
                                                 ...styles.infoText,
-                                                fontFamily:fontFamilys? fontFamilys:'',
-                                                color:fontColor ? fontColor:'',
-                                                }}>or</p>
+                                                fontFamily: fontFamilys ? fontFamilys : '',
+                                                color: fontColor ? fontColor : '',
+                                            }}>or</p>
                                         </div>
                                         <Button
                                             // type="primary"
@@ -719,27 +722,28 @@ const Layers = ({ width }) => {
                                             onMouseLeave={handleBrowseMouseLeave}
                                             style={{
                                                 ...styles.BrowseButton,
-                                                fontFamily: btnFamily ? (browsebtnHovered ? btnHoverFamily : btnFamily) : '' ,
-                                                backgroundColor: btnBackgroundColor ? (browsebtnHovered ? btnHoverColor : 'white') : (browsebtnHovered ? '#0087b7' : 'white') ,
-                                                color: btnBackgroundColor ? (browsebtnHovered ? 'white': (btnBackgroundColor ? btnBackgroundColor : 'black')) : (browsebtnHovered ? 'white' : '#0087b7') ,
-                                                borderColor:btnBackgroundColor ? (browsebtnHovered ? "white" : (btnBackgroundColor ? btnBackgroundColor : 'transparent')):(browsebtnHovered ? 'white' : '#0087b7'),
-                                                border: btnBackgroundColor ?  '1px solid' +btnBackgroundColor:  '1px solid #0087b7',
-                                                borderRadius:'6px' 
-                                              }}
+                                                fontFamily: btnFamily ? (browsebtnHovered ? btnHoverFamily : btnFamily) : '',
+                                                backgroundColor: btnBackgroundColor ? (browsebtnHovered ? btnHoverColor : 'white') : (browsebtnHovered ? '#0087b7' : 'white'),
+                                                color: btnBackgroundColor ? (browsebtnHovered ? 'white' : (btnBackgroundColor ? btnBackgroundColor : 'black')) : (browsebtnHovered ? 'white' : '#0087b7'),
+                                                borderColor: btnBackgroundColor ? (browsebtnHovered ? "white" : (btnBackgroundColor ? btnBackgroundColor : 'transparent')) : (browsebtnHovered ? 'white' : '#0087b7'),
+                                                border: btnBackgroundColor ? '1px solid' + btnBackgroundColor : '1px solid #0087b7',
+                                                borderRadius: '6px'
+                                            }}
                                             onClick={() => document.querySelector('input[type="file"]').click()}>
                                             +  Browse Files
                                         </Button>
                                         <br />
-                                        <div style={{ 
-                                            marginTop: 7, 
-                                            ...styles.fileFormatText,  
-                                            fontFamily:fontFamilys? fontFamilys :'',
-                                            color: fontColor ? fontColor: '',  }}>
-                                        The following formats can be uploaded: .pdf, .gif, .jpg or .png
+                                        <div style={{
+                                            marginTop: 7,
+                                            ...styles.fileFormatText,
+                                            fontFamily: fontFamilys ? fontFamilys : '',
+                                            color: fontColor ? fontColor : '',
+                                        }}>
+                                            The following formats can be uploaded: .pdf, .gif, .jpg or .png
                                         </div>
                                     </div>
-                                   
-                                    <div style={{marginTop: 14}}>
+
+                                    <div style={{ marginTop: 14 }}>
                                         {selectedFiles.length > 0 && (
                                             <div>
                                                 {renderFiles()}
@@ -755,9 +759,11 @@ const Layers = ({ width }) => {
                             <>
                                 <div>
                                     <Row>
-                                        <Col span={24} style={{...styles.mapDetailHeading,
-                                           fontFamily:fontFamilys? fontFamilys :'',
-                                           color: fontColor ? fontColor: '',}}>Contact Information</Col>
+                                        <Col span={24} style={{
+                                            ...styles.mapDetailHeading,
+                                            fontFamily: fontFamilys ? fontFamilys : '',
+                                            color: fontColor ? fontColor : '',
+                                        }}>Contact Information</Col>
                                     </Row>
                                     {renderInput('name', 'Name', mapData.name, 'text', 'Name')}
                                     {renderInput('email', 'Email Address', mapData.email, 'text', 'Email Address')}
@@ -770,31 +776,32 @@ const Layers = ({ width }) => {
                         {submitSuccessFull === true && <div style={{ width: '100%' }}>
                             <div style={{ display: 'flex', alignItems: 'center', flexDirection: 'column', marginTop: 60 }}>
                                 <SuccessIcon color={headerBgColor ? headerBgColor : ''} size="14" />
-                                <div style={{ 
-                                     fontFamily:fontFamilys? fontFamilys :'Poppins',
-                                     color: fontColor ? fontColor: '#0087B7',
-                                     marginTop: 9, 
-                                     fontSize: 14, 
-                                     fontWeight: 700, 
-                                    }}>Thank you for submitting your site</div>
-                                <Button onClick={submitAnotherSite} 
-                                 onMouseEnter={handleSuccesskMouseEnter}
-                                 onMouseLeave={handleSuccessMouseLeave}
-                                style={{ 
+                                <div style={{
+                                    fontFamily: fontFamilys ? fontFamilys : 'Poppins',
+                                    color: fontColor ? fontColor : '#0087B7',
+                                    marginTop: 9,
+                                    fontSize: 14,
+                                    fontWeight: 700,
+                                }}>Thank you for submitting your site</div>
+                                <Button onClick={submitAnotherSite}
+                                    onMouseEnter={handleSuccesskMouseEnter}
+                                    onMouseLeave={handleSuccessMouseLeave}
+                                    style={{
 
-                                    fontFamily: btnFamily ? (successbtnHovered ? btnHoverFamily : btnFamily) : '' ,
-                                    backgroundColor: btnBackgroundColor ? (successbtnHovered ? btnHoverColor : 'white') : (successbtnHovered ? '#0087b7' : 'white') ,
-                                    color: btnBackgroundColor ? (successbtnHovered ? 'white': (btnBackgroundColor ? btnBackgroundColor : 'black')) : (successbtnHovered ? 'white' : '#0087b7') ,
-                                    borderColor:btnBackgroundColor ? (successbtnHovered ? "white" : (btnBackgroundColor ? btnBackgroundColor : 'transparent')):(successbtnHovered ? 'white' : '#0087b7'),
-                                    border: btnBackgroundColor ?  '1px solid' +btnBackgroundColor:  '1px solid #0087b7',
-                                    borderRadius:'6px' ,
-                                    // border: '1px solid #0087B7', 
-                                    // background: '#0087B7', 
-                                    fontWeight: 500, 
-                                    fontSize: 14, 
-                                    // fontFamily: 'Roboto', 
-                                    // color: '#FFF', 
-                                    marginTop: 24 }}>Submit Another Site</Button>
+                                        fontFamily: btnFamily ? (successbtnHovered ? btnHoverFamily : btnFamily) : '',
+                                        backgroundColor: btnBackgroundColor ? (successbtnHovered ? btnHoverColor : 'white') : (successbtnHovered ? '#0087b7' : 'white'),
+                                        color: btnBackgroundColor ? (successbtnHovered ? 'white' : (btnBackgroundColor ? btnBackgroundColor : 'black')) : (successbtnHovered ? 'white' : '#0087b7'),
+                                        borderColor: btnBackgroundColor ? (successbtnHovered ? "white" : (btnBackgroundColor ? btnBackgroundColor : 'transparent')) : (successbtnHovered ? 'white' : '#0087b7'),
+                                        border: btnBackgroundColor ? '1px solid' + btnBackgroundColor : '1px solid #0087b7',
+                                        borderRadius: '6px',
+                                        // border: '1px solid #0087B7', 
+                                        // background: '#0087B7', 
+                                        fontWeight: 500,
+                                        fontSize: 14,
+                                        // fontFamily: 'Roboto', 
+                                        // color: '#FFF', 
+                                        marginTop: 24
+                                    }}>Submit Another Site</Button>
                             </div>
                         </div>}
 
@@ -803,50 +810,55 @@ const Layers = ({ width }) => {
 
 
                 {submitSuccessFull === false && <div style={styles.bottomBox}>
-                    <div style={{ marginTop: '16px', width: '100%' }}>
-                        <Row>
-                            <Col span={18}>
+                    {/* <div style={{ marginTop: '16px', width: '100%' }}> */}
+                    <div style={{ width: '100%' }}>
+                        <Row style={{ padding: '15px' }}>
+                            {/* <Col span={18}> */}
+                            <Col style={{ marginRight: 'auto' }}>
                                 {currentStep !== 1 && (
-                                    <Button 
-                                    onMouseEnter={handleBackMouseEnter}
-                                    onMouseLeave={handleBackMouseLeave}
-                                    style={{ marginLeft: '15px',
-                                    fontFamily: btnFamily ? (backHovered ? btnHoverFamily : btnFamily) : '' ,
-                                    backgroundColor: btnBackgroundColor ? (backHovered ? btnHoverColor : 'white') : (backHovered ? '#0087b7' : 'white') ,
-                                    color: btnBackgroundColor ? (backHovered ? 'white': (btnBackgroundColor ? btnBackgroundColor : 'black')) : (backHovered ? 'white' : '#0087b7') ,
-                                    borderColor:btnBackgroundColor ? (backHovered ? "white" : (btnBackgroundColor ? btnBackgroundColor : 'transparent')):(backHovered ? 'white' : '#0087b7'),
-                                    border: btnBackgroundColor ?  '1px solid' +btnBackgroundColor:  '1px solid #0087b7',
-                                    borderRadius:'6px' }} onClick={handleBackStep}>Back</Button>
+                                    <Button
+                                        onMouseEnter={handleBackMouseEnter}
+                                        onMouseLeave={handleBackMouseLeave}
+                                        // style={{ marginLeft: '15px',
+                                        style={{
+                                            fontFamily: btnFamily ? (backHovered ? btnHoverFamily : btnFamily) : '',
+                                            backgroundColor: btnBackgroundColor ? (backHovered ? btnHoverColor : 'white') : (backHovered ? '#0087b7' : 'white'),
+                                            color: btnBackgroundColor ? (backHovered ? 'white' : (btnBackgroundColor ? btnBackgroundColor : 'black')) : (backHovered ? 'white' : '#0087b7'),
+                                            borderColor: btnBackgroundColor ? (backHovered ? "white" : (btnBackgroundColor ? btnBackgroundColor : 'transparent')) : (backHovered ? 'white' : '#0087b7'),
+                                            border: btnBackgroundColor ? '1px solid' + btnBackgroundColor : '1px solid #0087b7',
+                                            borderRadius: '6px'
+                                        }} onClick={handleBackStep}>Back</Button>
                                 )}
                             </Col>
-                            <Col span={6}>
+                            {/* <Col span={6}> */}
+                            <Col style={{ marginLeft: 'auto' }}>
                                 <Button
                                     // style={styles.modalButton}
                                     onMouseEnter={handleMouseEnter}
                                     onMouseLeave={handleMouseLeave}
                                     style={{
                                         // backgroundColor: btnBackgroundColor ? (hovered ? btnBackgroundColor : 'white') : (hovered ? '#0087b7' : 'white') ,
-                                        fontFamily: btnFamily ? (hovered ? btnHoverFamily : btnFamily) : '' ,
-                                        backgroundColor: btnBackgroundColor ? 
-                                                ((currentStep === 1 && (!viewSideDetailFields || mapData.mapName === "") ||
+                                        fontFamily: btnFamily ? (hovered ? btnHoverFamily : btnFamily) : '',
+                                        backgroundColor: btnBackgroundColor ?
+                                            ((currentStep === 1 && (!viewSideDetailFields || mapData.mapName === "") ||
                                                 currentStep === 3 && (mapData.name === "" || mapData.email === "" || !isValidEmail(mapData.email)))
-                                                ? 'white'  : (hovered ? btnBackgroundColor : 'white')) : (hovered ? '#0087b7' : 'white'),
-                                        color: btnBackgroundColor ?  ((currentStep === 1 && (!viewSideDetailFields || mapData.mapName === "") ||
-                                                currentStep === 3 && (mapData.name === "" || mapData.email === "" || !isValidEmail(mapData.email)))
-                                                ? '#ccc' : (hovered ? 'white': (btnBackgroundColor ? btnBackgroundColor : 'black'))) : (hovered ? 'white' : '#0087b7') ,
-                                        borderColor:btnBackgroundColor ?((currentStep === 1 && (!viewSideDetailFields || mapData.mapName === "") ||
-                                                currentStep === 3 && (mapData.name === "" || mapData.email === "" || !isValidEmail(mapData.email)))
-                                                ? '#ccc' : (hovered ? "white" : (btnBackgroundColor ? btnBackgroundColor : 'transparent'))):(hovered ? 'white' : '#0087b7'),
-                                        border: btnBackgroundColor ?  '1px solid' +btnBackgroundColor:  '1px solid #0087b7',
-                                        borderRadius:'6px'
-                
+                                                ? 'white' : (hovered ? btnBackgroundColor : 'white')) : (hovered ? '#0087b7' : 'white'),
+                                        color: btnBackgroundColor ? ((currentStep === 1 && (!viewSideDetailFields || mapData.mapName === "") ||
+                                            currentStep === 3 && (mapData.name === "" || mapData.email === "" || !isValidEmail(mapData.email)))
+                                            ? '#ccc' : (hovered ? 'white' : (btnBackgroundColor ? btnBackgroundColor : 'black'))) : (hovered ? 'white' : '#0087b7'),
+                                        borderColor: btnBackgroundColor ? ((currentStep === 1 && (!viewSideDetailFields || mapData.mapName === "") ||
+                                            currentStep === 3 && (mapData.name === "" || mapData.email === "" || !isValidEmail(mapData.email)))
+                                            ? '#ccc' : (hovered ? "white" : (btnBackgroundColor ? btnBackgroundColor : 'transparent'))) : (hovered ? 'white' : '#0087b7'),
+                                        border: btnBackgroundColor ? '1px solid' + btnBackgroundColor : '1px solid #0087b7',
+                                        borderRadius: '6px'
+
                                     }}
                                     onClick={currentStep === 1 || currentStep === 2 ? moveNextStep : handleSubmit}
                                     disabled={
                                         (currentStep === 1 && (!viewSideDetailFields || mapData.mapName === "")) || // comments remove =>  || mapData.comments === ""
                                         (currentStep === 3 && (mapData.name === "" || mapData.email === "" || !isValidEmail(mapData.email)))
                                     }
-                                    className={btnBackgroundColor ? "" :'sitewise-rect-primary-button'}
+                                    className={btnBackgroundColor ? "" : 'sitewise-rect-primary-button'}
 
                                 >
                                     {currentStep === 1 || currentStep === 2 ? 'Next' : 'Submit'}
