@@ -186,15 +186,15 @@ button.gm-ui-hover-effect {
   background-color: #f2f8fb;
 }
 
-.ant-notification-notice::before {
-  content: '';
-  width: 5px;
-  height: 100%;
-  position: absolute;
-  left: 0;
-  top: 0;
-  background-color: #0087b7;
-}
+/*.ant-notification-notice::before {*/
+/*  content: '';*/
+/*  width: 5px;*/
+/*  height: 100%;*/
+/*  position: absolute;*/
+/*  left: 0;*/
+/*  top: 0;*/
+/*  background-color: #0087b7;*/
+/*}*/
 
 .ant-notification-notice-message {
   color: #021e4f;

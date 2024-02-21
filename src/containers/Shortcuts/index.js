@@ -252,6 +252,19 @@ const Button = ({ buttonStyle, ...props }) => (
                                 </div>
                             </div>
                         </div>
+                        <style>
+                            {`
+                                .ant-notification-notice::before {
+                                    content: '';
+                                    width: 5px;
+                                    height: 100%;
+                                    position: absolute;
+                                    left: 0;
+                                    top: 0;
+                                    background-color: ${fontColor ? fontColor : '#0087b7'};
+                                }
+                            `}
+                        </style>
                     </div>
                 </div>
             ) : null}
