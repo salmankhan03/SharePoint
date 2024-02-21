@@ -69,6 +69,7 @@ const InputComp = (props) => {
                     type={type}
                     value={value || ''}
                     onChange={handleChange}
+                    className={'searchInfoInput'}
                     {...rest}
                 /> :
                     <TextArea
@@ -83,18 +84,19 @@ const InputComp = (props) => {
                         type={type}
                         value={value || ''}
                         onChange={handleChange}
+                        className={'searchInfoInput'}
                         {...rest}
                     />
                 }
             </Col>
             <style>
                 {`
-                    .ant-input:focus {
+                    .searchInfoInput:focus {
                         border-color: ${hoverBG ? hoverBG : '#0087b7'};
                         box-shadow: inset 0 0 0 1px ${hoverBG ? hoverBG : '#0087b7'};
                     }
                     
-                    .ant-input:hover {
+                    .searchInfoInput:hover {
                         border-color: ${hoverBG ? hoverBG : '#0087b7'};
                         box-shadow: inset 0 0 0 1px ${hoverBG ? hoverBG : '#0087b7'};
                      }
@@ -627,8 +629,22 @@ const Layers = ({ width }) => {
                                                                 type={attribute?.columnType === 0 ? "text" :"number" }
                                                                 value={formData[attribute.columnName]}
                                                                 onChange={(e) => handleInputChange(attribute.columnName, e.target.value)}
+                                                                className={'searchInfoInput'}
                                                             />
                                                             }
+                                                            <style>
+                                                                {`
+                                                                    .searchInfoInput:focus {
+                                                                        border-color: ${backgroundColor ? backgroundColor : '#0087b7'};
+                                                                        box-shadow: inset 0 0 0 1px ${backgroundColor ? backgroundColor : '#0087b7'};
+                                                                    }
+                                                                    
+                                                                    .searchInfoInput:hover {
+                                                                        border-color: ${backgroundColor ? backgroundColor : '#0087b7'};
+                                                                        box-shadow: inset 0 0 0 1px ${backgroundColor ? backgroundColor : '#0087b7'};
+                                                                     }
+                                                                `}
+                                                            </style>
                                                         </Col>
                                                     </div>
                                                 )}
