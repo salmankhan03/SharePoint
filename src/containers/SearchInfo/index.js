@@ -523,7 +523,7 @@ const Layers = ({ width }) => {
                                     fontSize: '14px', 
                                     margin: '15px 2px' 
                                     }}>{instructionParagraphs}</div>
-                                <Search />
+                                <Search backgroundColor={backgroundColor}/>
                                 <div style={{ marginTop: 8, alignItems: 'flex-end', textAlign: 'right' }}>
                                     <div 
                                         onClick={selectedOnTheMap} 

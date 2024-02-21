@@ -9,7 +9,7 @@ import { setSearchProps, searchLocation } from "../../store";
 
 const path = "input";
 
-const Search = () => {
+const Search = ({backgroundColor}) => {
   const searchRef = useRef();
   const active = true;
   const input = useSelector((state) => state.search);
@@ -21,11 +21,13 @@ const Search = () => {
       dispatch(searchLocation(trim, path));
     }
   }, [dispatch, trim]);
+
+  const containerStyle = backgroundColor ? {borderColor: backgroundColor, ...styles.container} : {...styles.container}
   return (
     <div className="sitewise-search">
       {active ? (
         <div
-          style={styles.container}
+          style={containerStyle}
           className={trim ? "sitewise-search-hastext" : ""}
         >
           <Input
@@ -45,6 +47,19 @@ const Search = () => {
             style={styles.input}
             ref={searchRef}
           />
+          <style>
+            {`
+                    .ant-input-affix-wrapper:focus {
+                        border-color: ${backgroundColor ? backgroundColor : '#0087b7'}  !important;
+                        box-shadow: inset 0 0 0 1px ${backgroundColor ? backgroundColor : '#0087b7'};
+                    }
+                    
+                    .ant-input-affix-wrapper:hover {
+                        border-color: ${backgroundColor ? backgroundColor : '#0087b7'} !important;
+                        box-shadow: inset 0 0 0 1px ${backgroundColor ? backgroundColor : '#0087b7'};
+                     }
+                `}
+          </style>
           {trim && (
             <div style={styles.result}>
               <MapResults path={path} search={searchRef} />
