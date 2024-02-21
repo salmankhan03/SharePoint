@@ -245,17 +245,10 @@ const Layers = ({ width }) => {
                 name: storedContactInfo?.name || '',
                 email: storedContactInfo?.email || '',
                 // pco_name: addressDetails ? addressDetails?.formattedAddress : '',
-<<<<<<< HEAD
-                pco_address: addressDetails ? addressDetails?.formattedAddress : '',
-                pco_city: addressDetails ? addressDetails?.structuredAddress['locality,political'] : '',
-                pco_state: addressDetails ? addressDetails?.structuredAddress['administrative_area_level_1,political'] : '',
-                pco_zipcode: addressDetails ? addressDetails?.structuredAddress?.postal_code : ''
-=======
                 // pco_address: addressDetails ? addressDetails?.formattedAddress   : '',
                 // pco_city: addressDetails ? addressDetails?.structuredAddress['locality,political'] :'',
                 // pco_state: addressDetails ? addressDetails?.structuredAddress['administrative_area_level_1,political'] :'',
                 // pco_zipcode: addressDetails ? addressDetails?.structuredAddress?.postal_code :''
->>>>>>> 09f4cfc575048adbb144b05f99e8cd40d24e8685
             }));
         } else {
             setMapData((prevMapData) => ({
