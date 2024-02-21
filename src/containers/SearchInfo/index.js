@@ -33,8 +33,7 @@ const { Option } = Select;
 const { TextArea } = AntInput;
 
 const InputComp = (props) => {
-    const { id, label, multiline, disabled, is_input_pw, showPassword, type, inputProps, value, onChange, placeholder, autoFocus,fontStyle,fontColor, ...rest } = props;
-
+    const { id, label, multiline, disabled, is_input_pw, showPassword, type, inputProps, value, onChange, placeholder, autoFocus,fontStyle,fontColor, hoverBG, ...rest } = props;
     const handleChange = event => onChange(id, event.target.value)
 
     const inputRef = useRef(null);
@@ -88,6 +87,19 @@ const InputComp = (props) => {
                     />
                 }
             </Col>
+            <style>
+                {`
+                    .ant-input:focus {
+                        border-color: ${hoverBG ? hoverBG : '#0087b7'};
+                        box-shadow: inset 0 0 0 1px ${hoverBG ? hoverBG : '#0087b7'};
+                    }
+                    
+                    .ant-input:hover {
+                        border-color: ${hoverBG ? hoverBG : '#0087b7'};
+                        box-shadow: inset 0 0 0 1px ${hoverBG ? hoverBG : '#0087b7'};
+                     }
+                `}
+            </style>
         </div>
     );
 };
@@ -129,6 +141,7 @@ const Layers = ({ width }) => {
 
     const [formData, setFormData] = useState({});
     const [checkSubmit, setCheckSubmit] = useState(false);
+    const [backgroundColor, setBackGroundColor] = useState()
 
     useEffect(() => {
         const initialData = {};
@@ -170,6 +183,7 @@ const Layers = ({ width }) => {
             const regex = /font-family:\s*([^;]*)/; //Style
             const regex1 = /color:\s*([^;]*)/; //font-color
             const buttonnRegex = /background-color:\s*([^;]*)/; //btn BGCOLOR
+            const backgroundRegex = /background-color:\s*([^;]*)/;
             const styleMatch = validateData?.siteStyle?.fontGeneral?.match(regex);         
             const fontColorMatch = validateData?.siteStyle?.fontGeneral?.match(regex1); 
             const btnBGColorMatch = validateData?.siteStyle?.buttonStyle?.match(buttonnRegex);  
@@ -177,6 +191,14 @@ const Layers = ({ width }) => {
             const btnHoverMatch = validateData?.siteStyle?.buttonHover?.match(buttonnRegex);  
             const btnHoverFamilyMatch = validateData?.siteStyle?.buttonHover?.match(regex); 
             const headerBgColorMatch = validateData?.siteStyle?.backgroundStyle?.match(buttonnRegex);
+
+            const extractStyle = (styleString, regex) => {
+                const match = styleString.match(regex);
+                return match ? match[1].trim() : null;
+            };
+
+            const backgroundColor = extractStyle(validateData?.siteStyle?.backgroundStyle, backgroundRegex);
+
             if (styleMatch) {
                 const fontsFamily = styleMatch[1].trim();
                     setFontFamilys(fontsFamily) //General fonts Style
@@ -204,6 +226,9 @@ const Layers = ({ width }) => {
             if(headerBgColorMatch){
                 const headerbgColorValue = headerBgColorMatch[1].trim();
                 setHeaderBgColor(headerbgColorValue)
+            }
+            if (backgroundColor) {
+                setBackGroundColor(backgroundColor);
             }
         }
     },[])
@@ -335,6 +360,7 @@ const Layers = ({ width }) => {
                     autoFocus={autoFocus}
                     fontStyle={fontFamilys}
                     fontColor={fontColor}
+                    hoverBG={backgroundColor}
                 />
             </div>
         );
@@ -556,6 +582,23 @@ const Layers = ({ width }) => {
                                                                     );
                                                                 })}
                                                             </Select>
+                                                            <style>
+                                                                {`
+                                                                    .ant-select-focused .ant-select-selector,
+                                                                    .ant-select-selector:focus,
+                                                                    .ant-select-selector:hover,
+                                                                    .ant-select-open .ant-select-selector { 
+                                                                        border-color: ${backgroundColor ? backgroundColor : '#0087b7'} !important;
+                                                                        box-shadow: inset 0 0 0 1px ${backgroundColor ? backgroundColor : '#0087b7'} !important;
+                                                                    }
+                                                            
+                                                                    .ant-select-dropdown.custom-dropdown .ant-select-item:hover,
+                                                                    .ant-select-dropdown.custom-dropdown .ant-select-item-active {
+                                                                        background-color: ${backgroundColor ? backgroundColor : '#0087b7'} !important;
+                                                                       box-shadow: inset 0 0 0 1px ${backgroundColor ? backgroundColor : '#0087b7'} !important;
+                                                                    } 
+                                                                `}
+                                                            </style>
                                                         </Col>
                                                     </div>
 
