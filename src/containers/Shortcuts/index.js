@@ -261,7 +261,7 @@ const Button = ({ buttonStyle, ...props }) => (
                                     position: absolute;
                                     left: 0;
                                     top: 0;
-                                    background-color: ${fontColor ? fontColor : '#0087b7'};
+                                    background-color: ${backgroundColor ? backgroundColor : '#0087b7'};
                                 }
                             `}
                         </style>
