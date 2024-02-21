@@ -576,7 +576,10 @@ const Layers = ({ width }) => {
                                                                 {attribute.tyo?.map((option) => {
                                                                     const [value, label] = option.split('|');
                                                                     return (
-                                                                        <option key={value} value={value} style={{fontFamily:fontFamilys?fontFamilys:''}}>
+                                                                        <option key={value} value={value}  style={{
+                                                                            fontFamily: fontFamilys ? fontFamilys : '',
+                                                                            backgroundColor: formData[attribute.columnName] === value ? '#F1F3F4' : 'inherit',
+                                                                        }}>
                                                                             {label}
                                                                         </option>
                                                                     );
