@@ -102,8 +102,8 @@ const mapSlice = createSlice({
                 center: action.payload.item,
                 zoom: 17,
                 display: true,
-                locationName: `${action.payload.item.lat}, ${action.payload.item.lng}`,
-                locationDetail: null,
+                locationName: action.payload.locationName,
+                locationDetail: action.payload.locationName,
             }
         },
 
@@ -255,7 +255,18 @@ export const searchLocation = (input, path) => (dispatch) => {
 };
 
 export const pressSearchPoint = (value) => async (dispatch, getState) => {
-    dispatch(mapSlice.actions.pressSearchPoint(value));
+    const { item } = value;
+    const { lat, lng } = item;
+    const geocoder = new window.google.maps.Geocoder();
+
+    geocoder.geocode({ location: { lat, lng } }, (results, status) => {
+        if (status === 'OK' && results.length > 0) {
+            const locationName = results[0].formatted_address;
+            dispatch(mapSlice.actions.pressSearchPoint({ ...value, locationName }));
+        } else {
+            console.error('Geocoding failed', status);
+        }
+    });
 };
 
 export const searchMapLocation = (input) => (dispatch, getState) => {
