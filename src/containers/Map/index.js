@@ -47,7 +47,8 @@ const Map = () => {
                         lat: latitude,
                         lng: longitude,
                     };
-                    dispatch(setCurrentUserLocation(center));
+                    const zoom = 12
+                    dispatch(setCurrentUserLocation({center, zoom}));
                 },
                 (error) => {
                     console.error("Error getting current location:", error);

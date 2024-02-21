@@ -17,7 +17,7 @@ const keyDragZoom = {
     veilStyle: { backgroundColor: '#8798AD', opacity: 0 }
 };
 export const center = { lat: 47.47941, lng: -122.196712 };
-export const zoom = 8;
+export const zoom = 9;
 
 const measureUnit = (metricUnit) => (metricUnit ? "metric" : "imperial");
 
@@ -57,7 +57,7 @@ const mapSlice = createSlice({
     initialState,
     reducers: {
         setCurrentUserLocation: (state, action) => {
-            return { ...state, center: action.payload };
+            return { ...state, center: action.payload.center, zoom: action.payload.zoom };
         },
         validateData: (state, action) => {
             return { ...state, validateData: action.payload };
