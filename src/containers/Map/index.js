@@ -48,9 +48,6 @@ const Map = () => {
                         lng: longitude,
                     };
                     dispatch(setCurrentUserLocation(center));
-                    if (ref) {
-                        ref.panTo(center);
-                    }
                 },
                 (error) => {
                     console.error("Error getting current location:", error);
