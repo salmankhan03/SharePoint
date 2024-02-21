@@ -37,11 +37,11 @@ const PageHeaders = () => {
     return (
         <div style={{...styles.pageHeader, backgroundColor: backGroundColor ? backGroundColor :'#021E4F'}}>
             <div style={{ display: 'flex', justifyContent: "space-between", height: '100%', padding: '0px 15px' }}>
-                <div style={{ color: '#fff', fontSize: '20px', fontWeight: 500, display: 'flex', alignItems: 'center' }}>
+                <div style={{ color: '#fff', fontSize: '20px', fontWeight: 500, display: 'flex', alignItems: 'center', padding: '8px 0px' }}>
                     <img
                         src={validateData?.logoUrl}
                         alt={"sitewise logo"}
-                        width="150"
+                        style={{maxHeight: '-webkit-fill-available'}}
                     />
                     <div style={{
                         marginLeft: '25px',
