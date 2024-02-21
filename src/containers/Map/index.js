@@ -38,32 +38,6 @@ const Map = () => {
 
     const dispatch = useDispatch();
 
-    const requestLocationPermission = () => {
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(
-                (position) => {
-                    const { latitude, longitude } = position.coords;
-                    const center = {
-                        lat: latitude,
-                        lng: longitude,
-                    };
-                    const zoom = 12
-                    dispatch(setCurrentUserLocation({center, zoom}));
-                },
-                (error) => {
-                    console.error("Error getting current location:", error);
-                }
-            );
-        } else {
-            console.error("Geolocation is not supported by this browser.");
-        }
-    };
-
-    useEffect(() => {
-        // Request location permission when the component mounts
-        requestLocationPermission();
-    }, []);
-
     useEffect(() => {
         setMapPosition(position)
     }, [position])

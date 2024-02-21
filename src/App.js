@@ -4,7 +4,7 @@ import { Provider } from "react-redux";
 import Dashboard from "./containers/Dashboard";
 import "./App.css";
 
-import store, {validateData} from "./store";
+import store, {setCurrentUserLocation, validateData} from "./store";
 import Loading from "./components/Loading";
 import SessionInvalid from "./components/SessionInvalid";
 
@@ -41,8 +41,30 @@ const App = () => {
                 );
                 const data = await response.json()
                 if (data) {
-                    setLoading(false);
                     dispatch(validateData(data));
+                    if (navigator.geolocation) {
+                        navigator.geolocation.getCurrentPosition(
+                            (position) => {
+                                const { latitude, longitude } = position.coords;
+                                const center = {
+                                    lat: latitude,
+                                    lng: longitude,
+                                };
+                                const zoom = 12
+                                dispatch(setCurrentUserLocation({center, zoom}));
+                                setLoading(false);
+                            },
+                            (error) => {
+                                const center = { lat: 47.47941, lng: -122.196712 }
+                                const zoom = 9;
+                                dispatch(setCurrentUserLocation({center, zoom}));
+                                setLoading(false);
+                                console.error("Error getting current location:", error);
+                            }
+                        );
+                    } else {
+                        console.error("Geolocation is not supported by this browser.");
+                    }
                 } else {
                     setIsValidSession(false);
                     console.error(
