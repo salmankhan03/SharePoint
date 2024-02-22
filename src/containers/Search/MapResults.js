@@ -17,7 +17,12 @@ const MapResults = ({ path, search }) => {
   const tot = useSelector((state) => state);
   const dispatch = useDispatch();
 
-  const values = input.split(',');
+  let values;
+  if (input.includes('/')) {
+    values = input.split('/');
+  } else {
+    values = input.split(',');
+  }
 
   const coordinates = {
     lat: parseFloat(values[0]),
