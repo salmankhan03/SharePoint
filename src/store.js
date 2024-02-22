@@ -16,8 +16,9 @@ const keyDragZoom = {
     },
     veilStyle: { backgroundColor: '#8798AD', opacity: 0 }
 };
-export const center = { lat: 47.47941, lng: -122.196712 };
-export const zoom = 9;
+
+export const center = { lat: 40.117546, lng: -107.20 };
+export const zoom = 5;
 
 const measureUnit = (metricUnit) => (metricUnit ? "metric" : "imperial");
 
@@ -102,8 +103,8 @@ const mapSlice = createSlice({
                 center: action.payload.item,
                 zoom: 17,
                 display: true,
-                locationName: action.payload.locationName,
-                locationDetail: action.payload.locationName,
+                locationName: `${action.payload.item.lat}, ${action.payload.item.lng}`,
+                locationDetail: null,
             }
         },
 
@@ -255,18 +256,7 @@ export const searchLocation = (input, path) => (dispatch) => {
 };
 
 export const pressSearchPoint = (value) => async (dispatch, getState) => {
-    const { item } = value;
-    const { lat, lng } = item;
-    const geocoder = new window.google.maps.Geocoder();
-
-    geocoder.geocode({ location: { lat, lng } }, (results, status) => {
-        if (status === 'OK' && results.length > 0) {
-            const locationName = results[0].formatted_address;
-            dispatch(mapSlice.actions.pressSearchPoint({ ...value, locationName }));
-        } else {
-            console.error('Geocoding failed', status);
-        }
-    });
+    dispatch(mapSlice.actions.pressSearchPoint(value));
 };
 
 export const searchMapLocation = (input) => (dispatch, getState) => {

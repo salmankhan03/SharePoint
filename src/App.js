@@ -48,15 +48,15 @@ const App = () => {
                                 const { latitude, longitude } = position.coords;
                                 const center = {
                                     lat: latitude,
-                                    lng: longitude,
+                                    lng: longitude-0.001,
                                 };
-                                const zoom = 12
+                                const zoom = 15
                                 dispatch(setCurrentUserLocation({center, zoom}));
                                 setLoading(false);
                             },
                             (error) => {
-                                const center = { lat: 47.47941, lng: -122.196712 }
-                                const zoom = 9;
+                                const center = { lat: 40.117546, lng: -107.20 };
+                                const zoom = 5;
                                 dispatch(setCurrentUserLocation({center, zoom}));
                                 setLoading(false);
                                 console.error("Error getting current location:", error);

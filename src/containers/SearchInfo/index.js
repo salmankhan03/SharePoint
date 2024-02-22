@@ -245,10 +245,10 @@ const Layers = ({ width }) => {
                 name: storedContactInfo?.name || '',
                 email: storedContactInfo?.email || '',
                 // pco_name: addressDetails ? addressDetails?.formattedAddress : '',
-                // pco_address: addressDetails ? addressDetails?.formattedAddress   : '',
-                // pco_city: addressDetails ? addressDetails?.structuredAddress['locality,political'] :'',
-                // pco_state: addressDetails ? addressDetails?.structuredAddress['administrative_area_level_1,political'] :'',
-                // pco_zipcode: addressDetails ? addressDetails?.structuredAddress?.postal_code :''
+                pco_address: addressDetails ? addressDetails?.formattedAddress : '',
+                pco_city: addressDetails ? addressDetails?.structuredAddress['locality,political'] : '',
+                pco_state: addressDetails ? addressDetails?.structuredAddress['administrative_area_level_1,political'] : '',
+                pco_zipcode: addressDetails ? addressDetails?.structuredAddress?.postal_code : ''
             }));
         } else {
             setMapData((prevMapData) => ({
@@ -296,8 +296,7 @@ const Layers = ({ width }) => {
 
         let submitfiles = selectedFiles.map(file => `${file.path}`);
         const payload = {
-            accessKey: 'abc',
-            comment: mapData.email,
+            email: mapData.email,
             from: mapData.name,
             id: validateData.id,
             sites: [
@@ -309,6 +308,13 @@ const Layers = ({ width }) => {
                     uploads: submitfiles
                 }
             ]
+        }
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const accessKey = urlParams.get("accessKey");
+
+        if (accessKey != null) {
+            payload.accessKey = accessKey;
         }
 
         const contactInfo = {
@@ -810,16 +816,13 @@ const Layers = ({ width }) => {
 
 
                 {submitSuccessFull === false && <div style={styles.bottomBox}>
-                    {/* <div style={{ marginTop: '16px', width: '100%' }}> */}
                     <div style={{ width: '100%' }}>
                         <Row style={{ padding: '15px' }}>
-                            {/* <Col span={18}> */}
                             <Col style={{ marginRight: 'auto' }}>
                                 {currentStep !== 1 && (
                                     <Button
                                         onMouseEnter={handleBackMouseEnter}
                                         onMouseLeave={handleBackMouseLeave}
-                                        // style={{ marginLeft: '15px',
                                         style={{
                                             fontFamily: btnFamily ? (backHovered ? btnHoverFamily : btnFamily) : '',
                                             backgroundColor: btnBackgroundColor ? (backHovered ? btnHoverColor : 'white') : (backHovered ? '#0087b7' : 'white'),
@@ -828,9 +831,9 @@ const Layers = ({ width }) => {
                                             border: btnBackgroundColor ? '1px solid' + btnBackgroundColor : '1px solid #0087b7',
                                             borderRadius: '6px'
                                         }} onClick={handleBackStep}>Back</Button>
+
                                 )}
                             </Col>
-                            {/* <Col span={6}> */}
                             <Col style={{ marginLeft: 'auto' }}>
                                 <Button
                                     // style={styles.modalButton}

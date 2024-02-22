@@ -31,15 +31,15 @@ const StudyAreas = ({ visible, locationDetail, position, locationName }) => {
     useEffect(() => {
         onClick()
         if (validateData?.siteStyle) {
-            const styleRegex = /font-style:\s*([^;]*)/;
+            const styleRegex = /font-family:\s*([^;]*)/;
             const colorRegex = /color:\s*([^;]*)/;
             const bgColorRegex = /background-color:\s*([^;]*)/;
-        
+
             const extractStyle = (styleString, regex) => {
                 const match = styleString.match(regex);
                 return match ? match[1].trim() : null;
             };
-        
+
             const buttonStyle = validateData?.siteStyle?.buttonStyle;
             const buttonHoverStyle = validateData?.siteStyle?.buttonHover;
             const fontFamily = validateData?.siteStyle?.fontGeneral;
@@ -53,26 +53,26 @@ const StudyAreas = ({ visible, locationDetail, position, locationName }) => {
             if (btnBackgroundColor) {
                 setBtnBackgroundColor(btnBackgroundColor);
             }
-        
+
             if (btnFontFamily) {
                 setBtnFamily(btnFontFamily);
             }
-        
+
             if (btnHoverBackgroundColor) {
                 setBtnHoverColor(btnHoverBackgroundColor);
             }
-        
+
             if (btnHoverFontFamily) {
                 setBtnHoverFamily(btnHoverFontFamily);
             }
-            if(generelFontFamily){
+            if (generelFontFamily) {
                 setFontFamily(generelFontFamily);
             }
-            if(generelfontsColor){
+            if (generelfontsColor) {
                 setFontColor(generelfontsColor)
             }
         }
-        
+
     }, [])
     const onHide = useCallback(() => {
         dispatch(onHideShowInfo(false));
@@ -104,12 +104,12 @@ const StudyAreas = ({ visible, locationDetail, position, locationName }) => {
                     onMouseLeave={handleMouseLeave}
                     style={{
                         ...styles.button,
-                        fontFamily: btnFamily ? (hovered ? btnHoverFamily : btnFamily) : '' ,
-                        backgroundColor: btnBackgroundColor ?  (contactScreenShowHide ? 'white'  : (hovered ? btnHoverColor : 'white')) : (hovered ? '#0087b7' : 'white'),
-                        color: btnBackgroundColor ? (contactScreenShowHide ? '#ccc' : (hovered ? 'white': (btnBackgroundColor ? btnBackgroundColor : 'black'))) : (hovered ? 'white' : '#0087b7') ,
-                        borderColor:btnBackgroundColor ?(contactScreenShowHide ? '#ccc' : (hovered ? "white" : (btnBackgroundColor ? btnBackgroundColor : 'transparent'))):(hovered ? 'white' : '#0087b7'),
-                        border: btnBackgroundColor ?  '1px solid' +btnBackgroundColor:  '1px solid #0087b7',
-                        borderRadius:'6px'
+                        fontFamily: btnFamily ? (hovered ? btnHoverFamily : btnFamily) : '',
+                        backgroundColor: btnBackgroundColor ? (contactScreenShowHide ? 'white' : (hovered ? btnHoverColor : 'white')) : (hovered ? '#0087b7' : 'white'),
+                        color: btnBackgroundColor ? (contactScreenShowHide ? '#ccc' : (hovered ? 'white' : (btnBackgroundColor ? btnBackgroundColor : 'black'))) : (hovered ? 'white' : '#0087b7'),
+                        borderColor: btnBackgroundColor ? (contactScreenShowHide ? '#ccc' : (hovered ? "white" : (btnBackgroundColor ? btnBackgroundColor : 'transparent'))) : (hovered ? 'white' : '#0087b7'),
+                        border: btnBackgroundColor ? '1px solid' + btnBackgroundColor : '1px solid #0087b7',
+                        borderRadius: '6px'
 
                     }}
                     className={

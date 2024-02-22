@@ -10,7 +10,7 @@ const PageHeaders = () => {
     useEffect(() => {
         if (validateData?.siteStyle) {
             const colorRegex = /color:\s*([^;]*)/;
-            const styleRegex = /font-style:\s*([^;]*)/;
+            const styleRegex = /font-family:\s*([^;]*)/;
             const backgroundRegex = /background-color:\s*([^;]*)/; //Style
             const matches = validateData?.siteStyle?.fontHeader?.match(styleRegex);
             const matches1 = validateData?.siteStyle?.fontHeader?.match(colorRegex);
@@ -42,6 +42,7 @@ const PageHeaders = () => {
                         src={validateData?.logoUrl}
                         alt={"sitewise logo"}
                         style={{ maxHeight: '-webkit-fill-available' }}
+
                     />
                     <div style={{
                         marginLeft: '25px',
