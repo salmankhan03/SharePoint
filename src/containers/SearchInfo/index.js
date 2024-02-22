@@ -514,7 +514,7 @@ const Layers = ({ width }) => {
 
 
     return (
-        <div style={styles.container}>
+        <div style={styles.container} className={"layerContainer"}>
             {/* {saveModal}
       {layerGroup} */}
             <LeftDrawerContent title="Layers">

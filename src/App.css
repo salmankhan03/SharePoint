@@ -291,3 +291,10 @@ border-radius: 4px !important;
     display: none;
   }
 }
+
+@media only screen and (max-width: 768px) {
+  .layerContainer{
+    height: 100vh !important;
+    max-height: 78vh !important;
+  }
+}
