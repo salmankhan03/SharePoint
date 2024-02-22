@@ -281,3 +281,13 @@ border-radius: 4px !important;
   color: #fff;
   background: #0087B7 !important;
 }
+
+@media only screen and (max-width: 480px) {
+  .leftLayerWidth {
+    max-width: 479px !important;
+    width: -webkit-fill-available !important;
+  }
+  .selectOnTheMap{
+    display: none;
+  }
+}

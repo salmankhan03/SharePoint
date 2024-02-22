@@ -245,10 +245,10 @@ const Layers = ({ width }) => {
                 name: storedContactInfo?.name || '',
                 email: storedContactInfo?.email || '',
                 // pco_name: addressDetails ? addressDetails?.formattedAddress : '',
-                pco_address: addressDetails ? addressDetails?.formattedAddress : '',
-                pco_city: addressDetails ? addressDetails?.structuredAddress['locality,political'] : '',
-                pco_state: addressDetails ? addressDetails?.structuredAddress['administrative_area_level_1,political'] : '',
-                pco_zipcode: addressDetails ? addressDetails?.structuredAddress?.postal_code : ''
+                // pco_address: addressDetails ? addressDetails?.formattedAddress : '',
+                // pco_city: addressDetails ? addressDetails?.structuredAddress['locality,political'] : '',
+                // pco_state: addressDetails ? addressDetails?.structuredAddress['administrative_area_level_1,political'] : '',
+                // pco_zipcode: addressDetails ? addressDetails?.structuredAddress?.postal_code : ''
             }));
         } else {
             setMapData((prevMapData) => ({
@@ -533,6 +533,7 @@ const Layers = ({ width }) => {
                                 <div style={{ marginTop: 8, alignItems: 'flex-end', textAlign: 'right' }}>
                                     <div
                                         onClick={selectedOnTheMap}
+                                        className={'selectOnTheMap'}
                                         style={{
                                             fontFamily: fontFamilys ? fontFamilys : '',
                                             color: fontColor ? fontColor : '#0087b7',

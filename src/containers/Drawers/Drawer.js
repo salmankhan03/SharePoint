@@ -1,5 +1,6 @@
 import React from "react";
 import _ from "lodash";
+import '../../App.css'
 
 const reverse = {
   left: "right",
@@ -35,7 +36,7 @@ const Drawer = ({
   };
 
   return (
-      <div style={containerStyles}>
+      <div style={containerStyles} className={"leftLayerWidth"}>
         {Content && <Content width={safeWidth} />}
         {children}
       </div>
