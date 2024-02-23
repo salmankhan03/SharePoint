@@ -110,7 +110,6 @@ const StudyAreas = ({ visible, locationDetail, position, locationName }) => {
                         borderColor: btnBackgroundColor ? (contactScreenShowHide ? '#ccc' : (hovered ? "white" : (btnBackgroundColor ? btnBackgroundColor : 'transparent'))) : (hovered ? 'white' : '#0087b7'),
                         border: btnBackgroundColor ? '1px solid' + btnBackgroundColor : '1px solid #0087b7',
                         borderRadius: '6px'
-
                     }}
                     className={
                         btnBackgroundColor ? "" : "sitewise-info-remove-details-button"

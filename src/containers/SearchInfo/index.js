@@ -841,7 +841,6 @@ const Layers = ({ width }) => {
                                     onMouseEnter={handleMouseEnter}
                                     onMouseLeave={handleMouseLeave}
                                     style={{
-                                        // backgroundColor: btnBackgroundColor ? (hovered ? btnBackgroundColor : 'white') : (hovered ? '#0087b7' : 'white') ,
                                         fontFamily: btnFamily ? (hovered ? btnHoverFamily : btnFamily) : '',
                                         backgroundColor: btnBackgroundColor ?
                                             ((currentStep === 1 && (!viewSideDetailFields || mapData.mapName === "") ||
@@ -852,14 +851,16 @@ const Layers = ({ width }) => {
                                             ? '#ccc' : (hovered ? 'white' : (btnBackgroundColor ? btnBackgroundColor : 'black'))) : (hovered ? 'white' : '#0087b7'),
                                         borderColor: btnBackgroundColor ? ((currentStep === 1 && (!viewSideDetailFields || mapData.mapName === "") ||
                                             currentStep === 3 && (mapData.name === "" || mapData.email === "" || !isValidEmail(mapData.email)))
-                                            ? '#ccc' : (hovered ? "white" : (btnBackgroundColor ? btnBackgroundColor : 'transparent'))) : (hovered ? 'white' : '#0087b7'),
-                                        border: btnBackgroundColor ? '1px solid' + btnBackgroundColor : '1px solid #0087b7',
+                                            ? '#aeb9ca' : (hovered ? "white" : (btnBackgroundColor ? btnBackgroundColor : 'transparent'))) : (hovered ? 'white' : '#0087b7'),
+                                        borderWidth: btnBackgroundColor ? ((currentStep === 1 && (!viewSideDetailFields || mapData.mapName === "") ||
+                                            currentStep === 3 && (mapData.name === "" || mapData.email === "" || !isValidEmail(mapData.email)))
+                                            ? '2px' : '1px') : '1px',
+                                        borderStyle: 'solid',
                                         borderRadius: '6px'
-
                                     }}
                                     onClick={currentStep === 1 || currentStep === 2 ? moveNextStep : handleSubmit}
                                     disabled={
-                                        (currentStep === 1 && (!viewSideDetailFields || mapData.mapName === "")) || // comments remove =>  || mapData.comments === ""
+                                        (currentStep === 1 && (!viewSideDetailFields || mapData.mapName === "")) ||
                                         (currentStep === 3 && (mapData.name === "" || mapData.email === "" || !isValidEmail(mapData.email)))
                                     }
                                     className={btnBackgroundColor ? "" : 'sitewise-rect-primary-button'}
