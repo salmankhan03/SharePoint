@@ -293,13 +293,13 @@ border-radius: 4px !important;
 
   .layerContainer{
     height: 100vh !important;
-    max-height: 79vh !important;
+    max-height: 78vh !important;
   }
 }
 
 @media only screen and (max-width: 834px) {
   .layerContainer{
-    height: 79vh ;
+    height: 78vh ;
     max-height: 70vh ;
   }
 }
