@@ -362,6 +362,10 @@ const Layers = ({ width }) => {
     }
 
     const handleChangeInput = (key, value) => {
+        if (key === 'phone' && /^\d+$/.test(value)) {
+            value = value.slice(0, 10);
+        }
+
         setMapData((prevRoles) => ({
             ...prevRoles,
             [key]: value,
@@ -630,7 +634,7 @@ const Layers = ({ width }) => {
 
                                                 ) : (
 
-                                                    <div style={{ display: 'flex', flexDirection: "column" }}>
+                                                    <div style={{ display: 'flex', flexDirection: "column", margin: '8px 0' }}>
                                                         <Col
                                                             span={24}
                                                             style={{
@@ -786,7 +790,7 @@ const Layers = ({ width }) => {
                                     </Row>
                                     {renderInput('name', 'Name', mapData.name, 'text', 'Name')}
                                     {renderInput('email', 'Email Address', mapData.email, 'text', 'Email Address')}
-                                    {renderInput('phone', 'Phone Number', mapData.phone, 'text', 'Phone Number')}
+                                    {renderInput('phone', 'Phone Number', mapData.phone, 'number', 'Phone Number')}
 
                                 </div>
                             </>
