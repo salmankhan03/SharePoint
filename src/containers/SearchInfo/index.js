@@ -114,6 +114,7 @@ const Layers = ({ width }) => {
 
     const { locationDetail, viewSideDetailFields, position } = useSelector((state) => state);
     const addressDetails = useSelector((state) => state.addressDetails);
+    const locationName = useSelector((state) => state.locationName);
     const validateData = useSelector((state) => state.validateData);
     const attributeData = useSelector((state) => state.attributeData);
     const [fontFamilys, setFontFamilys] = useState()
@@ -304,11 +305,19 @@ const Layers = ({ width }) => {
             id: validateData.id,
             sites: [
                 {
-                    site: { latitude: position.lat, longitude: position.lng },
+                    site: {
+                        latitude: position.lat,
+                        longitude: position.lng,
+                        address: locationName,
+                        city: addressDetails.city ? addressDetails.city : '',
+                        state: addressDetails.state ? addressDetails.state : '',
+                        country: addressDetails.country ? addressDetails.country : '',
+                        zipcode: addressDetails.zipcode ? addressDetails.zipcode : ''
+                    },
                     name: mapData.mapName,
                     comment: mapData.comments,
                     attributes: formDataCopy,
-                    uploads: submitfiles
+                    uploads: submitfiles,
                 }
             ]
         }

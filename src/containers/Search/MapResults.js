@@ -104,6 +104,27 @@ const MapResults = ({ path, search }) => {
                           const addresses = results ? formatAddress(results[0]) : undefined;
                           dispatch(setAddressDetails(addresses))
                           const location = results[0].geometry.location;
+
+                          const addressComponents = results[0].address_components;
+
+                          let city, state, country, zipcode;
+
+                          if (Array.isArray(addressComponents)) {
+                            for (const component of addressComponents) {
+                              if (component.types.includes("administrative_area_level_3") || component.types.includes("locality")) {
+                                city = component.long_name;
+                              } else if (component.types.includes("administrative_area_level_1")) {
+                                state = component.long_name;
+                              } else if (component.types.includes("country")) {
+                                country = component.long_name;
+                              } else if (component.types.includes("postal_code")) {
+                                zipcode = component.long_name;
+                              }
+                            }
+                          }
+
+                          dispatch(setAddressDetails({city, state, country, zipcode }))
+
                           dispatch(setLocation({
                             locationName: item.description,
                             locationDetail: results[0].formatted_address,
