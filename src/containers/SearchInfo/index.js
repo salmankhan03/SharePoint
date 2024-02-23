@@ -854,7 +854,7 @@ const Layers = ({ width }) => {
                                             ? '#aeb9ca' : (hovered ? "white" : (btnBackgroundColor ? btnBackgroundColor : 'transparent'))) : (hovered ? 'white' : '#0087b7'),
                                         borderWidth: btnBackgroundColor ? ((currentStep === 1 && (!viewSideDetailFields || mapData.mapName === "") ||
                                             currentStep === 3 && (mapData.name === "" || mapData.email === "" || !isValidEmail(mapData.email)))
-                                            ? '2px' : '1px') : '1px',
+                                            ? '1px' : '1px') : '1px',
                                         borderStyle: 'solid',
                                         borderRadius: '6px'
                                     }}
