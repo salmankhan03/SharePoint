@@ -549,6 +549,7 @@ const Layers = ({ width }) => {
                                 <Search backgroundColor={backgroundColor} />
                                 <div style={{ marginTop: 8, alignItems: 'flex-end', textAlign: 'right' }}>
                                     <div
+                                        className={'selectOnTheMap'}
                                         onClick={selectedOnTheMap}
                                         style={{
                                             fontFamily: fontFamilys ? fontFamilys : '',
@@ -898,8 +899,8 @@ const Layers = ({ width }) => {
 };
 
 const styles = {
-    container: { display: "flex", flexDirection: "column", height: "100vh" },
-    topBox: { height: "calc(100vh - 135px)", backgroundColor: '#FAFAFC', overflow: 'auto' },
+    container: { display: "flex", flexDirection: "column", height: "100%" },
+    topBox: { height: "calc(100% - 135px)", backgroundColor: '#FAFAFC', overflow: 'auto' },
     bottomBox: { height: "65px", borderTop: '1px solid #AEB9CA', backgroundColor: '#FFFFFF' },
     containerDiv: { padding: '15px' },
     mapDetailsContainer: {
