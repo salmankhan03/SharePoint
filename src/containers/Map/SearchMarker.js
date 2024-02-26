@@ -42,7 +42,7 @@ const SearchMarker = () => {
 
                         const addressComponents = results[0].address_components;
 
-                        let city, state, country, zipcode;
+                        let city, state, country, zipcode, premise, political, sublocality, streetNumber, route;
 
                         if (Array.isArray(addressComponents)) {
 
@@ -55,11 +55,21 @@ const SearchMarker = () => {
                                     country = component.long_name;
                                 } else if (component.types.includes("postal_code")) {
                                     zipcode = component.long_name;
+                                } else if (component.types.includes("street_number")) {
+                                    streetNumber = component.long_name;
+                                } else if (component.types.includes("route")) {
+                                    route = component.long_name;
+                                } else if (component.types.includes("premise")) {
+                                    premise = component.long_name;
+                                } else if (component.types.includes("political")) {
+                                    political = component.long_name;
+                                } else if (component.types.includes("sublocality")) {
+                                    sublocality = component.long_name;
                                 }
                             }
                         }
 
-                        dispatch(setAddressDetails({city, state, country, zipcode }))
+                        dispatch(setAddressDetails({city, state, country, zipcode, premise, sublocality, political, streetNumber, route }))
                         dispatch(setAddress(results[0].formatted_address))
                         setLocationName(results[0].formatted_address);
                         setCheckDrag(false)

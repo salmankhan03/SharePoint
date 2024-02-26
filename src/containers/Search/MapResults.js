@@ -107,7 +107,7 @@ const MapResults = ({ path, search }) => {
 
                           const addressComponents = results[0].address_components;
 
-                          let city, state, country, zipcode;
+                          let city, state, country, zipcode, premise, political, sublocality, streetNumber, route;
 
                           if (Array.isArray(addressComponents)) {
                             for (const component of addressComponents) {
@@ -119,11 +119,21 @@ const MapResults = ({ path, search }) => {
                                 country = component.long_name;
                               } else if (component.types.includes("postal_code")) {
                                 zipcode = component.long_name;
+                              } else if (component.types.includes("street_number")) {
+                                streetNumber = component.long_name;
+                              } else if (component.types.includes("route")) {
+                                route = component.long_name;
+                              } else if (component.types.includes("premise")) {
+                                premise = component.long_name;
+                              } else if (component.types.includes("political")) {
+                                political = component.long_name;
+                              } else if (component.types.includes("sublocality")) {
+                                sublocality = component.long_name;
                               }
                             }
                           }
 
-                          dispatch(setAddressDetails({city, state, country, zipcode }))
+                          dispatch(setAddressDetails({city, state, country, zipcode, premise, political, sublocality, streetNumber, route }))
 
                           dispatch(setLocation({
                             locationName: item.description,

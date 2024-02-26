@@ -295,7 +295,7 @@ const Layers = ({ width }) => {
                 }
             }
         });
-
+        const formattedAddress = [addressDetails.streetNumber, addressDetails.premise, addressDetails.route, addressDetails.political, addressDetails.sublocality].filter(Boolean).join(', ');
 
         let submitfiles = selectedFiles.map(file => `${file.path}`);
         const payload = {
@@ -308,7 +308,7 @@ const Layers = ({ width }) => {
                     site: {
                         latitude: position.lat,
                         longitude: position.lng,
-                        address: locationName,
+                        address: formattedAddress,
                         city: addressDetails.city ? addressDetails.city : '',
                         state: addressDetails.state ? addressDetails.state : '',
                         country: addressDetails.country ? addressDetails.country : '',
