@@ -23,7 +23,6 @@ const MapResults = ({ path, search }) => {
   } else {
     values = input.split(',');
   }
-
   const coordinates = {
     lat: parseFloat(values[0]),
     lng: parseFloat(values[1])
@@ -45,25 +44,25 @@ const MapResults = ({ path, search }) => {
 
   const formatAddress = input => {
     const structuredAddress = input?.address_components?.reduce(
-        (result, item) => ({ ...result, [item.types]: item.short_name }),
-        {}
+      (result, item) => ({ ...result, [item.types]: item.short_name }),
+      {}
     );
     let formattedAddress = '';
     if (structuredAddress['street_number']) {
-        formattedAddress = formattedAddress + structuredAddress['street_number'] + ' ';
+      formattedAddress = formattedAddress + structuredAddress['street_number'] + ' ';
     }
     if (structuredAddress['route']) {
-        formattedAddress = formattedAddress + structuredAddress['route'] + ', ';
+      formattedAddress = formattedAddress + structuredAddress['route'] + ', ';
     }
     if (structuredAddress['locality,political']) {
-        formattedAddress = formattedAddress + structuredAddress['locality,political'] + ' ';
+      formattedAddress = formattedAddress + structuredAddress['locality,political'] + ' ';
     }
     if (structuredAddress['administrative_area_level_1,political']) {
-        formattedAddress =
-            formattedAddress + structuredAddress['administrative_area_level_1,political'];
+      formattedAddress =
+        formattedAddress + structuredAddress['administrative_area_level_1,political'];
     }
-    return { structuredAddress, formattedAddress};
-};
+    return { structuredAddress, formattedAddress };
+  };
 
 
   return (

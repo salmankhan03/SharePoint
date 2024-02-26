@@ -4,7 +4,7 @@ import { Provider } from "react-redux";
 import Dashboard from "./containers/Dashboard";
 import "./App.css";
 
-import store, {setCurrentUserLocation, validateData} from "./store";
+import store, { setCurrentUserLocation, validateData } from "./store";
 import Loading from "./components/Loading";
 import SessionInvalid from "./components/SessionInvalid";
 
@@ -48,16 +48,16 @@ const App = () => {
                                 const { latitude, longitude } = position.coords;
                                 const center = {
                                     lat: latitude,
-                                    lng: longitude-0.001,
+                                    lng: longitude - 0.001,
                                 };
                                 const zoom = 15
-                                dispatch(setCurrentUserLocation({center, zoom}));
+                                dispatch(setCurrentUserLocation({ center, zoom }));
                                 setLoading(false);
                             },
                             (error) => {
                                 const center = { lat: 40.117546, lng: -107.20 };
                                 const zoom = 5;
-                                dispatch(setCurrentUserLocation({center, zoom}));
+                                dispatch(setCurrentUserLocation({ center, zoom }));
                                 setLoading(false);
                                 console.error("Error getting current location:", error);
                             }
@@ -106,7 +106,7 @@ const App = () => {
 const styles = {
     fullscreen: {
         height: "100vh",
-        maxHeight: "-webkit-fill-available"
+        maxHeight: "-webkit-fill-available",
         // background:
         //     "linear-gradient(202.32deg, #032869 9.68%, rgba(2, 35, 92, 0.71) 61.13%, rgba(2, 30, 79, 0.45) 88.43%)",
     },

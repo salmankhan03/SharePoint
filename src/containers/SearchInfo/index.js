@@ -129,7 +129,7 @@ const Layers = ({ width }) => {
     const [btnHoverFamily, setBtnHoverFamily] = useState()
 
     const instructionParagraphs = validateData?.instructions?.replace(/<br\/>/g, '');
-    const storedContactInfo = JSON.parse(localStorage.getItem('contactInfo')) || { name: '', email: '' };
+    const storedContactInfo = JSON.parse(localStorage.getItem('contactInfo')) || { name: '', email: '', phone: '' };
     const [mapData, setMapData] = useState(attributeData);
     const [submitSuccessFull, SetSubmitSuccessFull] = useState(false)
     const [optionalField, SetOptionalField] = useState(true)
@@ -244,6 +244,7 @@ const Layers = ({ width }) => {
                 mapName: locationDetail,
                 name: storedContactInfo?.name || '',
                 email: storedContactInfo?.email || '',
+                phone: storedContactInfo?.phone || '',
                 // pco_name: addressDetails ? addressDetails?.formattedAddress : '',
                 // pco_address: addressDetails ? addressDetails?.formattedAddress : '',
                 // pco_city: addressDetails ? addressDetails?.structuredAddress['locality,political'] : '',
@@ -256,6 +257,7 @@ const Layers = ({ width }) => {
                 mapName: locationDetail,
                 name: storedContactInfo?.name || '',
                 email: storedContactInfo?.email || '',
+                phone: storedContactInfo?.phone || '',
             }));
         }
     }, [locationDetail])
@@ -298,6 +300,7 @@ const Layers = ({ width }) => {
         const payload = {
             email: mapData.email,
             from: mapData.name,
+            phone: mapData.phone,
             id: validateData.id,
             sites: [
                 {
@@ -319,7 +322,8 @@ const Layers = ({ width }) => {
 
         const contactInfo = {
             name: mapData.name,
-            email: mapData.email
+            email: mapData.email,
+            phone: mapData.phone
         }
 
         try {
@@ -533,7 +537,6 @@ const Layers = ({ width }) => {
                                 <div style={{ marginTop: 8, alignItems: 'flex-end', textAlign: 'right' }}>
                                     <div
                                         onClick={selectedOnTheMap}
-                                        className={'selectOnTheMap'}
                                         style={{
                                             fontFamily: fontFamilys ? fontFamilys : '',
                                             color: fontColor ? fontColor : '#0087b7',
@@ -774,6 +777,7 @@ const Layers = ({ width }) => {
                                     </Row>
                                     {renderInput('name', 'Name', mapData.name, 'text', 'Name')}
                                     {renderInput('email', 'Email Address', mapData.email, 'text', 'Email Address')}
+                                    {renderInput('phone', 'Phone Number', mapData.phone, 'text', 'Phone Number')}
 
                                 </div>
                             </>

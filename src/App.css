@@ -69,7 +69,6 @@
   justify-content: center;
   align-items: center;
   height: 100%;
-  background: linear-gradient(202.32deg, rgb(3, 40, 105) 9.68%, rgba(2, 35, 92, 0.71) 61.13%, rgba(2, 30, 79, 0.45) 88.43%);
   z-index: 9999;
 }
 
@@ -80,7 +79,7 @@
 /*  top: 20px;*/
 /*  padding: 0;*/
 /*}*/
-.gm-style .gm-style-iw-c{
+.gm-style .gm-style-iw-c {
   padding: 0;
   max-width: 312px !important;
 }
@@ -118,7 +117,7 @@ button.gm-ui-hover-effect {
   border-radius: 4px;
 }
 
-.summeryLink .ant-spin-container{
+.summeryLink .ant-spin-container {
   font-size: 12px;
 }
 
@@ -171,6 +170,7 @@ button.gm-ui-hover-effect {
   from {
     transform: rotate(0deg);
   }
+
   to {
     transform: rotate(360deg);
   }
@@ -231,7 +231,7 @@ button.gm-ui-hover-effect {
 }
 
 .ant-notification-topLeft {
-  left: -400px !important; 
+  left: -400px !important;
   /* // notification window is on top of all other components, so make its original position outside the page, and adjust the position later to avoid overlap */
 }
 
@@ -266,20 +266,27 @@ button.gm-ui-hover-effect {
   box-shadow: 0px 4px 3px 0px #d1cfbb59;
   margin-bottom: 16px;
 }
+
 /* INPUT */
 .ant-input {
   cursor: pointer;
 }
+
 .ant-input-affix-wrapper {
   border-style: none;
 }
 
 .gm-style-iw-c {
-border-radius: 4px !important;
+  border-radius: 4px !important;
 }
+
 :where(.css-dev-only-do-not-override-dkbvqv).ant-btn-primary:hover {
   color: #fff;
   background: #0087B7 !important;
+}
+
+.ant-spin .ant-spin-dot-item {
+  background-color: darkgray;
 }
 
 @media only screen and (max-width: 480px) {
@@ -287,19 +294,20 @@ border-radius: 4px !important;
     max-width: 479px !important;
     width: -webkit-fill-available !important;
   }
-  .selectOnTheMap{
+
+  .selectOnTheMap {
     display: none;
   }
 
-  .layerContainer{
+  .layerContainer {
     height: 100vh !important;
     max-height: 78vh !important;
   }
 }
 
 @media only screen and (max-width: 834px) {
-  .layerContainer{
-    height: 78vh ;
-    max-height: 70vh ;
+  .layerContainer {
+    height: 78vh;
+    max-height: 70vh;
   }
 }
