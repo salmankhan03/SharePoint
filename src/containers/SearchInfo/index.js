@@ -363,7 +363,7 @@ const Layers = ({ width }) => {
 
     const handleChangeInput = (key, value) => {
         if (key === 'phone' && /^\d+$/.test(value)) {
-            value = value.slice(0, 10);
+            value = value.slice(0, 20);
         }
 
         setMapData((prevRoles) => ({
