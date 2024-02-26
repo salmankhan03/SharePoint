@@ -299,3 +299,9 @@ button.gm-ui-hover-effect {
     display: none;
   }
 }
+
+@media only screen and (max-width: 834px) {
+  .headerImage {
+    max-width: 60%;
+  }
+}

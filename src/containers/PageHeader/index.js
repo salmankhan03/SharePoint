@@ -42,7 +42,7 @@ const PageHeaders = () => {
                         src={validateData?.logoUrl}
                         alt={"sitewise logo"}
                         style={{ maxHeight: '-webkit-fill-available' }}
-
+                        className={'headerImage'}
                     />
                     <div style={{
                         marginLeft: '25px',

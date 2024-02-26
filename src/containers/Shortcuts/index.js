@@ -111,12 +111,12 @@ const Button = ({ buttonStyle, ...props }) => (
 
   const rotateClockwise = () => {
     console.log("call")
-    const newRotationAngle = rotationAngle + 90;
+    const newRotationAngle = rotationAngle - 90;
     dispatch(rotateMapClockwise(newRotationAngle))
   };
 
   const rotateAntiClockwise = () => {
-    const newRotationAngle = rotationAngle - 90;
+    const newRotationAngle = rotationAngle + 90;
     console.log("newRotationAngle ==>",newRotationAngle)
     dispatch(rotateMapAntiClockwise(newRotationAngle))
   };

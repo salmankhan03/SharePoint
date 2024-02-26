@@ -362,7 +362,7 @@ const Layers = ({ width }) => {
     }
 
     const handleChangeInput = (key, value) => {
-        if (key === 'phone' && /^\d+$/.test(value)) {
+        if (key === 'phone') {
             value = value.slice(0, 20);
         }
 
@@ -791,7 +791,7 @@ const Layers = ({ width }) => {
                                     </Row>
                                     {renderInput('name', 'Name', mapData.name, 'text', 'Name')}
                                     {renderInput('email', 'Email Address', mapData.email, 'text', 'Email Address')}
-                                    {renderInput('phone', 'Phone Number', mapData.phone, 'number', 'Phone Number')}
+                                    {renderInput('phone', 'Phone Number', mapData.phone, 'text', 'Phone Number')}
 
                                 </div>
                             </>
@@ -912,7 +912,7 @@ const styles = {
 
     },
     input: {
-        margin: '8px 0'
+        margin: '16px 0'
     },
     inputLabel: {
         color: '#021E4F',
