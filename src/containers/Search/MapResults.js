@@ -5,7 +5,14 @@ import "../../App.css";
 
 import SearchResult from "../../components/SearchResult";
 
-import { pressSearchPoint, setAddressDetails, setLayer, setLocation, setSearchProps } from "../../store";
+import {
+  pressSearchPoint,
+  setAddressDetails,
+  setLayer,
+  setLocation,
+  setSearchProps,
+  setSelectedMapHideShow
+} from "../../store";
 
 const { Title } = Typography;
 const locale = { emptyText: "No Results" };
@@ -39,6 +46,7 @@ const MapResults = ({ path, search }) => {
 
   const handleClick = () => {
     drop(coordinates);
+    dispatch(setSelectedMapHideShow(false));
     dispatch(setSearchProps("search", ""))
   };
 
@@ -122,7 +130,7 @@ const MapResults = ({ path, search }) => {
                           }
 
                           dispatch(setAddressDetails({city, state, country, zipcode, addresses }))
-
+                          dispatch(setSelectedMapHideShow(false));
                           dispatch(setLocation({
                             locationName: item.description,
                             locationDetail: results[0].formatted_address,
