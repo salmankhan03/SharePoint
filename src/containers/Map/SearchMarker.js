@@ -10,26 +10,25 @@ const SearchMarker = () => {
     const [checkDrag, setCheckDrag] = useState(false);
 
     const dispatch = useDispatch();
-    const formatAddress = input => {
-        const structuredAddress = input?.address_components?.reduce(
-            (result, item) => ({ ...result, [item.types]: item.short_name }),
-            {}
-        );
-        let formattedAddress = '';
-        if (structuredAddress['street_number']) {
-            formattedAddress = formattedAddress + structuredAddress['street_number'] + ' ';
+
+    const formatAddress = address => {
+        try {
+            const structuredAddress = address.address_components.reduce(
+                (result, item) => ({ ...result, [item.types]: item.short_name }),
+                {}
+            );
+            let formattedAddress = '';
+            if (structuredAddress['street_number']) {
+                formattedAddress = formattedAddress + structuredAddress['street_number'] + ' ';
+            }
+            if (structuredAddress['route']) {
+                formattedAddress = formattedAddress + structuredAddress['route'];
+            }
+
+            return formattedAddress;
+        } catch (e) {
+            return address.formatted_address;
         }
-        if (structuredAddress['route']) {
-            formattedAddress = formattedAddress + structuredAddress['route'] + ', ';
-        }
-        if (structuredAddress['locality,political']) {
-            formattedAddress = formattedAddress + structuredAddress['locality,political'] + ' ';
-        }
-        if (structuredAddress['administrative_area_level_1,political']) {
-            formattedAddress =
-                formattedAddress + structuredAddress['administrative_area_level_1,political'];
-        }
-        return { structuredAddress, formattedAddress};
     };
 
     useEffect(() => {
@@ -42,7 +41,7 @@ const SearchMarker = () => {
 
                         const addressComponents = results[0].address_components;
 
-                        let city, state, country, zipcode, premise, political, sublocality, streetNumber, route;
+                        let city, state, country, zipcode;
 
                         if (Array.isArray(addressComponents)) {
 
@@ -55,21 +54,11 @@ const SearchMarker = () => {
                                     country = component.long_name;
                                 } else if (component.types.includes("postal_code")) {
                                     zipcode = component.long_name;
-                                } else if (component.types.includes("street_number")) {
-                                    streetNumber = component.long_name;
-                                } else if (component.types.includes("route")) {
-                                    route = component.long_name;
-                                } else if (component.types.includes("premise")) {
-                                    premise = component.long_name;
-                                } else if (component.types.includes("political")) {
-                                    political = component.long_name;
-                                } else if (component.types.includes("sublocality")) {
-                                    sublocality = component.long_name;
                                 }
                             }
                         }
 
-                        dispatch(setAddressDetails({city, state, country, zipcode, premise, sublocality, political, streetNumber, route }))
+                        dispatch(setAddressDetails({city, state, country, zipcode, addresses }))
                         dispatch(setAddress(results[0].formatted_address))
                         setLocationName(results[0].formatted_address);
                         setCheckDrag(false)

@@ -180,7 +180,6 @@ const Layers = ({ width }) => {
     }, [timeStamp]);
 
 
-
     useEffect(() => {
         if (validateData?.siteStyle) {
             const regex = /font-family:\s*([^;]*)/; //Style
@@ -308,7 +307,7 @@ const Layers = ({ width }) => {
                     site: {
                         latitude: position.lat,
                         longitude: position.lng,
-                        address: formattedAddress,
+                        address: addressDetails.addresses,
                         city: addressDetails.city ? addressDetails.city : '',
                         state: addressDetails.state ? addressDetails.state : '',
                         country: addressDetails.country ? addressDetails.country : '',
