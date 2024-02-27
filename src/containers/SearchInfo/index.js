@@ -307,6 +307,8 @@ const Layers = ({ width }) => {
                     site: {
                         latitude: position.lat,
                         longitude: position.lng,
+                    },
+                    address: {
                         address: addressDetails.addresses,
                         city: addressDetails.city ? addressDetails.city : '',
                         state: addressDetails.state ? addressDetails.state : '',
@@ -339,7 +341,7 @@ const Layers = ({ width }) => {
             console.log('API Response:', response);
             SetSubmitSuccessFull(true)
             localStorage.setItem('contactInfo', JSON.stringify(contactInfo));
-            message.success('Site Submitted successfully');
+            // message.success('Site Submitted successfully');
             onClose()
             setMapData({ mapName: '', comments: '' })
             setSelectedFiles([])
