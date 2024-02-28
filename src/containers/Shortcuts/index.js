@@ -126,7 +126,8 @@ const Button = ({ buttonStyle, ...props }) => (
         fontWeight: 100,
         fontFamily: 'Roboto',
         marginTop: 15,
-        color: mapTypeId === 'roadmap' ? '#000' : '#fff'
+        color: mapTypeId === 'roadmap' ? '#000' : '#fff',
+        width: 'max-content'
     };
 
 
@@ -145,7 +146,7 @@ const Button = ({ buttonStyle, ...props }) => (
                 <div
                     style={{
                         position: "absolute",
-                        right: `calc(100% - (${windowWidth}px - 20px))`,
+                        left: "calc(100vw - 185px)",
                         bottom: 35,
                         display: 'flex',
                         flexDirection: 'column',
