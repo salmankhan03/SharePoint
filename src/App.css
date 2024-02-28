@@ -298,10 +298,14 @@ button.gm-ui-hover-effect {
   .selectOnTheMap {
     display: none;
   }
+
+  .headerImage {
+    max-width: 60%;
+  }
 }
 
 @media only screen and (max-width: 834px) {
   .headerImage {
-    max-width: 60%;
+    max-width: 45%;
   }
 }

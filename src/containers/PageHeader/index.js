@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector } from "react-redux";
+import '../../App.css'
 
 const PageHeaders = () => {
     const validateData = useSelector((state) => state.validateData);
