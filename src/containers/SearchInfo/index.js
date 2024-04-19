@@ -529,6 +529,8 @@ const Layers = ({ width }) => {
         setSuccessbtnHovered(false);
     };
 
+    const declaimerText = validateData && validateData.disclaimer
+
 
 
     return (
@@ -795,7 +797,7 @@ const Layers = ({ width }) => {
                                     {renderInput('phone', 'Phone Number', mapData.phone, 'text', 'Phone Number')}
 
                                 </div>
-                                <div style={styles.disclaimer}>This is a disclaimer text example. The property coming from the sitesubmitter object will be called disclaimer. Please make this bottom aligned with a grey line above the text.</div>
+                                <div style={styles.disclaimer}>{declaimerText}</div>
                             </div>
                         }
 
