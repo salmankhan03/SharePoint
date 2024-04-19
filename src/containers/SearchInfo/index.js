@@ -577,7 +577,7 @@ const Layers = ({ width }) => {
                                     {renderInput('mapName', 'Name', mapData.mapName, 'text', 'Site Name', viewSideDetailFields)}
                                     {renderInput('comments', 'Comments', mapData.comments, 'text-area', 'Comments')}
 
-                                    {validateAttributeData.length > 0 && <div>
+                                    {validateAttributeData?.length > 0 && <div>
                                         <div onClick={() => SetOptionalField(true)} style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer' }}>
                                             <div style={{
                                                 fontWeight: 700, fontSize: 14,
@@ -781,7 +781,7 @@ const Layers = ({ width }) => {
                         }
                         {
                             currentStep === 3 && submitSuccessFull === false &&
-                            <>
+                            <div style={{ display: 'flex', flexDirection: 'column', height: '100%', justifyContent: "space-between" }}>
                                 <div>
                                     <Row>
                                         <Col span={24} style={{
@@ -795,7 +795,8 @@ const Layers = ({ width }) => {
                                     {renderInput('phone', 'Phone Number', mapData.phone, 'text', 'Phone Number')}
 
                                 </div>
-                            </>
+                                <div style={styles.disclaimer}>This is a disclaimer text example. The property coming from the sitesubmitter object will be called disclaimer. Please make this bottom aligned with a grey line above the text.</div>
+                            </div>
                         }
 
 
@@ -903,7 +904,8 @@ const styles = {
     container: { display: "flex", flexDirection: "column", height: "100%" },
     topBox: { height: "calc(100% - 135px)", backgroundColor: '#FAFAFC', overflow: 'auto' },
     bottomBox: { height: "65px", borderTop: '1px solid #AEB9CA', backgroundColor: '#FFFFFF' },
-    containerDiv: { padding: '15px' },
+    containerDiv: { padding: '15px', height: '-webkit-fill-available' },
+    disclaimer: { fontFamily: 'Roboto', fontSize: '14px', fontWeight: 500, lineHeight: '16.41px', textAlign: 'left', color: 'rgba(0, 36, 93, 0.7)' },
     mapDetailsContainer: {
         padding: '15px',
         border: '1px solid #AEB9CA',
