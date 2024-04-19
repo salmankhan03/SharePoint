@@ -529,7 +529,7 @@ const Layers = ({ width }) => {
         setSuccessbtnHovered(false);
     };
 
-    const declaimerText = validateData && validateData.disclaimer
+    const declaimerText = validateData && validateData.disclaimer ? validateData.disclaimer : ''
 
 
 
