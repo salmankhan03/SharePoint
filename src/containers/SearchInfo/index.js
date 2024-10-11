@@ -145,6 +145,7 @@ const Layers = ({ width }) => {
     const [formData, setFormData] = useState({});
     const [checkSubmit, setCheckSubmit] = useState(false);
     const [backgroundColor, setBackGroundColor] = useState()
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         const initialData = {};
@@ -276,6 +277,7 @@ const Layers = ({ width }) => {
     }
 
     const handleSubmit = async (e) => {
+        setLoading(true)
         e.preventDefault()
         await uploadfile()
         const formDataCopy = { ...formData };
@@ -350,8 +352,10 @@ const Layers = ({ width }) => {
             setCurrentStep(1);
             dispatch(setContactScreenShowHide(false))
             setFormData({});
+            setLoading(false)
         } catch (error) {
             message.error(error);
+            setLoading(false)
         }
 
     }
@@ -882,13 +886,13 @@ const Layers = ({ width }) => {
                                     }}
                                     onClick={currentStep === 1 || currentStep === 2 ? moveNextStep : handleSubmit}
                                     disabled={
+                                        loading ||
                                         (currentStep === 1 && (!viewSideDetailFields || mapData.mapName === "")) ||
                                         (currentStep === 3 && (mapData.name === "" || mapData.email === "" || !isValidEmail(mapData.email)))
                                     }
                                     className={btnBackgroundColor ? "" : 'sitewise-rect-primary-button'}
-
                                 >
-                                    {currentStep === 1 || currentStep === 2 ? 'Next' : 'Submit'}
+                                    {loading ? 'Loading...' : (currentStep === 1 || currentStep === 2 ? 'Next' : 'Submit')}
                                 </Button>
                             </Col>
                         </Row>
