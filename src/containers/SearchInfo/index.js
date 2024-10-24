@@ -151,7 +151,12 @@ const Layers = ({ width }) => {
     useEffect(() => {
         const initialData = {};
         validateAttributeData?.forEach((attribute) => {
-            initialData[attribute.columnName] = attribute.tyo ? getDefaultOption(attribute) : attribute.dv;
+            // Check if ty is 5
+            if (attribute.ty === 5) {
+                initialData[attribute.columnName] = false; // Store false if ty is 5
+            } else {
+                initialData[attribute.columnName] = attribute.tyo ? getDefaultOption(attribute) : attribute.dv;
+            }
         });
 
         setFormData(initialData);
@@ -538,7 +543,7 @@ const Layers = ({ width }) => {
 
     const groupBy = (data, key) => {
         return data?.reduce((result, current) => {
-            const groupKey = current[key]?.replace('^', '').trim(); // Remove ^ sign
+            const groupKey = current[key]?.replace('^', '').trim(); 
             if (!result[groupKey]) {
                 result[groupKey] = [];
             }
@@ -548,7 +553,15 @@ const Layers = ({ width }) => {
     };
 
     const groupedAttributes = groupBy(validateAttributeData, 'grp');
-    
+    useEffect(() => {
+        if (groupedAttributes?.hasOwnProperty("undefined")) {
+            setExpandedGroups((prev) => ({
+                ...prev,
+                "undefined": true,
+            }));
+        }
+    }, [groupedAttributes]);
+
     const toggleGroup = (groupName) => {
         setExpandedGroups((prev) => ({
             ...prev,
@@ -616,6 +629,7 @@ const Layers = ({ width }) => {
                                                 </div>
                                                 {optionalField && Object.entries(groupedAttributes).map(([groupName, attributes]) => (
                                                     <div key={groupName}>
+                                                        {groupName !== 'undefined' ?(
                                                         <div style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }} onClick={() => toggleGroup(groupName)}>
                                                             <span style={{
                                                                 border: '1px solid #0087b7',
@@ -634,6 +648,7 @@ const Layers = ({ width }) => {
                                                             </span>
                                                             <span style={{ fontWeight: 700, margin: '12px 0', color: '#0087b7', }}>{groupName}</span>
                                                         </div>
+                                                        ):null}
 
                                                         {expandedGroups[groupName] && attributes.map(attribute => (
                                                             <div key={attribute.columnName}>
