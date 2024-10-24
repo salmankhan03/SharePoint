@@ -5,7 +5,7 @@ import {
 } from "antd";
 
 import { Row, Col } from "antd";
-import { Input as AntInput, Select } from 'antd';
+import { Input as AntInput, Select, Checkbox } from 'antd';
 import { CaretDownOutlined, CaretRightOutlined, DeleteOutlined, MapOutlined } from '@ant-design/icons';
 
 
@@ -139,6 +139,7 @@ const Layers = ({ width }) => {
     const [siteCharacteristics, SetSiteCharacteristics] = useState([])
     const [timeStamp, setTimeStamp] = useState(false)
     const timestampRef = useRef('');
+    const [expandedGroups, setExpandedGroups] = useState({});
 
     const validateAttributeData = validateData?.attributes
 
@@ -535,6 +536,25 @@ const Layers = ({ width }) => {
 
     const declaimerText = validateData && validateData.disclaimer ? validateData.disclaimer : ''
 
+    const groupBy = (data, key) => {
+        return data?.reduce((result, current) => {
+            const groupKey = current[key].replace('^', '').trim(); // Remove ^ sign
+            if (!result[groupKey]) {
+                result[groupKey] = [];
+            }
+            result[groupKey].push(current);
+            return result;
+        }, {});
+    };
+
+    const groupedAttributes = groupBy(validateAttributeData, 'grp');
+    
+    const toggleGroup = (groupName) => {
+        setExpandedGroups((prev) => ({
+            ...prev,
+            [groupName]: !prev[groupName]
+        }));
+    };
 
 
     return (
@@ -583,107 +603,99 @@ const Layers = ({ width }) => {
                                     {renderInput('mapName', 'Name', mapData.mapName, 'text', 'Site Name', viewSideDetailFields)}
                                     {renderInput('comments', 'Comments', mapData.comments, 'text-area', 'Comments')}
 
-                                    {validateAttributeData?.length > 0 && <div>
-                                        <div onClick={() => SetOptionalField(true)} style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer' }}>
-                                            <div style={{
-                                                fontWeight: 700, fontSize: 14,
-                                                fontFamily: fontFamilys ? fontFamilys : 'Roboto',
-                                                color: fontColor ? fontColor : '#021E4F',
-                                                marginTop: 12
-                                            }}>Site Characteristics (Optional)</div>
-                                        </div>
-                                        {optionalField && validateAttributeData?.map(attribute => (
-                                            <div key={attribute.columnName}>
-                                                {attribute.tyo ? (
+                                    <div>
+                                        {validateAttributeData.length > 0 && (
+                                            <div>
+                                                <div onClick={() => SetOptionalField(true)} style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer' }}>
+                                                    <div style={{
+                                                        fontWeight: 700, fontSize: 14,
+                                                        fontFamily: 'Roboto',
+                                                        color: '#021E4F',
+                                                        marginTop: 12
+                                                    }}>Site Characteristics (Optional)</div>
+                                                </div>
+                                                {optionalField && Object.entries(groupedAttributes).map(([groupName, attributes]) => (
+                                                    <div key={groupName}>
+                                                        <div style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }} onClick={() => toggleGroup(groupName)}>
+                                                            <span style={{
+                                                                border: '1px solid #0087b7',
+                                                                padding: '0px',
+                                                                display: 'flex',
+                                                                alignItems: 'center',
+                                                                justifyContent: 'center',
+                                                                width: '25px',
+                                                                height: '25px',
+                                                                borderRadius: '4px',
+                                                                marginRight: '8px',
+                                                                fontSize: '16px',
+                                                                color: '#0087b7',
+                                                            }}>
+                                                                {expandedGroups[groupName] ? '-' : '+'}
+                                                            </span>
+                                                            <span style={{ fontWeight: 700, margin: '12px 0', color: '#0087b7', }}>{groupName}</span>
+                                                        </div>
 
-                                                    <div style={styles.input}>
-                                                        <Col span={24} style={{ ...styles.inputLabel, fontFamily: fontFamilys ? fontFamilys : '', color: fontColor ? fontColor : '' }}>
-                                                            {attribute.description}
-                                                        </Col>
-                                                        <Col span={24} style={styles.inputs}>
-                                                            <Select
-                                                                style={{ width: '100%', fontFamily: fontFamilys ? fontFamilys : '' }}
-                                                                value={formData[attribute.columnName]}
-                                                                onChange={(e) => handleInputChange(attribute.columnName, e)}
-                                                                placeholder={attribute.description}
-                                                                autoFocus={false}
-                                                            >
-                                                                {attribute.tyo?.map((option) => {
-                                                                    const [value, label] = option.split('|');
-                                                                    return (
-                                                                        <option key={value} value={value} style={{
-                                                                            fontFamily: fontFamilys ? fontFamilys : '',
-                                                                            backgroundColor: formData[attribute.columnName] === value ? '#F1F3F4' : 'inherit',
-                                                                        }}>
-                                                                            {label}
-                                                                        </option>
-                                                                    );
-                                                                })}
-                                                            </Select>
-                                                            <style>
-                                                                {`
-                                                                    .ant-select-focused .ant-select-selector,
-                                                                    .ant-select-selector:focus,
-                                                                    .ant-select-selector:hover,
-                                                                    .ant-select-open .ant-select-selector { 
-                                                                        border-color: ${backgroundColor ? backgroundColor : '#0087b7'} !important;
-                                                                        box-shadow: inset 0 0 0 1px ${backgroundColor ? backgroundColor : '#0087b7'} !important;
-                                                                    }
-                                                            
-                                                                    .ant-select-dropdown.custom-dropdown .ant-select-item:hover,
-                                                                    .ant-select-dropdown.custom-dropdown .ant-select-item-active {
-                                                                        background-color: ${backgroundColor ? backgroundColor : '#0087b7'} !important;
-                                                                       box-shadow: inset 0 0 0 1px ${backgroundColor ? backgroundColor : '#0087b7'} !important;
-                                                                    } 
-                                                                `}
-                                                            </style>
-                                                        </Col>
+                                                        {expandedGroups[groupName] && attributes.map(attribute => (
+                                                            <div key={attribute.columnName}>
+                                                                {attribute.tyo ? (
+                                                                    <div style={styles.input}>
+                                                                        <Col span={24} style={{ ...styles.inputLabel }}>
+                                                                            {attribute.description}
+                                                                        </Col>
+                                                                        <Col span={24} style={styles.inputs}>
+                                                                            <Select
+                                                                                style={{ width: '100%' }}
+                                                                                value={formData[attribute.columnName]}
+                                                                                onChange={(e) => handleInputChange(attribute.columnName, e)}
+                                                                                placeholder={attribute.description}
+                                                                                autoFocus={false}
+                                                                            >
+                                                                                {attribute.tyo?.map((option) => {
+                                                                                    const [value, label] = option.split('|');
+                                                                                    return (
+                                                                                        <option key={value} value={value}>
+                                                                                            {label}
+                                                                                        </option>
+                                                                                    );
+                                                                                })}
+                                                                            </Select>
+                                                                        </Col>
+                                                                    </div>
+                                                                ) : (
+                                                                    <div style={{ display: 'flex', flexDirection: "column", margin: '8px 0' }}>
+                                                                        {attribute.ty !== 5 ? (
+                                                                            <Col span={24} style={{ ...styles.inputLabel }}>
+                                                                                {attribute.description}
+                                                                            </Col>
+                                                                        ) : null}
+                                                                        <Col span={24} style={styles.inputs}>
+                                                                            {attribute.ty === 5 ? (
+                                                                                <Checkbox
+                                                                                    checked={formData[attribute.columnName] || false}
+                                                                                    onChange={(e) => handleInputChange(attribute.columnName, e.target.checked)}
+                                                                                >
+                                                                                    {attribute.description}
+                                                                                </Checkbox>
+
+                                                                            ) : (
+                                                                                <AntInput
+                                                                                    placeholder={attribute.description}
+                                                                                    type={attribute.columnType === 0 ? "text" : "number"}
+                                                                                    value={formData[attribute.columnName]}
+                                                                                    onChange={(e) => handleInputChange(attribute.columnName, e.target.value)}
+                                                                                />
+                                                                            )}
+                                                                        </Col>
+                                                                    </div>
+                                                                )}
+                                                            </div>
+                                                        ))}
                                                     </div>
-
-                                                ) : (
-
-                                                    <div style={{ display: 'flex', flexDirection: "column", margin: '8px 0' }}>
-                                                        <Col
-                                                            span={24}
-                                                            style={{
-                                                                ...styles.inputLabel,
-                                                                fontFamily: fontFamilys ? fontFamilys : '', //+'!important'
-                                                                color: fontColor ? fontColor : '',
-                                                            }}
-                                                        >
-                                                            {attribute.description}
-                                                        </Col>
-                                                        <Col span={24} style={styles.inputs}>
-
-                                                            {<AntInput
-                                                                style={{ position: 'inherit' }}
-                                                                autoFocus={false}
-                                                                placeholder={attribute.description}
-                                                                type={attribute?.columnType === 0 ? "text" : "number"}
-                                                                value={formData[attribute.columnName]}
-                                                                onChange={(e) => handleInputChange(attribute.columnName, e.target.value)}
-                                                                className={'searchInfoInput'}
-                                                            />
-                                                            }
-                                                            <style>
-                                                                {`
-                                                                    .searchInfoInput:focus {
-                                                                        border-color: ${backgroundColor ? backgroundColor : '#0087b7'};
-                                                                        box-shadow: inset 0 0 0 1px ${backgroundColor ? backgroundColor : '#0087b7'};
-                                                                    }
-                                                                    
-                                                                    .searchInfoInput:hover {
-                                                                        border-color: ${backgroundColor ? backgroundColor : '#0087b7'};
-                                                                        box-shadow: inset 0 0 0 1px ${backgroundColor ? backgroundColor : '#0087b7'};
-                                                                     }
-                                                                `}
-                                                            </style>
-                                                        </Col>
-                                                    </div>
-                                                )}
+                                                ))}
                                             </div>
-                                        ))}
-                                    </div>}
+                                        )}
+                                    </div>
+
                                 </div> :
 
                                     <div style={styles.noLocationContainer}>
