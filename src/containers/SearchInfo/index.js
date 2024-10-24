@@ -538,7 +538,7 @@ const Layers = ({ width }) => {
 
     const groupBy = (data, key) => {
         return data?.reduce((result, current) => {
-            const groupKey = current[key].replace('^', '').trim(); // Remove ^ sign
+            const groupKey = current[key]?.replace('^', '').trim(); // Remove ^ sign
             if (!result[groupKey]) {
                 result[groupKey] = [];
             }
