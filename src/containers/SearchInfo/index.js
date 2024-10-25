@@ -554,13 +554,13 @@ const Layers = ({ width }) => {
 
     const groupedAttributes = groupBy(validateAttributeData, 'grp');
     useEffect(() => {
-        if (groupedAttributes?.hasOwnProperty("undefined")) {
+        if (groupedAttributes?.hasOwnProperty("undefined") && !expandedGroups["undefined"]) {
             setExpandedGroups((prev) => ({
                 ...prev,
                 "undefined": true,
             }));
         }
-    }, [groupedAttributes]);
+    }, [groupedAttributes, expandedGroups]);
 
     const toggleGroup = (groupName) => {
         setExpandedGroups((prev) => ({
