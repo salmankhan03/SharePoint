@@ -288,7 +288,9 @@ button.gm-ui-hover-effect {
 .ant-spin .ant-spin-dot-item {
   background-color: darkgray;
 }
-
+.gm-style-iw-chr{
+  display: none ;
+}
 @media only screen and (max-width: 480px) {
   .leftLayerWidth {
     max-width: 479px !important;
