@@ -580,12 +580,38 @@ const Layers = ({ width }) => {
                 "undefined": true,
             }));
         }
-    }, [groupedAttributes, expandedGroups]);
+    }, [groupedAttributes]);
+
+    // useEffect(() => {
+    //     initializeExpandedGroups();
+    // }, [groupedAttributes]);
+
+    // const initializeExpandedGroups = () => {
+    //     const getVisibilityObject = (data) => {
+    //         const visibilityObject = {};
+    //         console.log(data)
+    //         for (const groupName in data) {
+    //             console.log(data[groupName].some(entry =>  !entry.visible),"141")
+    //             visibilityObject[groupName] = data[groupName].some(entry => entry.visible);
+    //         }
+    //         return visibilityObject;
+    //     };
+
+    //     const visibilityObject = getVisibilityObject(groupedAttributes);
+    //     console.log("visibilityObject", visibilityObject);
+
+        
+    //     setExpandedGroups((prev) => {
+    //         return JSON.stringify(prev) !== JSON.stringify(visibilityObject) ? visibilityObject : prev;
+    //     });
+    // };
 
     const toggleGroup = (groupName) => {
+        console.log("Call toggleGroup");
+        
         setExpandedGroups((prev) => ({
             ...prev,
-            [groupName]: !prev[groupName]
+            [groupName]: !prev[groupName],
         }));
     };
 
