@@ -362,26 +362,25 @@ const Layers = ({ width }) => {
             email: mapData.email,
             phone: mapData.phone
         }
-        console.log("payload", payload)
-        // try {
-        //     const response = await axios.post('https://submitapi.sitewise.com/submit', payload);
-        //     console.log('API Response:', response);
-        //     SetSubmitSuccessFull(true)
-        //     localStorage.setItem('contactInfo', JSON.stringify(contactInfo));
-        //     // message.success('Site Submitted successfully');
-        //     onClose()
-        //     setMapData({ mapName: '', comments: '' })
-        //     setSelectedFiles([])
-        //     setTimeStamp(true)
-        //     dispatch(setAttributesData(mapData));
-        //     setCurrentStep(1);
-        //     dispatch(setContactScreenShowHide(false))
-        //     setFormData({});
-        //     setLoading(false)
-        // } catch (error) {
-        //     message.error(error);
-        //     setLoading(false)
-        // }
+        try {
+            const response = await axios.post('https://submitapi.sitewise.com/submit', payload);
+            console.log('API Response:', response);
+            SetSubmitSuccessFull(true)
+            localStorage.setItem('contactInfo', JSON.stringify(contactInfo));
+            // message.success('Site Submitted successfully');
+            onClose()
+            setMapData({ mapName: '', comments: '' })
+            setSelectedFiles([])
+            setTimeStamp(true)
+            dispatch(setAttributesData(mapData));
+            setCurrentStep(1);
+            dispatch(setContactScreenShowHide(false))
+            setFormData({});
+            setLoading(false)
+        } catch (error) {
+            message.error(error);
+            setLoading(false)
+        }
 
     }
 
