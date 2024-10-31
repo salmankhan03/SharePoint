@@ -291,6 +291,22 @@ button.gm-ui-hover-effect {
 .gm-style-iw-chr{
   display: none ;
 }
+
+/* Checkbox */
+.ant-checkbox-checked .ant-checkbox-inner {
+  background-color: #021E4F  !important; 
+  border-color: #021E4F  !important; 
+}
+
+.ant-checkbox-checked .ant-checkbox-inner::after {
+  background-color: #021E4F  !important;
+}
+
+.ant-checkbox:hover .ant-checkbox-inner {
+  border-color: #021E4F  !important; 
+}
+
+/* Checkbox */
 @media only screen and (max-width: 480px) {
   .leftLayerWidth {
     max-width: 479px !important;
