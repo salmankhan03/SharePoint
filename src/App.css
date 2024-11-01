@@ -270,6 +270,11 @@ button.gm-ui-hover-effect {
 /* INPUT */
 .ant-input {
   cursor: pointer;
+  font-family: 'Roboto';
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 16.41px;
+  text-align: left;
 }
 
 .ant-input-affix-wrapper {
@@ -288,25 +293,32 @@ button.gm-ui-hover-effect {
 .ant-spin .ant-spin-dot-item {
   background-color: darkgray;
 }
-.gm-style-iw-chr{
-  display: none ;
+
+.gm-style-iw-chr {
+  display: none;
 }
 
 /* Checkbox */
 .ant-checkbox-checked .ant-checkbox-inner {
-  background-color: #021E4F  !important; 
-  border-color: #021E4F  !important; 
+  background-color: #021E4F !important;
+  border-color: #021E4F !important;
 }
 
 .ant-checkbox-checked .ant-checkbox-inner::after {
-  background-color: #021E4F  !important;
+  background-color: #021E4F !important;
 }
 
 .ant-checkbox:hover .ant-checkbox-inner {
-  border-color: #021E4F  !important; 
+  border-color: #021E4F !important;
 }
 
 /* Checkbox */
+
+/* Select */
+.ant-select-selector {
+  border: 1px solid #8295af !important;
+}
+/* Select */
 @media only screen and (max-width: 480px) {
   .leftLayerWidth {
     max-width: 479px !important;
