@@ -1,14 +1,12 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
     Button,
 } from "antd";
 
 import { Row, Col } from "antd";
-import { Input as AntInput, Select } from 'antd';
-import { CaretDownOutlined, CaretRightOutlined, DeleteOutlined, MapOutlined } from '@ant-design/icons';
-
-
+import { Input as AntInput, Select, Checkbox } from 'antd';
+import { CaretDownOutlined, CaretRightOutlined, DeleteOutlined, MapOutlined, DownOutlined, CaretUpOutlined, UpOutlined } from '@ant-design/icons';
 
 import LeftDrawerContent from "../../components/LeftDrawerContent";
 import Search from "../Search";
@@ -138,19 +136,48 @@ const Layers = ({ width }) => {
 
     const [siteCharacteristics, SetSiteCharacteristics] = useState([])
     const [timeStamp, setTimeStamp] = useState(false)
-    const timestampRef = useRef('');
+    // const timestampRef = useRef('');
+    const [expandedGroups, setExpandedGroups] = useState({});
 
-    const validateAttributeData = validateData?.attributes
+    // const validateAttributeData = validateData?.attributes;
+    const [validateAttributeData, setValidateAttributeData] = useState([])
+    // const [groupedAttributes, setGroupedAttributes] = useState([])
 
     const [formData, setFormData] = useState({});
     const [checkSubmit, setCheckSubmit] = useState(false);
     const [backgroundColor, setBackGroundColor] = useState()
     const [loading, setLoading] = useState(false);
+    const [openStates, setOpenStates] = useState({});
+    const fileInputRef = useRef(null)
+    const timestampRef = useRef(Date.now());
+
+    useEffect(() => {
+        let customData = validateData?.attributes;
+
+        if (customData) {
+            const updatedCustomData = customData.map(item => {
+                const newItem = { ...item };
+                const element = newItem?.tyo;
+                if (element?.length > 0) {
+                    // console.log("161",element)
+                    // newItem.tyo = ["|Select an option", ...element];
+                }
+                return newItem;
+            });
+            // console.log("updatedCustomData",updatedCustomData)
+            setValidateAttributeData(updatedCustomData)
+        }
+    }, [validateData]);
 
     useEffect(() => {
         const initialData = {};
         validateAttributeData?.forEach((attribute) => {
-            initialData[attribute.columnName] = attribute.tyo ? getDefaultOption(attribute) : attribute.dv;
+            // Check if ty is 5
+            if (attribute.ty === 5) {
+                initialData[attribute.columnName] = false; // Store false if ty is 5
+            } else {
+                initialData[attribute.columnName] = attribute.tyo ? getDefaultOption(attribute) : attribute.dv;
+            }
         });
 
         setFormData(initialData);
@@ -159,7 +186,7 @@ const Layers = ({ width }) => {
 
     const getDefaultOption = (attribute) => {
         if (attribute.tyo && attribute.tyo.length > 0) {
-            const [defaultValue] = attribute.tyo.find(option => option.startsWith(attribute.dv))?.split('|') || [attribute.dv];
+            const [defaultValue] = attribute.tyo.find(option => option.startsWith(''))?.split('|') || [attribute.dv];
             return defaultValue;
         }
         return attribute.dv || '';
@@ -337,7 +364,6 @@ const Layers = ({ width }) => {
             email: mapData.email,
             phone: mapData.phone
         }
-
         try {
             const response = await axios.post('https://submitapi.sitewise.com/submit', payload);
             console.log('API Response:', response);
@@ -422,7 +448,7 @@ const Layers = ({ width }) => {
             path: `submitter/${timestampRef.current}/${file.path}`
         }));
 
-        setSelectedFiles((prevFiles) => [...prevFiles, ...filesWithTimestamp]);
+        setSelectedFiles(prevFiles => [...prevFiles, ...filesWithTimestamp]);
     }, []);
 
     async function uploadfile() {
@@ -491,17 +517,19 @@ const Layers = ({ width }) => {
         onDrop,
     });
     const removeFile = (fileName) => {
-        setSelectedFiles((prevFiles) => prevFiles.filter((file) => file.name !== fileName));
+        setSelectedFiles(prevFiles => prevFiles.filter(file => file.name !== fileName));
+        if (fileInputRef.current) {
+            fileInputRef.current.value = "";
+        }
     };
-
     const renderFiles = () => {
         return selectedFiles.map((file) => (
             <Row style={{ marginTop: 10 }}>
-                <Col span={18}>
-                    <div style={{ ...styles.fileListText, fontFamily: fontFamilys ? fontFamilys : '', color: fontColor ? fontColor : '' }}>{file.name}</div>
+                <Col span={22}>
+                    <div style={{ ...styles.fileListText, fontFamily: fontFamilys ? fontFamilys : '', color: fontColor ? fontColor : '', textOverflow: 'ellipsis', overflow: 'hidden', marginRight: 20 }}>{file.name}</div>
                 </Col>
-                <Col span={6}>
-                    <div style={styles.textEnd} onClick={() => removeFile(file.name)}>
+                <Col span={2}>
+                    <div style={{ ...styles.textEnd, marginLeft: 10 }} onClick={() => removeFile(file.name)}>
                         <TrashIcon size="14" />
                     </div>
                 </Col>
@@ -534,8 +562,37 @@ const Layers = ({ width }) => {
     };
 
     const declaimerText = validateData && validateData.disclaimer ? validateData.disclaimer : ''
+    const groupBy = (data, key) => {
+        return data?.reduce((acc, current) => {
+            const groupKey = current[key]?.replace('^', '').trim() || 'undefined';
+            if (!acc.groupedAttributes[groupKey]) {
+                acc.groupedAttributes[groupKey] = [];
+            }
+            acc.groupedAttributes[groupKey].push(current);
 
+            acc.presenceTracker[groupKey] = true;
 
+            return acc;
+        }, { groupedAttributes: {}, presenceTracker: {} });
+    };
+    const { groupedAttributes, presenceTracker } = useMemo(() => {
+        return groupBy(validateAttributeData, 'grp');
+    }, [validateAttributeData]);
+    useEffect(() => {
+        setExpandedGroups(presenceTracker);
+    }, [presenceTracker]);
+    const toggleGroup = (groupName) => {
+        console.log("Call toggleGroup", expandedGroups);
+
+        setExpandedGroups((prev) => ({
+            ...prev,
+            [groupName]: !prev[groupName],
+        }));
+    };
+
+    const handleDropdownOpenChange = (columnName, isOpen) => {
+        setOpenStates(prev => ({ ...prev, [columnName]: isOpen }));
+    };
 
     return (
         <div style={styles.container} className={"layerContainer"}>
@@ -583,107 +640,137 @@ const Layers = ({ width }) => {
                                     {renderInput('mapName', 'Name', mapData.mapName, 'text', 'Site Name', viewSideDetailFields)}
                                     {renderInput('comments', 'Comments', mapData.comments, 'text-area', 'Comments')}
 
-                                    {validateAttributeData?.length > 0 && <div>
-                                        <div onClick={() => SetOptionalField(true)} style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer' }}>
-                                            <div style={{
-                                                fontWeight: 700, fontSize: 14,
-                                                fontFamily: fontFamilys ? fontFamilys : 'Roboto',
-                                                color: fontColor ? fontColor : '#021E4F',
-                                                marginTop: 12
-                                            }}>Site Characteristics (Optional)</div>
-                                        </div>
-                                        {optionalField && validateAttributeData?.map(attribute => (
-                                            <div key={attribute.columnName}>
-                                                {attribute.tyo ? (
+                                    <div>
+                                        {validateAttributeData.length > 0 && (
+                                            <div>
+                                                <div onClick={() => SetOptionalField(true)} style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer' }}>
+                                                    <div style={{
+                                                        fontFamily: 'Poppins',
+                                                        fontSize: 17,
+                                                        fontWeight: 700,
+                                                        lineHeight: '25.5px',
+                                                        textAlign: 'left',
+                                                    }}>Site Characteristics</div>
+                                                </div>
+                                                {/* {optionalField && groupedAttributes.length > 0 && Object.entries(groupedAttributes)?.map(([groupName, attributes]) => ( */}
+                                                {optionalField && groupedAttributes && Object.keys(groupedAttributes).length > 0 &&
+                                                    Object.entries(groupedAttributes).map(([groupName, attributes]) => (
+                                                        <div key={groupName} style={{ marginTop: 10, marginBottom: 10 }}>
+                                                            {groupName !== 'undefined' ? (
+                                                                <div style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }} onClick={() => toggleGroup(groupName)}>
+                                                                    <span style={{
+                                                                        // border: '1px solid #0087b7',
+                                                                        padding: '0px',
+                                                                        display: 'flex',
+                                                                        alignItems: 'center',
+                                                                        justifyContent: 'center',
+                                                                        width: '25px',
+                                                                        height: '25px',
+                                                                        borderRadius: '4px',
+                                                                        marginRight: '8px',
+                                                                        fontSize: '16px',
+                                                                        color: '#0087b7',
+                                                                    }}>
+                                                                        {expandedGroups[groupName] ? <CaretUpOutlined /> : <CaretDownOutlined />}
+                                                                    </span>
+                                                                    <span style={{
+                                                                        color: '#0087b7',
+                                                                        fontFamily: 'Roboto',
+                                                                        fontSize: 14,
+                                                                        fontWeight: 700,
+                                                                        lineHeight: '16.41px',
+                                                                        textAlign: 'left',
 
-                                                    <div style={styles.input}>
-                                                        <Col span={24} style={{ ...styles.inputLabel, fontFamily: fontFamilys ? fontFamilys : '', color: fontColor ? fontColor : '' }}>
-                                                            {attribute.description}
-                                                        </Col>
-                                                        <Col span={24} style={styles.inputs}>
-                                                            <Select
-                                                                style={{ width: '100%', fontFamily: fontFamilys ? fontFamilys : '' }}
-                                                                value={formData[attribute.columnName]}
-                                                                onChange={(e) => handleInputChange(attribute.columnName, e)}
-                                                                placeholder={attribute.description}
-                                                                autoFocus={false}
-                                                            >
-                                                                {attribute.tyo?.map((option) => {
-                                                                    const [value, label] = option.split('|');
-                                                                    return (
-                                                                        <option key={value} value={value} style={{
-                                                                            fontFamily: fontFamilys ? fontFamilys : '',
-                                                                            backgroundColor: formData[attribute.columnName] === value ? '#F1F3F4' : 'inherit',
-                                                                        }}>
-                                                                            {label}
-                                                                        </option>
-                                                                    );
-                                                                })}
-                                                            </Select>
-                                                            <style>
-                                                                {`
-                                                                    .ant-select-focused .ant-select-selector,
-                                                                    .ant-select-selector:focus,
-                                                                    .ant-select-selector:hover,
-                                                                    .ant-select-open .ant-select-selector { 
-                                                                        border-color: ${backgroundColor ? backgroundColor : '#0087b7'} !important;
-                                                                        box-shadow: inset 0 0 0 1px ${backgroundColor ? backgroundColor : '#0087b7'} !important;
-                                                                    }
-                                                            
-                                                                    .ant-select-dropdown.custom-dropdown .ant-select-item:hover,
-                                                                    .ant-select-dropdown.custom-dropdown .ant-select-item-active {
-                                                                        background-color: ${backgroundColor ? backgroundColor : '#0087b7'} !important;
-                                                                       box-shadow: inset 0 0 0 1px ${backgroundColor ? backgroundColor : '#0087b7'} !important;
-                                                                    } 
-                                                                `}
-                                                            </style>
-                                                        </Col>
-                                                    </div>
+                                                                    }}>{groupName}</span>
+                                                                </div>
+                                                            ) : null}
 
-                                                ) : (
+                                                            {expandedGroups[groupName] && attributes.map(attribute => {
+                                                                console.log("formData[attribute.columnName]", formData[attribute.columnName])
+                                                                console.log("attribute.description", attribute.description)
+                                                                console.log("groupedAttributes", groupedAttributes)
+                                                                return (
+                                                                    <div key={attribute.columnName} style={{ marginLeft: groupName !== 'undefined' ? 10 : 0 }}>
+                                                                        {attribute.tyo ? (
+                                                                            <div style={styles.input}>
+                                                                                <Col span={24} style={{ ...styles.inputLabel }}>
+                                                                                    {attribute.description}
+                                                                                </Col>
+                                                                                <Col span={24} style={styles.inputs}>
+                                                                                    {/* <Select
+                                                                                    style={{ width: '100%'}}    
+                                                                                    value={formData[attribute.columnName]}
+                                                                                    onChange={(e) => handleInputChange(attribute.columnName, e)}
+                                                                                    onDropdownVisibleChange={(isOpen) => handleDropdownOpenChange(attribute.columnName, isOpen)}
+                                                                                    placeholder={attribute.description}
+                                                                                    suffixIcon={openStates[attribute.columnName] ? <CaretUpOutlined /> : <CaretDownOutlined />}
+                                                                                >
+                                                                                    {attribute.tyo?.map((option) => {
+                                                                                        const [value, label] = option.split('|');
+                                                                                        return (
+                                                                                            <Option key={value} value={value}>
+                                                                                                {label}
+                                                                                            </Option>
+                                                                                        );
+                                                                                    })}
+                                                                                </Select> */}
+                                                                                    <Select
+                                                                                        style={{ width: '100%' }}
+                                                                                        activeBorderColor={'red'}
+                                                                                        placeholder="Select an option"
+                                                                                        onDropdownVisibleChange={(isOpen) => handleDropdownOpenChange(attribute.columnName, isOpen)}
+                                                                                        suffixIcon={openStates[attribute.columnName] ? <UpOutlined /> : <DownOutlined />}
+                                                                                        optionFilterProp="label"
+                                                                                        onChange={(e) => handleInputChange(attribute.columnName, e)}
+                                                                                    >
+                                                                                        {attribute.tyo?.map((option) => {
+                                                                                            const [value, label] = option.split('|');
+                                                                                            return (
+                                                                                                <Option key={value} value={value}>
+                                                                                                    {label === "NA" ? "N/A" : label}
+                                                                                                </Option>
+                                                                                            );
+                                                                                        })}
 
-                                                    <div style={{ display: 'flex', flexDirection: "column", margin: '8px 0' }}>
-                                                        <Col
-                                                            span={24}
-                                                            style={{
-                                                                ...styles.inputLabel,
-                                                                fontFamily: fontFamilys ? fontFamilys : '', //+'!important'
-                                                                color: fontColor ? fontColor : '',
-                                                            }}
-                                                        >
-                                                            {attribute.description}
-                                                        </Col>
-                                                        <Col span={24} style={styles.inputs}>
+                                                                                    </Select>
+                                                                                </Col>
+                                                                            </div>
+                                                                        ) : (
+                                                                            <div style={{ display: 'flex', flexDirection: "column", margin: '8px 0' }}>
+                                                                                {attribute.ty !== 5 ? (
+                                                                                    <Col span={24} style={{ ...styles.inputLabel }}>
+                                                                                        {attribute.description}
+                                                                                    </Col>
+                                                                                ) : null}
+                                                                                <Col span={24} style={styles.inputs}>
+                                                                                    {attribute.ty === 5 ? (
+                                                                                        <Checkbox
+                                                                                            checked={formData[attribute.columnName] || false}
+                                                                                            onChange={(e) => handleInputChange(attribute.columnName, e.target.checked)}
+                                                                                        >
+                                                                                            {attribute.description}
+                                                                                        </Checkbox>
 
-                                                            {<AntInput
-                                                                style={{ position: 'inherit' }}
-                                                                autoFocus={false}
-                                                                placeholder={attribute.description}
-                                                                type={attribute?.columnType === 0 ? "text" : "number"}
-                                                                value={formData[attribute.columnName]}
-                                                                onChange={(e) => handleInputChange(attribute.columnName, e.target.value)}
-                                                                className={'searchInfoInput'}
-                                                            />
-                                                            }
-                                                            <style>
-                                                                {`
-                                                                    .searchInfoInput:focus {
-                                                                        border-color: ${backgroundColor ? backgroundColor : '#0087b7'};
-                                                                        box-shadow: inset 0 0 0 1px ${backgroundColor ? backgroundColor : '#0087b7'};
-                                                                    }
-                                                                    
-                                                                    .searchInfoInput:hover {
-                                                                        border-color: ${backgroundColor ? backgroundColor : '#0087b7'};
-                                                                        box-shadow: inset 0 0 0 1px ${backgroundColor ? backgroundColor : '#0087b7'};
-                                                                     }
-                                                                `}
-                                                            </style>
-                                                        </Col>
-                                                    </div>
-                                                )}
+                                                                                    ) : (
+                                                                                        <AntInput
+                                                                                            placeholder={'Enter Text'}
+                                                                                            type={attribute.columnType === 0 ? "text" : "number"}
+                                                                                            value={formData[attribute.columnName]}
+                                                                                            onChange={(e) => handleInputChange(attribute.columnName, e.target.value)}
+                                                                                        />
+                                                                                    )}
+                                                                                </Col>
+                                                                            </div>
+                                                                        )}
+                                                                    </div>
+                                                                )
+                                                            })}
+                                                        </div>
+                                                    ))}
                                             </div>
-                                        ))}
-                                    </div>}
+                                        )}
+                                    </div>
+
                                 </div> :
 
                                     <div style={styles.noLocationContainer}>
@@ -747,22 +834,41 @@ const Layers = ({ width }) => {
                                                 color: fontColor ? fontColor : '',
                                             }}>or</p>
                                         </div>
-                                        <Button
-                                            // type="primary"
-                                            onMouseEnter={handleBrowsekMouseEnter}
-                                            onMouseLeave={handleBrowseMouseLeave}
-                                            style={{
-                                                ...styles.BrowseButton,
-                                                fontFamily: btnFamily ? (browsebtnHovered ? btnHoverFamily : btnFamily) : '',
-                                                backgroundColor: btnBackgroundColor ? (browsebtnHovered ? btnHoverColor : 'white') : (browsebtnHovered ? '#0087b7' : 'white'),
-                                                color: btnBackgroundColor ? (browsebtnHovered ? 'white' : (btnBackgroundColor ? btnBackgroundColor : 'black')) : (browsebtnHovered ? 'white' : '#0087b7'),
-                                                borderColor: btnBackgroundColor ? (browsebtnHovered ? "white" : (btnBackgroundColor ? btnBackgroundColor : 'transparent')) : (browsebtnHovered ? 'white' : '#0087b7'),
-                                                border: btnBackgroundColor ? '1px solid' + btnBackgroundColor : '1px solid #0087b7',
-                                                borderRadius: '6px'
-                                            }}
-                                            onClick={() => document.querySelector('input[type="file"]').click()}>
-                                            +  Browse Files
-                                        </Button>
+                                        <div {...getRootProps()} >
+                                            <input
+                                                type="file"
+                                                ref={fileInputRef}
+                                                {...getInputProps()}
+                                                style={{ display: 'none' }} // Hide the file input
+                                                onChange={(e) => {
+                                                    const files = e.target.files;
+                                                    if (files.length > 0) {
+                                                        onDrop(Array.from(files));
+                                                    }
+                                                }}
+                                            />
+                                            <Button
+                                                onMouseEnter={handleBrowsekMouseEnter}
+                                                onMouseLeave={handleBrowseMouseLeave}
+                                                style={{
+                                                    ...styles.BrowseButton,
+                                                    fontFamily: btnFamily ? (browsebtnHovered ? btnHoverFamily : btnFamily) : '',
+                                                    backgroundColor: btnBackgroundColor ? (browsebtnHovered ? btnHoverColor : 'white') : (browsebtnHovered ? '#0087b7' : 'white'),
+                                                    color: btnBackgroundColor ? (browsebtnHovered ? 'white' : (btnBackgroundColor ? btnBackgroundColor : 'black')) : (browsebtnHovered ? 'white' : '#0087b7'),
+                                                    borderColor: btnBackgroundColor ? (browsebtnHovered ? "white" : (btnBackgroundColor ? btnBackgroundColor : 'transparent')) : (browsebtnHovered ? 'white' : '#0087b7'),
+                                                    border: btnBackgroundColor ? '1px solid' + btnBackgroundColor : '1px solid #0087b7',
+                                                    borderRadius: '6px'
+                                                }}
+                                                onClick={() => {
+                                                    if (fileInputRef.current) {
+                                                        fileInputRef.current.value = "";
+                                                        fileInputRef.current.click();
+                                                    }
+                                                }}
+                                            >
+                                                + Browse Files
+                                            </Button>
+                                        </div>
                                         <br />
                                         <div style={{
                                             marginTop: 7,
@@ -1008,7 +1114,8 @@ const styles = {
         fontSize: 13
     },
     textEnd: {
-        textAlign: 'end'
+        textAlign: 'end',
+        cursor: 'pointer'
     },
     BrowseButton: {
         fontFamily: 'Roboto',
