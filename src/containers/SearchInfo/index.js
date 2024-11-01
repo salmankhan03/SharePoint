@@ -517,7 +517,7 @@ const Layers = ({ width }) => {
     const removeFile = (fileName) => {
         setSelectedFiles(prevFiles => prevFiles.filter(file => file.name !== fileName));
         if (fileInputRef.current) {
-            fileInputRef.current.value = ""; 
+            fileInputRef.current.value = "";
         }
     };
     const renderFiles = () => {
@@ -563,7 +563,7 @@ const Layers = ({ width }) => {
 
     const groupBy = (data, key) => {
         return data?.reduce((result, current) => {
-            const groupKey = current[key]?.replace('^', '').trim(); 
+            const groupKey = current[key]?.replace('^', '').trim();
             if (!result[groupKey]) {
                 result[groupKey] = [];
             }
@@ -600,7 +600,7 @@ const Layers = ({ width }) => {
     //     const visibilityObject = getVisibilityObject(groupedAttributes);
     //     console.log("visibilityObject", visibilityObject);
 
-        
+
     //     setExpandedGroups((prev) => {
     //         return JSON.stringify(prev) !== JSON.stringify(visibilityObject) ? visibilityObject : prev;
     //     });
@@ -608,7 +608,7 @@ const Layers = ({ width }) => {
 
     const toggleGroup = (groupName) => {
         console.log("Call toggleGroup");
-        
+
         setExpandedGroups((prev) => ({
             ...prev,
             [groupName]: !prev[groupName],
@@ -682,7 +682,7 @@ const Layers = ({ width }) => {
                                                         {groupName !== 'undefined' ? (
                                                             <div style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }} onClick={() => toggleGroup(groupName)}>
                                                                 <span style={{
-                                                                    border: '1px solid #0087b7',
+                                                                    // border: '1px solid #0087b7',
                                                                     padding: '0px',
                                                                     display: 'flex',
                                                                     alignItems: 'center',
@@ -694,7 +694,7 @@ const Layers = ({ width }) => {
                                                                     fontSize: '16px',
                                                                     color: '#0087b7',
                                                                 }}>
-                                                                    {expandedGroups[groupName] ? '-' : '+'}
+                                                                    {expandedGroups[groupName] ? <CaretUpOutlined /> : <CaretDownOutlined />}
                                                                 </span>
                                                                 <span style={{
                                                                     color: '#0087b7',
@@ -720,7 +720,7 @@ const Layers = ({ width }) => {
                                                                                 {attribute.description}
                                                                             </Col>
                                                                             <Col span={24} style={styles.inputs}>
-                                                                                <Select
+                                                                            <Select
                                                                                     style={{ width: '100%' }}
                                                                                     value={formData[attribute.columnName]}
                                                                                     onChange={(e) => handleInputChange(attribute.columnName, e)}
@@ -837,7 +837,7 @@ const Layers = ({ width }) => {
                                                 fontFamily: fontFamilys ? fontFamilys : '',
                                                 color: fontColor ? fontColor : '',
                                             }}>or</p>
-                                        </div>                        
+                                        </div>
                                         <div {...getRootProps()} >
                                             <input
                                                 type="file"
@@ -865,8 +865,8 @@ const Layers = ({ width }) => {
                                                 }}
                                                 onClick={() => {
                                                     if (fileInputRef.current) {
-                                                        fileInputRef.current.value = ""; 
-                                                        fileInputRef.current.click(); 
+                                                        fileInputRef.current.value = "";
+                                                        fileInputRef.current.click();
                                                     }
                                                 }}
                                             >
