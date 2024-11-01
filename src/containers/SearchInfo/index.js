@@ -187,7 +187,7 @@ const Layers = ({ width }) => {
     const getDefaultOption = (attribute) => {
         if (attribute.tyo && attribute.tyo.length > 0) {
             const [defaultValue] = attribute.tyo.find(option => option.startsWith(''))?.split('|') || [attribute.dv];
-            return defaultValue;
+            return '';
         }
         return attribute.dv || '';
     };
@@ -522,11 +522,26 @@ const Layers = ({ width }) => {
             fileInputRef.current.value = "";
         }
     };
+    const getFormattedFilename = (file) => {
+        const maxLength = 25; 
+        const fileName = file.name;
+        const fileExtension = fileName.split('.').pop(); 
+        const nameWithoutExtension = fileName.slice(0, -fileExtension.length - 1); 
+      
+        if (nameWithoutExtension.length > maxLength) {
+          const lastThreeChars = nameWithoutExtension.slice(-3);
+          const truncatedName = nameWithoutExtension.slice(0, maxLength - 3);
+          return `${truncatedName}…${lastThreeChars}.${fileExtension}`;
+        }
+        return fileName; 
+      };
     const renderFiles = () => {
         return selectedFiles.map((file) => (
             <Row style={{ marginTop: 10 }}>
                 <Col span={22}>
-                    <div style={{ ...styles.fileListText, fontFamily: fontFamilys ? fontFamilys : '', color: fontColor ? fontColor : '', textOverflow: 'ellipsis', overflow: 'hidden', marginRight: 20 }}>{file.name}</div>
+                    <div style={{ ...styles.fileListText, fontFamily: fontFamilys ? fontFamilys : '', color: fontColor ? fontColor : '', textOverflow: 'ellipsis', overflow: 'hidden', marginRight: 20 }}>
+                        {getFormattedFilename(file)}
+                    </div>
                 </Col>
                 <Col span={2}>
                     <div style={{ ...styles.textEnd, marginLeft: 10 }} onClick={() => removeFile(file.name)}>
@@ -671,7 +686,7 @@ const Layers = ({ width }) => {
                                                                         fontSize: '16px',
                                                                         color: '#0087b7',
                                                                     }}>
-                                                                        {expandedGroups[groupName] ? <CaretUpOutlined /> : <CaretDownOutlined />}
+                                                                        {expandedGroups[groupName] ?  <CaretDownOutlined /> :<CaretUpOutlined />}
                                                                     </span>
                                                                     <span style={{
                                                                         color: '#0087b7',
@@ -718,6 +733,7 @@ const Layers = ({ width }) => {
                                                                                         style={{ width: '100%' }}
                                                                                         activeBorderColor={'red'}
                                                                                         placeholder="Select an option"
+                                                                                        value={formData[attribute.columnName] || undefined} 
                                                                                         onDropdownVisibleChange={(isOpen) => handleDropdownOpenChange(attribute.columnName, isOpen)}
                                                                                         suffixIcon={openStates[attribute.columnName] ? <UpOutlined /> : <DownOutlined />}
                                                                                         optionFilterProp="label"
