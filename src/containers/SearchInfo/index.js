@@ -6,7 +6,7 @@ import {
 
 import { Row, Col } from "antd";
 import { Input as AntInput, Select, Checkbox } from 'antd';
-import { CaretDownOutlined, CaretRightOutlined, DeleteOutlined, MapOutlined, DownOutlined, CaretUpOutlined } from '@ant-design/icons';
+import { CaretDownOutlined, CaretRightOutlined, DeleteOutlined, MapOutlined, DownOutlined, CaretUpOutlined ,UpOutlined} from '@ant-design/icons';
 
 import LeftDrawerContent from "../../components/LeftDrawerContent";
 import Search from "../Search";
@@ -158,7 +158,8 @@ const Layers = ({ width }) => {
                 const newItem = { ...item };
                 const element = newItem?.tyo;
                 if (element?.length > 0) {
-                    newItem.tyo = ["|Selec an option", ...element];
+                    // console.log("161",element)
+                    // newItem.tyo = ["|Select an option", ...element];
                 }
                 return newItem;
             });
@@ -720,8 +721,8 @@ const Layers = ({ width }) => {
                                                                                 {attribute.description}
                                                                             </Col>
                                                                             <Col span={24} style={styles.inputs}>
-                                                                            <Select
-                                                                                    style={{ width: '100%' }}
+                                                                                {/* <Select
+                                                                                    style={{ width: '100%'}}    
                                                                                     value={formData[attribute.columnName]}
                                                                                     onChange={(e) => handleInputChange(attribute.columnName, e)}
                                                                                     onDropdownVisibleChange={(isOpen) => handleDropdownOpenChange(attribute.columnName, isOpen)}
@@ -736,7 +737,26 @@ const Layers = ({ width }) => {
                                                                                             </Option>
                                                                                         );
                                                                                     })}
-                                                                                </Select>
+                                                                                </Select> */}
+                                                                                <Select
+                                                                                    style={{ width: '100%'}}    
+                                                                                    activeBorderColor={'red'}
+                                                                                    placeholder="Select an option"
+                                                                                    onDropdownVisibleChange={(isOpen) => handleDropdownOpenChange(attribute.columnName, isOpen)}
+                                                                                    suffixIcon={openStates[attribute.columnName] ? <UpOutlined/> : <DownOutlined/>}
+                                                                                    optionFilterProp="label"
+                                                                                    onChange={(e) => handleInputChange(attribute.columnName, e)}
+                                                                                >
+                                                                                    {attribute.tyo?.map((option) => {
+                                                                                        const [value, label] = option.split('|');
+                                                                                        return (
+                                                                                            <Option key={value} value={value}>
+                                                                                                {label === "NA" ? "N/A": label}
+                                                                                            </Option>
+                                                                                        );
+                                                                                    })}
+                                                                                    
+                                                                                </Select>                                                                                
                                                                             </Col>
                                                                         </div>
                                                                     ) : (
