@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
     Button,
@@ -6,7 +6,7 @@ import {
 
 import { Row, Col } from "antd";
 import { Input as AntInput, Select, Checkbox } from 'antd';
-import { CaretDownOutlined, CaretRightOutlined, DeleteOutlined, MapOutlined, DownOutlined, CaretUpOutlined ,UpOutlined} from '@ant-design/icons';
+import { CaretDownOutlined, CaretRightOutlined, DeleteOutlined, MapOutlined, DownOutlined, CaretUpOutlined, UpOutlined } from '@ant-design/icons';
 
 import LeftDrawerContent from "../../components/LeftDrawerContent";
 import Search from "../Search";
@@ -141,6 +141,7 @@ const Layers = ({ width }) => {
 
     // const validateAttributeData = validateData?.attributes;
     const [validateAttributeData, setValidateAttributeData] = useState([])
+    // const [groupedAttributes, setGroupedAttributes] = useState([])
 
     const [formData, setFormData] = useState({});
     const [checkSubmit, setCheckSubmit] = useState(false);
@@ -561,54 +562,27 @@ const Layers = ({ width }) => {
     };
 
     const declaimerText = validateData && validateData.disclaimer ? validateData.disclaimer : ''
-
     const groupBy = (data, key) => {
-        return data?.reduce((result, current) => {
-            const groupKey = current[key]?.replace('^', '').trim();
-            if (!result[groupKey]) {
-                result[groupKey] = [];
+        return data?.reduce((acc, current) => {
+            const groupKey = current[key]?.replace('^', '').trim() || 'undefined';
+            if (!acc.groupedAttributes[groupKey]) {
+                acc.groupedAttributes[groupKey] = [];
             }
-            result[groupKey].push(current);
-            return result;
-        }, {});
+            acc.groupedAttributes[groupKey].push(current);
+
+            acc.presenceTracker[groupKey] = true;
+
+            return acc;
+        }, { groupedAttributes: {}, presenceTracker: {} });
     };
-
-    const groupedAttributes = groupBy(validateAttributeData, 'grp');
+    const { groupedAttributes, presenceTracker } = useMemo(() => {
+        return groupBy(validateAttributeData, 'grp');
+    }, [validateAttributeData]);
     useEffect(() => {
-        if (groupedAttributes?.hasOwnProperty("undefined") && !expandedGroups["undefined"]) {
-            setExpandedGroups((prev) => ({
-                ...prev,
-                "undefined": true,
-            }));
-        }
-    }, [groupedAttributes]);
-
-    // useEffect(() => {
-    //     initializeExpandedGroups();
-    // }, [groupedAttributes]);
-
-    // const initializeExpandedGroups = () => {
-    //     const getVisibilityObject = (data) => {
-    //         const visibilityObject = {};
-    //         console.log(data)
-    //         for (const groupName in data) {
-    //             console.log(data[groupName].some(entry =>  !entry.visible),"141")
-    //             visibilityObject[groupName] = data[groupName].some(entry => entry.visible);
-    //         }
-    //         return visibilityObject;
-    //     };
-
-    //     const visibilityObject = getVisibilityObject(groupedAttributes);
-    //     console.log("visibilityObject", visibilityObject);
-
-
-    //     setExpandedGroups((prev) => {
-    //         return JSON.stringify(prev) !== JSON.stringify(visibilityObject) ? visibilityObject : prev;
-    //     });
-    // };
-
+        setExpandedGroups(presenceTracker);
+    }, [presenceTracker]);
     const toggleGroup = (groupName) => {
-        console.log("Call toggleGroup");
+        console.log("Call toggleGroup", expandedGroups);
 
         setExpandedGroups((prev) => ({
             ...prev,
@@ -678,50 +652,52 @@ const Layers = ({ width }) => {
                                                         textAlign: 'left',
                                                     }}>Site Characteristics</div>
                                                 </div>
-                                                {optionalField && Object.entries(groupedAttributes).map(([groupName, attributes]) => (
-                                                    <div key={groupName} style={{ marginTop: 10, marginBottom: 10 }}>
-                                                        {groupName !== 'undefined' ? (
-                                                            <div style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }} onClick={() => toggleGroup(groupName)}>
-                                                                <span style={{
-                                                                    // border: '1px solid #0087b7',
-                                                                    padding: '0px',
-                                                                    display: 'flex',
-                                                                    alignItems: 'center',
-                                                                    justifyContent: 'center',
-                                                                    width: '25px',
-                                                                    height: '25px',
-                                                                    borderRadius: '4px',
-                                                                    marginRight: '8px',
-                                                                    fontSize: '16px',
-                                                                    color: '#0087b7',
-                                                                }}>
-                                                                    {expandedGroups[groupName] ? <CaretUpOutlined /> : <CaretDownOutlined />}
-                                                                </span>
-                                                                <span style={{
-                                                                    color: '#0087b7',
-                                                                    fontFamily: 'Roboto',
-                                                                    fontSize: 14,
-                                                                    fontWeight: 700,
-                                                                    lineHeight: '16.41px',
-                                                                    textAlign: 'left',
+                                                {/* {optionalField && groupedAttributes.length > 0 && Object.entries(groupedAttributes)?.map(([groupName, attributes]) => ( */}
+                                                {optionalField && groupedAttributes && Object.keys(groupedAttributes).length > 0 &&
+                                                    Object.entries(groupedAttributes).map(([groupName, attributes]) => (
+                                                        <div key={groupName} style={{ marginTop: 10, marginBottom: 10 }}>
+                                                            {groupName !== 'undefined' ? (
+                                                                <div style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }} onClick={() => toggleGroup(groupName)}>
+                                                                    <span style={{
+                                                                        // border: '1px solid #0087b7',
+                                                                        padding: '0px',
+                                                                        display: 'flex',
+                                                                        alignItems: 'center',
+                                                                        justifyContent: 'center',
+                                                                        width: '25px',
+                                                                        height: '25px',
+                                                                        borderRadius: '4px',
+                                                                        marginRight: '8px',
+                                                                        fontSize: '16px',
+                                                                        color: '#0087b7',
+                                                                    }}>
+                                                                        {expandedGroups[groupName] ? <CaretUpOutlined /> : <CaretDownOutlined />}
+                                                                    </span>
+                                                                    <span style={{
+                                                                        color: '#0087b7',
+                                                                        fontFamily: 'Roboto',
+                                                                        fontSize: 14,
+                                                                        fontWeight: 700,
+                                                                        lineHeight: '16.41px',
+                                                                        textAlign: 'left',
 
-                                                                }}>{groupName}</span>
-                                                            </div>
-                                                        ) : null}
+                                                                    }}>{groupName}</span>
+                                                                </div>
+                                                            ) : null}
 
-                                                        {expandedGroups[groupName] && attributes.map(attribute => {
-                                                            console.log("formData[attribute.columnName]", formData[attribute.columnName])
-                                                            console.log("attribute.description", attribute.description)
-                                                            console.log("groupedAttributes", groupedAttributes)
-                                                            return (
-                                                                <div key={attribute.columnName} style={{ marginLeft: groupName !== 'undefined' ? 10 : 0 }}>
-                                                                    {attribute.tyo ? (
-                                                                        <div style={styles.input}>
-                                                                            <Col span={24} style={{ ...styles.inputLabel }}>
-                                                                                {attribute.description}
-                                                                            </Col>
-                                                                            <Col span={24} style={styles.inputs}>
-                                                                                {/* <Select
+                                                            {expandedGroups[groupName] && attributes.map(attribute => {
+                                                                console.log("formData[attribute.columnName]", formData[attribute.columnName])
+                                                                console.log("attribute.description", attribute.description)
+                                                                console.log("groupedAttributes", groupedAttributes)
+                                                                return (
+                                                                    <div key={attribute.columnName} style={{ marginLeft: groupName !== 'undefined' ? 10 : 0 }}>
+                                                                        {attribute.tyo ? (
+                                                                            <div style={styles.input}>
+                                                                                <Col span={24} style={{ ...styles.inputLabel }}>
+                                                                                    {attribute.description}
+                                                                                </Col>
+                                                                                <Col span={24} style={styles.inputs}>
+                                                                                    {/* <Select
                                                                                     style={{ width: '100%'}}    
                                                                                     value={formData[attribute.columnName]}
                                                                                     onChange={(e) => handleInputChange(attribute.columnName, e)}
@@ -738,59 +714,59 @@ const Layers = ({ width }) => {
                                                                                         );
                                                                                     })}
                                                                                 </Select> */}
-                                                                                <Select
-                                                                                    style={{ width: '100%'}}    
-                                                                                    activeBorderColor={'red'}
-                                                                                    placeholder="Select an option"
-                                                                                    onDropdownVisibleChange={(isOpen) => handleDropdownOpenChange(attribute.columnName, isOpen)}
-                                                                                    suffixIcon={openStates[attribute.columnName] ? <UpOutlined/> : <DownOutlined/>}
-                                                                                    optionFilterProp="label"
-                                                                                    onChange={(e) => handleInputChange(attribute.columnName, e)}
-                                                                                >
-                                                                                    {attribute.tyo?.map((option) => {
-                                                                                        const [value, label] = option.split('|');
-                                                                                        return (
-                                                                                            <Option key={value} value={value}>
-                                                                                                {label === "NA" ? "N/A": label}
-                                                                                            </Option>
-                                                                                        );
-                                                                                    })}
-                                                                                    
-                                                                                </Select>                                                                                
-                                                                            </Col>
-                                                                        </div>
-                                                                    ) : (
-                                                                        <div style={{ display: 'flex', flexDirection: "column", margin: '8px 0' }}>
-                                                                            {attribute.ty !== 5 ? (
-                                                                                <Col span={24} style={{ ...styles.inputLabel }}>
-                                                                                    {attribute.description}
-                                                                                </Col>
-                                                                            ) : null}
-                                                                            <Col span={24} style={styles.inputs}>
-                                                                                {attribute.ty === 5 ? (
-                                                                                    <Checkbox
-                                                                                        checked={formData[attribute.columnName] || false}
-                                                                                        onChange={(e) => handleInputChange(attribute.columnName, e.target.checked)}
+                                                                                    <Select
+                                                                                        style={{ width: '100%' }}
+                                                                                        activeBorderColor={'red'}
+                                                                                        placeholder="Select an option"
+                                                                                        onDropdownVisibleChange={(isOpen) => handleDropdownOpenChange(attribute.columnName, isOpen)}
+                                                                                        suffixIcon={openStates[attribute.columnName] ? <UpOutlined /> : <DownOutlined />}
+                                                                                        optionFilterProp="label"
+                                                                                        onChange={(e) => handleInputChange(attribute.columnName, e)}
                                                                                     >
-                                                                                        {attribute.description}
-                                                                                    </Checkbox>
+                                                                                        {attribute.tyo?.map((option) => {
+                                                                                            const [value, label] = option.split('|');
+                                                                                            return (
+                                                                                                <Option key={value} value={value}>
+                                                                                                    {label === "NA" ? "N/A" : label}
+                                                                                                </Option>
+                                                                                            );
+                                                                                        })}
 
-                                                                                ) : (
-                                                                                    <AntInput
-                                                                                        placeholder={'Enter Text'}
-                                                                                        type={attribute.columnType === 0 ? "text" : "number"}
-                                                                                        value={formData[attribute.columnName]}
-                                                                                        onChange={(e) => handleInputChange(attribute.columnName, e.target.value)}
-                                                                                    />
-                                                                                )}
-                                                                            </Col>
-                                                                        </div>
-                                                                    )}
-                                                                </div>
-                                                            )
-                                                        })}
-                                                    </div>
-                                                ))}
+                                                                                    </Select>
+                                                                                </Col>
+                                                                            </div>
+                                                                        ) : (
+                                                                            <div style={{ display: 'flex', flexDirection: "column", margin: '8px 0' }}>
+                                                                                {attribute.ty !== 5 ? (
+                                                                                    <Col span={24} style={{ ...styles.inputLabel }}>
+                                                                                        {attribute.description}
+                                                                                    </Col>
+                                                                                ) : null}
+                                                                                <Col span={24} style={styles.inputs}>
+                                                                                    {attribute.ty === 5 ? (
+                                                                                        <Checkbox
+                                                                                            checked={formData[attribute.columnName] || false}
+                                                                                            onChange={(e) => handleInputChange(attribute.columnName, e.target.checked)}
+                                                                                        >
+                                                                                            {attribute.description}
+                                                                                        </Checkbox>
+
+                                                                                    ) : (
+                                                                                        <AntInput
+                                                                                            placeholder={'Enter Text'}
+                                                                                            type={attribute.columnType === 0 ? "text" : "number"}
+                                                                                            value={formData[attribute.columnName]}
+                                                                                            onChange={(e) => handleInputChange(attribute.columnName, e.target.value)}
+                                                                                        />
+                                                                                    )}
+                                                                                </Col>
+                                                                            </div>
+                                                                        )}
+                                                                    </div>
+                                                                )
+                                                            })}
+                                                        </div>
+                                                    ))}
                                             </div>
                                         )}
                                     </div>
