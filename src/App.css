@@ -100,7 +100,7 @@ button.gm-ui-hover-effect {
   border-color: #8295af;
   box-shadow: none;
   padding: 6px 4px 6px 16px;
-  color: #8295AF;
+  /* color: #8295AF; */
 }
 
 /*.ant-input:focus {*/
@@ -318,7 +318,7 @@ button.gm-ui-hover-effect {
 /* Select */
 .ant-select-selector {
   border: 1px solid #8295af !important;
-  color: #8295AF !important;
+  /* color: #8295AF !important; */
 }
 /* Select */
 @media only screen and (max-width: 480px) {
