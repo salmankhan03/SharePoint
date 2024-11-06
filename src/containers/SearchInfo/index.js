@@ -650,6 +650,7 @@ const Layers = ({ width }) => {
                                                         fontWeight: 700,
                                                         lineHeight: '25.5px',
                                                         textAlign: 'left',
+                                                        color:'#021E4F'
                                                     }}>Site Characteristics</div>
                                                 </div>
                                                 {/* {optionalField && groupedAttributes.length > 0 && Object.entries(groupedAttributes)?.map(([groupName, attributes]) => ( */}
@@ -657,24 +658,24 @@ const Layers = ({ width }) => {
                                                     Object.entries(groupedAttributes).map(([groupName, attributes]) => (
                                                         <div key={groupName} style={{ marginTop: 10, marginBottom: 10 }}>
                                                             {groupName !== 'undefined' ? (
-                                                                <div style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }} onClick={() => toggleGroup(groupName)}>
+                                                                <div style={{ display: 'flex', alignItems: 'center', cursor: 'pointer', marginBottom:-4 }} onClick={() => toggleGroup(groupName)}>
                                                                     <span style={{
                                                                         // border: '1px solid #0087b7',
                                                                         padding: '0px',
-                                                                        display: 'flex',
+                                                                        // display: 'flex',
                                                                         alignItems: 'center',
-                                                                        justifyContent: 'center',
+                                                                        justifyContent: 'flex-start',
                                                                         width: '25px',
                                                                         height: '25px',
                                                                         borderRadius: '4px',
-                                                                        marginRight: '8px',
+                                                                        // marginRight: '8px',
                                                                         fontSize: '16px',
-                                                                        color: '#0087b7',
+                                                                        color: '#021E4F',
                                                                     }}>
                                                                         {expandedGroups[groupName] ? <CaretUpOutlined /> : <CaretDownOutlined />}
                                                                     </span>
                                                                     <span style={{
-                                                                        color: '#0087b7',
+                                                                        color: '#021E4F',
                                                                         fontFamily: 'Roboto',
                                                                         fontSize: 14,
                                                                         fontWeight: 700,
@@ -692,7 +693,7 @@ const Layers = ({ width }) => {
                                                                 return (
                                                                     <div key={attribute.columnName} style={{ marginLeft: groupName !== 'undefined' ? 10 : 0 }}>
                                                                         {attribute.tyo ? (
-                                                                            <div style={styles.input}>
+                                                                            <div style={{margin: '8px 0px'}}>
                                                                                 <Col span={24} style={{ ...styles.inputLabel }}>
                                                                                     {attribute.description}
                                                                                 </Col>
@@ -736,7 +737,7 @@ const Layers = ({ width }) => {
                                                                                 </Col>
                                                                             </div>
                                                                         ) : (
-                                                                            <div style={{ display: 'flex', flexDirection: "column", margin: '8px 0' }}>
+                                                                            <div style={{ display: 'flex', flexDirection: "column", margin: '8px 0px' }}>
                                                                                 {attribute.ty !== 5 ? (
                                                                                     <Col span={24} style={{ ...styles.inputLabel }}>
                                                                                         {attribute.description}
