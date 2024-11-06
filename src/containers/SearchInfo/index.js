@@ -612,7 +612,7 @@ const Layers = ({ width }) => {
                                 }}>{instructionParagraphs}</div>
                                 <Search backgroundColor={backgroundColor} />
                                 <div style={{ marginTop: 8, alignItems: 'flex-end', textAlign: 'right' }}>
-                                    <div
+                                    {/* <div
                                         className={'selectOnTheMap'}
                                         onClick={selectedOnTheMap}
                                         style={{
@@ -621,6 +621,23 @@ const Layers = ({ width }) => {
                                             fontSize: 14, cursor: 'pointer'
                                         }}>
                                         <Marker color={fontColor ? fontColor : '#0087b7'} size="14" /> Select On the Map
+                                    </div> */}
+                                    <div
+                                        className={'selectOnTheMap'}
+                                        onClick={selectedOnTheMap}
+                                        style={{
+                                            fontFamily: fontFamilys ? fontFamilys : '',
+                                            color: fontColor ? fontColor : '#0087b7',
+                                            fontSize: 14,
+                                            cursor: 'pointer',
+                                            display: 'flex',               
+                                            alignItems: 'center', 
+                                            justifyContent:'end',         
+                                            gap: '5px'                 
+                                        }}
+                                    >
+                                        <Marker color={fontColor ? fontColor : '#0087b7'} size="14" />
+                                        Select On the Map
                                     </div>
                                 </div>
 
@@ -650,7 +667,7 @@ const Layers = ({ width }) => {
                                                         fontWeight: 700,
                                                         lineHeight: '25.5px',
                                                         textAlign: 'left',
-                                                        color:'#021E4F'
+                                                        color: '#021E4F'
                                                     }}>Site Characteristics</div>
                                                 </div>
                                                 {/* {optionalField && groupedAttributes.length > 0 && Object.entries(groupedAttributes)?.map(([groupName, attributes]) => ( */}
@@ -672,7 +689,7 @@ const Layers = ({ width }) => {
                                                                         fontSize: '16px',
                                                                         color: '#021E4F',
                                                                     }}>
-                                                                        {expandedGroups[groupName] ? <CaretDownOutlined /> : <CaretRightOutlined  />}
+                                                                        {expandedGroups[groupName] ? <CaretDownOutlined /> : <CaretRightOutlined />}
                                                                     </span>
                                                                     <span style={{
                                                                         color: '#021E4F',
@@ -693,7 +710,7 @@ const Layers = ({ width }) => {
                                                                 return (
                                                                     <div key={attribute.columnName} style={{ marginLeft: groupName !== 'undefined' ? 10 : 0 }}>
                                                                         {attribute.tyo ? (
-                                                                            <div style={{margin: '8px 0px'}}>
+                                                                            <div style={{ margin: '8px 0px' }}>
                                                                                 <Col span={24} style={{ ...styles.inputLabel }}>
                                                                                     {attribute.description}
                                                                                 </Col>
