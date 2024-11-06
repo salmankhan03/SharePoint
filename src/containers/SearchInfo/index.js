@@ -114,7 +114,6 @@ const Layers = ({ width }) => {
     const addressDetails = useSelector((state) => state.addressDetails);
     const locationName = useSelector((state) => state.locationName);
     const validateData = useSelector((state) => state.validateData);
-    console.log(validateData,"test")
     const attributeData = useSelector((state) => state.attributeData);
     const [fontFamilys, setFontFamilys] = useState()
     const [fontColor, setFontColor] = useState()
@@ -673,7 +672,7 @@ const Layers = ({ width }) => {
                                                                         fontSize: '16px',
                                                                         color: '#021E4F',
                                                                     }}>
-                                                                        {expandedGroups[groupName] ? <CaretUpOutlined /> : <CaretDownOutlined />}
+                                                                        {expandedGroups[groupName] ? <CaretDownOutlined /> : <CaretRightOutlined  />}
                                                                     </span>
                                                                     <span style={{
                                                                         color: '#021E4F',
