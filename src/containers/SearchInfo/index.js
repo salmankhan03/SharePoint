@@ -51,7 +51,7 @@ const InputComp = (props) => {
                 style={{
                     ...styles.inputLabel,
                     fontFamily: fontStyle ? fontStyle : '', //+'!important'
-                    color: fontColor ? fontColor : '',
+                    color: fontColor ? fontColor : '#021e4f',
                 }}
             >
                 {label}
@@ -114,6 +114,7 @@ const Layers = ({ width }) => {
     const addressDetails = useSelector((state) => state.addressDetails);
     const locationName = useSelector((state) => state.locationName);
     const validateData = useSelector((state) => state.validateData);
+    console.log(validateData,"test")
     const attributeData = useSelector((state) => state.attributeData);
     const [fontFamilys, setFontFamilys] = useState()
     const [fontColor, setFontColor] = useState()
