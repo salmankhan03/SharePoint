@@ -630,10 +630,10 @@ const Layers = ({ width }) => {
                                             color: fontColor ? fontColor : '#0087b7',
                                             fontSize: 14,
                                             cursor: 'pointer',
-                                            display: 'flex',               
-                                            alignItems: 'center', 
-                                            justifyContent:'end',         
-                                            gap: '5px'                 
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'flex-end',
+                                            gap: '5px'
                                         }}
                                     >
                                         <Marker color={fontColor ? fontColor : '#0087b7'} size="14" />
@@ -675,7 +675,7 @@ const Layers = ({ width }) => {
                                                     Object.entries(groupedAttributes).map(([groupName, attributes]) => (
                                                         <div key={groupName} style={{ marginTop: 10, marginBottom: 10 }}>
                                                             {groupName !== 'undefined' ? (
-                                                                <div style={{ display: 'flex', alignItems: 'center', cursor: 'pointer', marginBottom:-4 }} onClick={() => toggleGroup(groupName)}>
+                                                                <div style={{ display: 'flex', alignItems: 'center', cursor: 'pointer', marginBottom: -4 }} onClick={() => toggleGroup(groupName)}>
                                                                     <span style={{
                                                                         // border: '1px solid #0087b7',
                                                                         padding: '0px',
@@ -1158,4 +1158,3 @@ const styles = {
 };
 
 export default Layers;
-

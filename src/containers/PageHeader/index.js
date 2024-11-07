@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector } from "react-redux";
-import '../../App.css'
 
 const PageHeaders = () => {
     const validateData = useSelector((state) => state.validateData);
@@ -42,7 +41,12 @@ const PageHeaders = () => {
                     <img
                         src={validateData?.logoUrl}
                         alt={"sitewise logo"}
-                        style={{ maxHeight: '100%' }}  
+                        style={{
+                            maxHeight: '100%',
+                            maxWidth: '100%'
+                        }}
+
+
                         className={'headerImage'}
                     />
                     <div style={{

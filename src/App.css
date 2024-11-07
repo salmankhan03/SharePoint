@@ -320,6 +320,7 @@ button.gm-ui-hover-effect {
   border: 1px solid #8295af !important;
   color: #021e4f !important;
 }
+
 /* Select */
 @media only screen and (max-width: 480px) {
   .leftLayerWidth {
