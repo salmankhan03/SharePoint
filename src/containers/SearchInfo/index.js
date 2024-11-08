@@ -152,6 +152,8 @@ const Layers = ({ width }) => {
     const timestampRef = useRef(Date.now());
     const [errorMessages, setErrorMessages] = useState([]);
     const timeoutRef = useRef(null); 
+    const maxFileSize = 10485760; // 10MB in bytes
+    const maxFiles = 5;
 
     useEffect(() => {
         let customData = validateData?.attributes;
@@ -440,14 +442,28 @@ const Layers = ({ width }) => {
 
     const onDrop = useCallback((acceptedFiles, rejectedFiles) => {
         const errorMessages = [];
+
+        if (acceptedFiles.length + rejectedFiles.length > 5) {
+            errorMessages.push("You can only upload up to 5 files at a time.");
+        }
+
         rejectedFiles.forEach(file => {
             file.errors.forEach(error => {
-                errorMessages.push(error.message);  
+                if (error.code === 'file-too-large') {
+                    errorMessages.push(`The files is too large. Max size is 10MB.`);
+                } else if (error.code === 'file-invalid-type') {
+                    errorMessages.push(`The files has an unsupported format. Allowed formats: JPG, PNG, GIF, PDF, SVG.`);
+                } else {
+                    errorMessages.push(error.message);  
+                }
             });
         });
-
-        if (errorMessages.length > 0) {
-            const uniqueErrorMessages = [...new Set(errorMessages)];
+        const filteredMessages = errorMessages.filter(msg => msg !== "Too many files");
+        if (acceptedFiles.length + rejectedFiles.length > maxFiles) {
+            filteredMessages.push("You can only upload up to 5 files at a time.");
+        }
+        if (filteredMessages.length > 0) {
+            const uniqueErrorMessages = [...new Set(filteredMessages)];
                 setErrorMessages(uniqueErrorMessages);
             if (timeoutRef.current) {
                 clearTimeout(timeoutRef.current);  
@@ -464,7 +480,7 @@ const Layers = ({ width }) => {
                 type: file.type,
                 size: file.size,
                 file: file,
-                path: `submitter/${timestampRef.current}/${file.name}`  // Ensure path uses file name, not file.path
+                path: `submitter/${timestampRef.current}/${file.name}`
             }));
 
             setSelectedFiles(prevFiles => [...prevFiles, ...filesWithTimestamp]);
@@ -538,8 +554,8 @@ const Layers = ({ width }) => {
             'image/jpeg': [],
             'image/png': []
         },
-        maxSize: 52428800,
-        maxFiles: 5,
+        maxSize: maxFileSize,
+        maxFiles: maxFiles,
         onDrop,
     });
     const handleBrowseClick = () => {
