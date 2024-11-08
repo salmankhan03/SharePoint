@@ -150,6 +150,8 @@ const Layers = ({ width }) => {
     const [openStates, setOpenStates] = useState({});
     const fileInputRef = useRef(null)
     const timestampRef = useRef(Date.now());
+    const [errorMessages, setErrorMessages] = useState([]);
+    const timeoutRef = useRef(null); 
 
     useEffect(() => {
         let customData = validateData?.attributes;
@@ -436,19 +438,37 @@ const Layers = ({ width }) => {
         return emailRegex.test(email);
     }
 
-    const onDrop = useCallback((acceptedFiles) => {
-        const filesWithTimestamp = acceptedFiles.map(file => ({
-            ...file,
-            lastModified: file.lastModified,
-            lastModifiedDate: file.lastModifiedDate,
-            name: file.name,
-            type: file.type,
-            size: file.size,
-            file: file,
-            path: `submitter/${timestampRef.current}/${file.path}`
-        }));
+    const onDrop = useCallback((acceptedFiles, rejectedFiles) => {
+        const errorMessages = [];
+        rejectedFiles.forEach(file => {
+            file.errors.forEach(error => {
+                errorMessages.push(error.message);  
+            });
+        });
 
-        setSelectedFiles(prevFiles => [...prevFiles, ...filesWithTimestamp]);
+        if (errorMessages.length > 0) {
+            const uniqueErrorMessages = [...new Set(errorMessages)];
+                setErrorMessages(uniqueErrorMessages);
+            if (timeoutRef.current) {
+                clearTimeout(timeoutRef.current);  
+            }
+            timeoutRef.current = setTimeout(() => {
+                setErrorMessages([]);
+            }, 10000);
+        } else {
+            const filesWithTimestamp = acceptedFiles.map(file => ({
+                ...file,
+                lastModified: file.lastModified,
+                lastModifiedDate: file.lastModifiedDate,
+                name: file.name,
+                type: file.type,
+                size: file.size,
+                file: file,
+                path: `submitter/${timestampRef.current}/${file.name}`  // Ensure path uses file name, not file.path
+            }));
+
+            setSelectedFiles(prevFiles => [...prevFiles, ...filesWithTimestamp]);
+        }
     }, []);
 
     async function uploadfile() {
@@ -510,12 +530,24 @@ const Layers = ({ width }) => {
         }
     };
 
-    const { getRootProps, getInputProps, isDragActive } = useDropzone({
-        accept: ['image/jpeg', 'image/png', 'application/pdf', 'image/gif', 'image/svg+xml'],
+    const { getRootProps, getInputProps, isDragActive, fileRejections } = useDropzone({
+        // accept: ['application/pdf', 'image/gif', 'image/jpeg', 'image/png'],  // Allowed file formats
+        accept: {
+            'application/pdf': [],
+            'image/gif': [],
+            'image/jpeg': [],
+            'image/png': []
+        },
         maxSize: 52428800,
         maxFiles: 5,
         onDrop,
     });
+    const handleBrowseClick = () => {
+        if (fileInputRef.current) {
+            fileInputRef.current.value = "";
+            fileInputRef.current.click();
+        }
+    };
     const removeFile = (fileName) => {
         setSelectedFiles(prevFiles => prevFiles.filter(file => file.name !== fileName));
         if (fileInputRef.current) {
@@ -838,7 +870,9 @@ const Layers = ({ width }) => {
                                     <div style={styles.uploadContainer}>
                                         <div {...getRootProps()} className={`dropzone ${isDragActive ? 'active' : ''}`}>
                                             <input {...getInputProps()} />
-                                            <p style={styles.textCenter}>  <UploadIcon color={headerBgColor ? headerBgColor : ''} size="14" /> </p>
+                                            <p style={styles.textCenter}>
+                                                <UploadIcon color={headerBgColor ? headerBgColor : ''} size="14" />
+                                            </p>
                                             <p style={{
                                                 ...styles.infoText,
                                                 fontFamily: fontFamilys ? fontFamilys : '',
@@ -852,7 +886,7 @@ const Layers = ({ width }) => {
                                                 color: fontColor ? fontColor : '',
                                             }}>or</p>
                                         </div>
-                                        <div {...getRootProps()} >
+                                        <div {...getRootProps()}>
                                             <input
                                                 type="file"
                                                 ref={fileInputRef}
@@ -875,19 +909,24 @@ const Layers = ({ width }) => {
                                                     color: btnBackgroundColor ? (browsebtnHovered ? 'white' : (btnBackgroundColor ? btnBackgroundColor : 'black')) : (browsebtnHovered ? 'white' : '#0087b7'),
                                                     borderColor: btnBackgroundColor ? (browsebtnHovered ? "white" : (btnBackgroundColor ? btnBackgroundColor : 'transparent')) : (browsebtnHovered ? 'white' : '#0087b7'),
                                                     border: btnBackgroundColor ? '1px solid' + btnBackgroundColor : '1px solid #0087b7',
-                                                    borderRadius: '6px'
+                                                    borderRadius: '6px',
                                                 }}
-                                                onClick={() => {
-                                                    if (fileInputRef.current) {
-                                                        fileInputRef.current.value = "";
-                                                        fileInputRef.current.click();
-                                                    }
-                                                }}
+                                                onClick={handleBrowseClick}
                                             >
                                                 + Browse Files
                                             </Button>
                                         </div>
                                         <br />
+                                        {/* Error messages for invalid file formats or max files */}
+                                        <div>
+                                            {errorMessages.length > 0 && (
+                                                <ul style={{ color: 'red' }}>
+                                                    {errorMessages.map((errorMessage, index) => (
+                                                        <li key={index}>{errorMessage}</li>
+                                                    ))}
+                                                </ul>
+                                            )}
+                                        </div>
                                         <div style={{
                                             marginTop: 7,
                                             ...styles.fileFormatText,
