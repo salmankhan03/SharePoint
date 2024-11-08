@@ -151,7 +151,7 @@ const Layers = ({ width }) => {
     const fileInputRef = useRef(null)
     const timestampRef = useRef(Date.now());
     const [errorMessages, setErrorMessages] = useState([]);
-    const timeoutRef = useRef(null); 
+    const timeoutRef = useRef(null);
     const maxFileSize = 10485760; // 10MB in bytes
     const maxFiles = 5;
 
@@ -442,50 +442,81 @@ const Layers = ({ width }) => {
 
     const onDrop = useCallback((acceptedFiles, rejectedFiles) => {
         const errorMessages = [];
-
-        if (acceptedFiles.length + rejectedFiles.length > 5) {
-            errorMessages.push("You can only upload up to 5 files at a time.");
+        
+        const totalFilesCount = selectedFiles.length + acceptedFiles.length;
+        if (totalFilesCount > 5) {
+            const filesToAccept = acceptedFiles.slice(0, 5 - selectedFiles.length); 
+            const filesRejectedForLimit = acceptedFiles.length - filesToAccept.length;
+            if (filesRejectedForLimit > 0) {
+                errorMessages.push(`You can only upload maximum 5 files.`);
+            }
+            acceptedFiles = filesToAccept;  
         }
-
+    
         rejectedFiles.forEach(file => {
             file.errors.forEach(error => {
                 if (error.code === 'file-too-large') {
-                    errorMessages.push(`The files is too large. Max size is 10MB.`);
+                    errorMessages.push(`The file is too large. Max size is 10MB.`);
                 } else if (error.code === 'file-invalid-type') {
-                    errorMessages.push(`The files has an unsupported format. Allowed formats: JPG, PNG, GIF, PDF, SVG.`);
+                    errorMessages.push(`The file has an unsupported format. Allowed formats: JPG, PNG, GIF, PDF, SVG.`);
                 } else {
                     errorMessages.push(error.message);  
                 }
             });
         });
+    
         const filteredMessages = errorMessages.filter(msg => msg !== "Too many files");
-        if (acceptedFiles.length + rejectedFiles.length > maxFiles) {
-            filteredMessages.push("You can only upload up to 5 files at a time.");
-        }
+    
         if (filteredMessages.length > 0) {
             const uniqueErrorMessages = [...new Set(filteredMessages)];
-                setErrorMessages(uniqueErrorMessages);
+            setErrorMessages(uniqueErrorMessages);
+    
             if (timeoutRef.current) {
-                clearTimeout(timeoutRef.current);  
+                clearTimeout(timeoutRef.current);
             }
             timeoutRef.current = setTimeout(() => {
                 setErrorMessages([]);
             }, 10000);
         } else {
-            const filesWithTimestamp = acceptedFiles.map(file => ({
-                ...file,
-                lastModified: file.lastModified,
-                lastModifiedDate: file.lastModifiedDate,
-                name: file.name,
-                type: file.type,
-                size: file.size,
-                file: file,
-                path: `submitter/${timestampRef.current}/${file.name}`
-            }));
-
-            setSelectedFiles(prevFiles => [...prevFiles, ...filesWithTimestamp]);
+            const existingFileHashes = new Set(
+                selectedFiles.map(file => `${file.name}-${file.size}-${file.lastModified}`)
+            );
+    
+            const newFiles = acceptedFiles.filter(file => {
+                const fileHash = `${file.name}-${file.size}-${file.lastModified}`;
+                if (existingFileHashes.has(fileHash)) {
+                    errorMessages.push(`The file '${file.name}' has already been uploaded.`);
+                    return false; 
+                }
+                return true; 
+            });
+    
+            if (errorMessages.length > 0) {
+                setErrorMessages(prevMessages => [...prevMessages, ...errorMessages]);
+                if (timeoutRef.current) {
+                    clearTimeout(timeoutRef.current);
+                }
+                timeoutRef.current = setTimeout(() => {
+                    setErrorMessages([]);
+                }, 10000);
+            } else {
+                const filesWithTimestamp = newFiles.map(file => ({
+                    ...file,
+                    lastModified: file.lastModified,
+                    lastModifiedDate: file.lastModifiedDate,
+                    name: file.name,
+                    type: file.type,
+                    size: file.size,
+                    file: file,
+                    path: `submitter/${timestampRef.current}/${file.name}`
+                }));
+    
+                setSelectedFiles(prevFiles => [...prevFiles, ...filesWithTimestamp]);
+            }
         }
-    }, []);
+    }, [selectedFiles]);  
+
+
 
     async function uploadfile() {
         try {
@@ -936,13 +967,27 @@ const Layers = ({ width }) => {
                                         {/* Error messages for invalid file formats or max files */}
                                         <div>
                                             {errorMessages.length > 0 && (
-                                                <ul style={{ color: 'red' }}>
+                                                <ul
+                                                    style={{
+                                                        color: 'red',
+                                                        padding: '10px',
+                                                        listStyleType: 'none',
+                                                        wordWrap: 'break-word',
+                                                        whiteSpace: 'normal',
+                                                        overflowWrap: 'break-word',
+                                                        maxWidth: '100%',
+                                                        wordBreak: 'break-all',
+                                                    }}
+                                                >
                                                     {errorMessages.map((errorMessage, index) => (
-                                                        <li key={index}>{errorMessage}</li>
+                                                        <li key={index} style={{ marginBottom: '5px' }}>
+                                                            {errorMessage}
+                                                        </li>
                                                     ))}
                                                 </ul>
                                             )}
                                         </div>
+
                                         <div style={{
                                             marginTop: 7,
                                             ...styles.fileFormatText,
