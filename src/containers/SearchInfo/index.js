@@ -190,11 +190,21 @@ const Layers = ({ width }) => {
 
     const getDefaultOption = (attribute) => {
         if (attribute.tyo && attribute.tyo.length > 0) {
-            const [defaultValue] = attribute.tyo.find(option => option.startsWith(''))?.split('|') || [attribute.dv];
-            return ''; //return defaultValue;
+
+            // const [defaultValue] = attribute.tyo.find(option => option.startsWith(''))?.split('|') || [attribute.dv];
+            // return defaultValue;
+            // console.log("att",attribute?.columnName , attribute.dv)
+            const defaultValue = attribute.dv == null
+                ? null
+                : (attribute.tyo.find(option => option === attribute.dv)?.split('|')[0]
+                    || attribute.tyo.find(option => option.startsWith(''))?.split('|')[0]
+                    || null);
+
+            return defaultValue;
+
         }
-        return '';
-        //        return attribute.dv || '';
+
+        return attribute.dv || '';
     };
 
     const handleInputChange = (columnName, value) => {
@@ -312,12 +322,16 @@ const Layers = ({ width }) => {
         setLoading(true)
         e.preventDefault()
         await uploadfile()
-        const formDataCopy = { ...formData };
+        let formDataCopy = { ...formData };
 
         validateAttributeData.forEach(attribute => {
-            const { columnName, columnType } = attribute;
-            const value = formDataCopy[columnName];
-
+            const { columnName, columnType, tyo } = attribute;
+            let value = formDataCopy[columnName];
+            if (tyo?.length > 0 && value === null) {
+                const defaultValue = tyo.find(option => option.startsWith(''))?.split('|')[0];  // Get the first element
+                formDataCopy[columnName] = defaultValue; // Assign the single value, not the array
+            }
+            value = formDataCopy[columnName];
             if (value !== "") {
                 if (columnType === 1) {
                     formDataCopy[columnName] = JSON.parse(value);
