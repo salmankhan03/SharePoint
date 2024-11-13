@@ -178,7 +178,7 @@ const Layers = ({ width }) => {
         validateAttributeData?.forEach((attribute) => {
             // Check if ty is 5
             if (attribute.ty === 5) {
-                initialData[attribute.columnName] = false; // Store false if ty is 5
+                initialData[attribute.columnName] = "No"; // Store "No" if ty is 5
             } else {
                 initialData[attribute.columnName] = attribute.tyo ? getDefaultOption(attribute) : attribute.dv;
             }
@@ -447,8 +447,8 @@ const Layers = ({ width }) => {
         if (totalFilesCount > 5) {
             const filesToAccept = acceptedFiles.slice(0, 5 - selectedFiles.length); 
             const filesRejectedForLimit = acceptedFiles.length - filesToAccept.length;
-            if (filesRejectedForLimit > 0) {
-                errorMessages.push(`You can only upload maximum 5 files.`);
+            if (filesRejectedForLimit > 0 && !errorMessages.includes("You can only upload a maximum of 5 files.")) {
+                errorMessages.push("You can only upload a maximum of 5 files.");
             }
             acceptedFiles = filesToAccept;  
         }
@@ -456,19 +456,21 @@ const Layers = ({ width }) => {
         rejectedFiles.forEach(file => {
             file.errors.forEach(error => {
                 if (error.code === 'file-too-large') {
-                    errorMessages.push(`The file is too large. Max size is 10MB.`);
+                    if (!errorMessages.includes("The file is too large. Max size is 10MB.")) {
+                        errorMessages.push("The file is too large. Max size is 10MB.");
+                    }
                 } else if (error.code === 'file-invalid-type') {
-                    errorMessages.push(`The file has an unsupported format. Allowed formats: JPG, PNG, GIF, PDF, SVG.`);
-                } else {
-                    errorMessages.push(error.message);  
+                    if (!errorMessages.includes("The file has an unsupported format. Allowed formats: JPG, PNG, GIF, PDF, SVG.")) {
+                        errorMessages.push("The file has an unsupported format. Allowed formats: JPG, PNG, GIF, PDF, SVG.");
+                    }
+                } else if (!errorMessages.includes(error.message)) {
+                    errorMessages.push(error.message);
                 }
             });
         });
     
-        const filteredMessages = errorMessages.filter(msg => msg !== "Too many files");
-    
-        if (filteredMessages.length > 0) {
-            const uniqueErrorMessages = [...new Set(filteredMessages)];
+        if (errorMessages.length > 0) {
+            const uniqueErrorMessages = [...new Set(errorMessages)];
             setErrorMessages(uniqueErrorMessages);
     
             if (timeoutRef.current) {
@@ -485,14 +487,16 @@ const Layers = ({ width }) => {
             const newFiles = acceptedFiles.filter(file => {
                 const fileHash = `${file.name}-${file.size}-${file.lastModified}`;
                 if (existingFileHashes.has(fileHash)) {
-                    errorMessages.push(`The file '${file.name}' has already been uploaded.`);
+                    if (!errorMessages.includes(`The file '${file.name}' has already been uploaded.`)) {
+                        errorMessages.push(`The file '${file.name}' has already been uploaded.`);
+                    }
                     return false; 
                 }
                 return true; 
             });
     
             if (errorMessages.length > 0) {
-                setErrorMessages(prevMessages => [...prevMessages, ...errorMessages]);
+                setErrorMessages(prevMessages => [...new Set([...prevMessages, ...errorMessages])]);
                 if (timeoutRef.current) {
                     clearTimeout(timeoutRef.current);
                 }
@@ -514,7 +518,7 @@ const Layers = ({ width }) => {
                 setSelectedFiles(prevFiles => [...prevFiles, ...filesWithTimestamp]);
             }
         }
-    }, [selectedFiles]);  
+    }, [selectedFiles]);
 
 
 
@@ -603,7 +607,7 @@ const Layers = ({ width }) => {
     };
     const renderFiles = () => {
         return selectedFiles.map((file) => (
-            <Row style={{ marginTop: 10 }}>
+            <Row style={{ marginTop: 15 }}>
                 <Col span={22}>
                     <div style={{ ...styles.fileListText, fontFamily: fontFamilys ? fontFamilys : '', color: fontColor ? fontColor : '', textOverflow: 'ellipsis', overflow: 'hidden', marginRight: 20 }}>{file.name}</div>
                 </Col>
@@ -842,11 +846,12 @@ const Layers = ({ width }) => {
                                                                                 <Col span={24} style={styles.inputs}>
                                                                                     {attribute.ty === 5 ? (
                                                                                         <Checkbox
-                                                                                            checked={formData[attribute.columnName] || false}
-                                                                                            onChange={(e) => handleInputChange(attribute.columnName, e.target.checked)}
-                                                                                        >
-                                                                                            {attribute.description}
-                                                                                        </Checkbox>
+                                                                                        checked={formData[attribute.columnName] === "Yes"}
+                                                                                        onChange={(e) => handleInputChange(attribute.columnName, e.target.checked ?  "Yes" : "No")}
+                                                                                    >
+                                                                                        {attribute.description}
+                                                                                    </Checkbox>
+                                                                                    
 
                                                                                     ) : (
                                                                                         <AntInput
