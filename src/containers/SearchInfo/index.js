@@ -442,17 +442,15 @@ const Layers = ({ width }) => {
 
     const onDrop = useCallback((acceptedFiles, rejectedFiles) => {
         const errorMessages = [];
-        
         const totalFilesCount = selectedFiles.length + acceptedFiles.length;
         if (totalFilesCount > 5) {
-            const filesToAccept = acceptedFiles.slice(0, 5 - selectedFiles.length); 
+            const filesToAccept = acceptedFiles.slice(0, 5 - selectedFiles.length);
             const filesRejectedForLimit = acceptedFiles.length - filesToAccept.length;
             if (filesRejectedForLimit > 0 && !errorMessages.includes("You can only upload a maximum of 5 files.")) {
                 errorMessages.push("You can only upload a maximum of 5 files.");
             }
-            acceptedFiles = filesToAccept;  
+            acceptedFiles = filesToAccept;
         }
-    
         rejectedFiles.forEach(file => {
             file.errors.forEach(error => {
                 if (error.code === 'file-too-large') {
@@ -468,11 +466,11 @@ const Layers = ({ width }) => {
                 }
             });
         });
-    
+
         if (errorMessages.length > 0) {
             const uniqueErrorMessages = [...new Set(errorMessages)];
             setErrorMessages(uniqueErrorMessages);
-    
+
             if (timeoutRef.current) {
                 clearTimeout(timeoutRef.current);
             }
@@ -483,18 +481,19 @@ const Layers = ({ width }) => {
             const existingFileHashes = new Set(
                 selectedFiles.map(file => `${file.name}-${file.size}-${file.lastModified}`)
             );
-    
+
             const newFiles = acceptedFiles.filter(file => {
                 const fileHash = `${file.name}-${file.size}-${file.lastModified}`;
                 if (existingFileHashes.has(fileHash)) {
                     if (!errorMessages.includes(`The file '${file.name}' has already been uploaded.`)) {
-                        errorMessages.push(`The file '${file.name}' has already been uploaded.`);
+                        const truncatedFileName = truncate(file.name, 30); 
+                        errorMessages.push(`The file '${truncatedFileName}' has already been uploaded.`);
                     }
-                    return false; 
+                    return false;
                 }
-                return true; 
+                return true;
             });
-    
+
             if (errorMessages.length > 0) {
                 setErrorMessages(prevMessages => [...new Set([...prevMessages, ...errorMessages])]);
                 if (timeoutRef.current) {
@@ -514,7 +513,7 @@ const Layers = ({ width }) => {
                     file: file,
                     path: `submitter/${timestampRef.current}/${file.name}`
                 }));
-    
+
                 setSelectedFiles(prevFiles => [...prevFiles, ...filesWithTimestamp]);
             }
         }
@@ -605,11 +604,22 @@ const Layers = ({ width }) => {
             fileInputRef.current.value = "";
         }
     };
+    function truncate(str, maxLength = 30, startChars = 23, endChars = 7) {
+        if (str.length <= maxLength) {
+            return str;
+        }
+        const start = str.slice(0, startChars);
+        const end = str.slice(-endChars);
+        return `${start}...${end}`;
+    }
     const renderFiles = () => {
         return selectedFiles.map((file) => (
             <Row style={{ marginTop: 15 }}>
                 <Col span={22}>
-                    <div style={{ ...styles.fileListText, fontFamily: fontFamilys ? fontFamilys : '', color: fontColor ? fontColor : '', textOverflow: 'ellipsis', overflow: 'hidden', marginRight: 20 }}>{file.name}</div>
+                    {/* <div>{file.name}</div> */}
+                    <div style={{ ...styles.fileListText, fontFamily: fontFamilys ? fontFamilys : '', color: fontColor ? fontColor : '', textOverflow: 'ellipsis', overflow: 'hidden', marginRight: 20 }}>
+                        {truncate(file.name)}
+                    </div>
                 </Col>
                 <Col span={2}>
                     <div style={{ ...styles.textEnd, marginLeft: 10 }} onClick={() => removeFile(file.name)}>
@@ -846,12 +856,12 @@ const Layers = ({ width }) => {
                                                                                 <Col span={24} style={styles.inputs}>
                                                                                     {attribute.ty === 5 ? (
                                                                                         <Checkbox
-                                                                                        checked={formData[attribute.columnName] === "Yes"}
-                                                                                        onChange={(e) => handleInputChange(attribute.columnName, e.target.checked ?  "Yes" : "No")}
-                                                                                    >
-                                                                                        {attribute.description}
-                                                                                    </Checkbox>
-                                                                                    
+                                                                                            checked={formData[attribute.columnName] === "Yes"}
+                                                                                            onChange={(e) => handleInputChange(attribute.columnName, e.target.checked ? "Yes" : "No")}
+                                                                                        >
+                                                                                            {attribute.description}
+                                                                                        </Checkbox>
+
 
                                                                                     ) : (
                                                                                         <AntInput
@@ -969,8 +979,17 @@ const Layers = ({ width }) => {
                                             </Button>
                                         </div>
                                         <br />
-                                        {/* Error messages for invalid file formats or max files */}
-                                        <div>
+                                        {/* Error messages for invalid file formats or max files */}                            
+                                        <div style={{
+                                            marginTop: 7,
+                                            ...styles.fileFormatText,
+                                            fontFamily: fontFamilys ? fontFamilys : '',
+                                            color: fontColor ? fontColor : '',
+                                        }}>
+                                            The following formats can be uploaded: .pdf, .gif, .jpg or .png
+                                        </div>
+                                    </div>
+                                    <div>
                                             {errorMessages.length > 0 && (
                                                 <ul
                                                     style={{
@@ -982,6 +1001,7 @@ const Layers = ({ width }) => {
                                                         overflowWrap: 'break-word',
                                                         maxWidth: '100%',
                                                         wordBreak: 'break-all',
+                                                        paddingLeft:'0px'
                                                     }}
                                                 >
                                                     {errorMessages.map((errorMessage, index) => (
@@ -993,16 +1013,6 @@ const Layers = ({ width }) => {
                                             )}
                                         </div>
 
-                                        <div style={{
-                                            marginTop: 7,
-                                            ...styles.fileFormatText,
-                                            fontFamily: fontFamilys ? fontFamilys : '',
-                                            color: fontColor ? fontColor : '',
-                                        }}>
-                                            The following formats can be uploaded: .pdf, .gif, .jpg or .png
-                                        </div>
-                                    </div>
-
                                     <div style={{ marginTop: 14 }}>
                                         {selectedFiles.length > 0 && (
                                             <div>
@@ -1010,6 +1020,7 @@ const Layers = ({ width }) => {
                                             </div>
                                         )}
                                     </div>
+                                    
 
                                 </div>
                             </>
