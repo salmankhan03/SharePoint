@@ -191,9 +191,10 @@ const Layers = ({ width }) => {
     const getDefaultOption = (attribute) => {
         if (attribute.tyo && attribute.tyo.length > 0) {
             const [defaultValue] = attribute.tyo.find(option => option.startsWith(''))?.split('|') || [attribute.dv];
-            return defaultValue;
+            return ''; //return defaultValue;
         }
-        return attribute.dv || '';
+        return '';
+        //        return attribute.dv || '';
     };
 
     const handleInputChange = (columnName, value) => {
@@ -486,7 +487,7 @@ const Layers = ({ width }) => {
                 const fileHash = `${file.name}-${file.size}-${file.lastModified}`;
                 if (existingFileHashes.has(fileHash)) {
                     if (!errorMessages.includes(`The file '${file.name}' has already been uploaded.`)) {
-                        const truncatedFileName = truncate(file.name, 30); 
+                        const truncatedFileName = truncate(file.name, 30);
                         errorMessages.push(`The file '${truncatedFileName}' has already been uploaded.`);
                     }
                     return false;
@@ -797,9 +798,6 @@ const Layers = ({ width }) => {
                                                             ) : null}
 
                                                             {expandedGroups[groupName] && attributes.map(attribute => {
-                                                                console.log("formData[attribute.columnName]", formData[attribute.columnName])
-                                                                console.log("attribute.description", attribute.description)
-                                                                console.log("groupedAttributes", groupedAttributes)
                                                                 return (
                                                                     <div key={attribute.columnName} style={{ marginLeft: groupName !== 'undefined' ? 10 : 0 }}>
                                                                         {attribute.tyo ? (
@@ -829,6 +827,7 @@ const Layers = ({ width }) => {
                                                                                         style={{ width: '100%' }}
                                                                                         activeBorderColor={'red'}
                                                                                         placeholder="Select an option"
+                                                                                        value={formData[attribute.columnName] || undefined}
                                                                                         onDropdownVisibleChange={(isOpen) => handleDropdownOpenChange(attribute.columnName, isOpen)}
                                                                                         suffixIcon={openStates[attribute.columnName] ? <UpOutlined /> : <DownOutlined />}
                                                                                         optionFilterProp="label"
@@ -979,7 +978,7 @@ const Layers = ({ width }) => {
                                             </Button>
                                         </div>
                                         <br />
-                                        {/* Error messages for invalid file formats or max files */}                            
+                                        {/* Error messages for invalid file formats or max files */}
                                         <div style={{
                                             marginTop: 7,
                                             ...styles.fileFormatText,
@@ -990,28 +989,28 @@ const Layers = ({ width }) => {
                                         </div>
                                     </div>
                                     <div>
-                                            {errorMessages.length > 0 && (
-                                                <ul
-                                                    style={{
-                                                        color: 'red',
-                                                        padding: '10px',
-                                                        listStyleType: 'none',
-                                                        wordWrap: 'break-word',
-                                                        whiteSpace: 'normal',
-                                                        overflowWrap: 'break-word',
-                                                        maxWidth: '100%',
-                                                        wordBreak: 'break-all',
-                                                        paddingLeft:'0px'
-                                                    }}
-                                                >
-                                                    {errorMessages.map((errorMessage, index) => (
-                                                        <li key={index} style={{ marginBottom: '5px' }}>
-                                                            {errorMessage}
-                                                        </li>
-                                                    ))}
-                                                </ul>
-                                            )}
-                                        </div>
+                                        {errorMessages.length > 0 && (
+                                            <ul
+                                                style={{
+                                                    color: 'red',
+                                                    padding: '10px',
+                                                    listStyleType: 'none',
+                                                    wordWrap: 'break-word',
+                                                    whiteSpace: 'normal',
+                                                    overflowWrap: 'break-word',
+                                                    maxWidth: '100%',
+                                                    wordBreak: 'break-all',
+                                                    paddingLeft: '0px'
+                                                }}
+                                            >
+                                                {errorMessages.map((errorMessage, index) => (
+                                                    <li key={index} style={{ marginBottom: '5px' }}>
+                                                        {errorMessage}
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                        )}
+                                    </div>
 
                                     <div style={{ marginTop: 14 }}>
                                         {selectedFiles.length > 0 && (
@@ -1020,7 +1019,7 @@ const Layers = ({ width }) => {
                                             </div>
                                         )}
                                     </div>
-                                    
+
 
                                 </div>
                             </>
