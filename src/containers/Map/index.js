@@ -105,7 +105,7 @@ const Map = () => {
           geocoder.geocode({ location: selectedPosition }, (results, status) => {
               if (status === 'OK') {
                   if (results[0]) {
-                      console.log('results----------------===============', results)
+                    //   console.log('results----------------===============', results)
                       dispatch(setAddress(results[0].formatted_address))
                       const location = results[0].geometry.location;
                       const addresses = results ? formatAddress(results[0]) : undefined;
@@ -130,8 +130,8 @@ const Map = () => {
                       }
 
                       dispatch(setAddressDetails({city, state, country, zipcode, addresses }))
-                      console.log('results[0]?.address_components[0]?.long_name-----------------', results[0]?.address_components[0]?.long_name   )
-                      // console.log("item.structured_formatting.main_text",item.structured_formatting.main_text)
+                        //   console.log('results[0]?.address_components[0]?.long_name-----------------', results[0]?.address_components[0]?.long_name   )
+                        // console.log("item.structured_formatting.main_text",item.structured_formatting.main_text)
                       dispatch(setLocation({
                         locationName:  results[0]?.formatted_address                       ,
                         locationDetail: results[0].formatted_address, 

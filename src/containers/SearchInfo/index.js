@@ -386,7 +386,7 @@ const Layers = ({ width }) => {
         }
         try {
             const response = await axios.post('https://submitapi.sitewise.com/submit', payload);
-            console.log('API Response:', response);
+            // console.log('API Response:', response);
             SetSubmitSuccessFull(true)
             localStorage.setItem('contactInfo', JSON.stringify(contactInfo));
             // message.success('Site Submitted successfully');
@@ -580,7 +580,7 @@ const Layers = ({ width }) => {
 
                             try {
                                 await axios.put(file.url, arrayBuffer, options);
-                                console.log('after save!');
+                                // console.log('after save!');
                                 resolve();
                             } catch (error) {
                                 reject(error);
@@ -691,7 +691,7 @@ const Layers = ({ width }) => {
         setExpandedGroups(presenceTracker);
     }, [presenceTracker]);
     const toggleGroup = (groupName) => {
-        console.log("Call toggleGroup", expandedGroups);
+        // console.log("Call toggleGroup", expandedGroups);
 
         setExpandedGroups((prev) => ({
             ...prev,

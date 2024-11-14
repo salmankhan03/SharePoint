@@ -128,8 +128,8 @@ const StudyAreaInfo = () => {
     const locationName = useSelector((state) => state.locationName);
     const locationDetail = useSelector((state) => state.locationDetail);
     const { display } = useSelector((state) => state);
-    console.log('display------------------------', display)
-    console.log('locationName------------------------', locationName)
+    // console.log('display------------------------', display)
+    // console.log('locationName------------------------', locationName)
     return (
         <InfoBox visible={display} position={position}>
             <StudyAreas locationDetail={locationDetail} position={position} locationName={locationName} />
