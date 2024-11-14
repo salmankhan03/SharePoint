@@ -110,7 +110,13 @@ const Layers = ({ width }) => {
     const [currentStep, setCurrentStep] = useState(1);
     const [selectedMapOptions, setSelectedMapOptions] = useState(false);
 
-    const { locationDetail, viewSideDetailFields, position } = useSelector((state) => state);
+    // Before Code
+    // const { locationDetail, viewSideDetailFields, position } = useSelector((state) => state);
+    // After Warning Resolve
+    const locationDetail = useSelector((state) => state.locationDetail);
+    const viewSideDetailFields = useSelector((state) => state.viewSideDetailFields);
+    const position = useSelector((state) => state.position);
+
     const addressDetails = useSelector((state) => state.addressDetails);
     const locationName = useSelector((state) => state.locationName);
     const validateData = useSelector((state) => state.validateData);
