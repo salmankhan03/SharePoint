@@ -8,7 +8,7 @@ const infoWindowOptions = {
 };
 
 const InfoBox = ({ visible, position, children }) => {
-    console.log("visible in box:", visible, " and position: ", position);
+    // console.log("visible in box:", visible, " and position: ", position);
     if (visible) {
         if (position !== undefined) {
             return (
