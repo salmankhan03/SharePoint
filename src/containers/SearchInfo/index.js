@@ -196,10 +196,9 @@ const Layers = ({ width }) => {
             // console.log("att",attribute?.columnName , attribute.dv)
             const defaultValue = attribute.dv == null
                 ? null
-                : (attribute.tyo.find(option => option === attribute.dv)?.split('|')[0]
-                    || attribute.tyo.find(option => option.startsWith(''))?.split('|')[0]
-                    || null);
-
+                : ( attribute.tyo.find(option => option.split('|')[0] === attribute.dv)?.split('|')[0] 
+                || attribute.tyo[0]?.split('|')[0] 
+                || null);
             return defaultValue;
 
         }
