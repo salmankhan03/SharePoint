@@ -180,7 +180,7 @@ const Layers = ({ width }) => {
             if (attribute.ty === 5) {
                 initialData[attribute.columnName] = "No"; // Store "No" if ty is 5
             } else {
-                initialData[attribute.columnName] = attribute.tyo ? getDefaultOption(attribute) : attribute.dv;
+                initialData[attribute.columnName] = attribute.tyo ? getDefaultOption(attribute) : attribute.dv ?attribute.dv : '';
             }
         });
 
@@ -382,25 +382,26 @@ const Layers = ({ width }) => {
             email: mapData.email,
             phone: mapData.phone
         }
-        try {
-            const response = await axios.post('https://submitapi.sitewise.com/submit', payload);
-            console.log('API Response:', response);
-            SetSubmitSuccessFull(true)
-            localStorage.setItem('contactInfo', JSON.stringify(contactInfo));
-            // message.success('Site Submitted successfully');
-            onClose()
-            setMapData({ mapName: '', comments: '' })
-            setSelectedFiles([])
-            setTimeStamp(true)
-            dispatch(setAttributesData(mapData));
-            setCurrentStep(1);
-            dispatch(setContactScreenShowHide(false))
-            setFormData({});
-            setLoading(false)
-        } catch (error) {
-            message.error(error);
-            setLoading(false)
-        }
+        console.log(payload)
+        // try {
+        //     const response = await axios.post('https://submitapi.sitewise.com/submit', payload);
+        //     console.log('API Response:', response);
+        //     SetSubmitSuccessFull(true)
+        //     localStorage.setItem('contactInfo', JSON.stringify(contactInfo));
+        //     // message.success('Site Submitted successfully');
+        //     onClose()
+        //     setMapData({ mapName: '', comments: '' })
+        //     setSelectedFiles([])
+        //     setTimeStamp(true)
+        //     dispatch(setAttributesData(mapData));
+        //     setCurrentStep(1);
+        //     dispatch(setContactScreenShowHide(false))
+        //     setFormData({});
+        //     setLoading(false)
+        // } catch (error) {
+        //     message.error(error);
+        //     setLoading(false)
+        // }
 
     }
 
