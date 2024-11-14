@@ -127,7 +127,11 @@ const StudyAreaInfo = () => {
     const position = useSelector((state) => state.position);
     const locationName = useSelector((state) => state.locationName);
     const locationDetail = useSelector((state) => state.locationDetail);
-    const { display } = useSelector((state) => state);
+    // Before Code 
+    // const { display } = useSelector((state) => state);
+    // warning resolve After
+    const display  = useSelector((state) => state?.display);
+
     // console.log('display------------------------', display)
     // console.log('locationName------------------------', locationName)
     return (
