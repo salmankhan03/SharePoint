@@ -34,15 +34,23 @@ const Map = () => {
 
     const mapTypeId = useSelector(state => state.mapTypeId);
     const searchByButtonClick = useSelector((state) => state.searchByButtonClick);
-    const total = useSelector((state) => state);
+    // this state is not useble
+    // const total = useSelector((state) => state);
     const [mapPosition, setMapPosition] = useState(position)
     const mapRef = useRef(null);
-    const { rotationAngle } = useSelector((state) => state);
-    const { tilt } = useSelector((state) => state);
+    // Before Code 
+    // const { rotationAngle } = useSelector((state) => state);
+    // warning resolve After
+    const rotationAngle = useSelector((state) => state?.rotationAngle);
+    // Before Code 
+    // const { tilt } = useSelector((state) => state);
+    // warning resolve After
+    const  tilt  = useSelector((state) => state?.tilt);
+
 
     // console.log("tilt ==>",tilt)
 
-    // console.log("rotationAngle ==>",rotationAngle)
+    // console.log("rotationAngle ==>", rotationAngle)
 
     const dispatch = useDispatch();
 
