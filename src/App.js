@@ -59,7 +59,7 @@ const App = () => {
                                 const zoom = 5;
                                 dispatch(setCurrentUserLocation({ center, zoom }));
                                 setLoading(false);
-                                console.error("Error getting current location:", error);
+                                // console.error("Error getting current location:", error);
                             }
                         );
                     } else {

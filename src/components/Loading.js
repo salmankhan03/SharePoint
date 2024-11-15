@@ -6,7 +6,9 @@ const Loading = () => {
         <div className="loading-page">
             <div style={styles.loading}>
                 <div className="loadingLogo" >
-                    <Spin size="large" tip="Loading Site..." />
+                    {/* <Spin size="large" tip="Loading Site..." /> */}
+                    <Spin size="large" />
+                    {/* Remove  tip="Loading Site..." from the spin  */}
                 </div>
                 <div>
                     <div style={styles.loadingDesc}>Loading Site...</div>
