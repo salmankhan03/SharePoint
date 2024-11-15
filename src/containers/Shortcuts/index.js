@@ -28,8 +28,12 @@ const Shortcuts = () => {
     const [backgroundColor, setBackGroundColor] = useState()
     const [fontColor, setFontColor] = useState()
     // console.log("zoom",zoom)
-    const { rotationAngle } = useSelector((state) => state);
-    const { tilt } = useSelector((state) => state);
+    // Before Code
+    // const { rotationAngle } = useSelector((state) => state);
+    // After Warning Resolve
+    const { rotationAngle } = useSelector((state) => state?.rotationAngle);
+    //Not Useable
+    // const { tilt } = useSelector((state) => state);
 
     const [windowWidth, setWindowWidth] = useState(window.innerWidth);
     const [rotate, setRotate] = useState(false)
@@ -94,7 +98,7 @@ const Button = ({ buttonStyle, ...props }) => (
 
     
   const handleOpenRotate = () => {
-    console.log("TiltUp Call",rotate)
+    // console.log("TiltUp Call",rotate)
     if(rotate === true){
         rotateUp(true)
     }else{
@@ -104,20 +108,20 @@ const Button = ({ buttonStyle, ...props }) => (
   }
   const rotateUp = (data) => {
 
-    console.log("rotateUp rotateUp call")
+    // console.log("rotateUp rotateUp call")
     const newTilt = data;
     dispatch(rotateMapUp(newTilt))
   };
 
   const rotateClockwise = () => {
-    console.log("call")
+    // console.log("call")
     const newRotationAngle = rotationAngle - 90;
     dispatch(rotateMapClockwise(newRotationAngle))
   };
 
   const rotateAntiClockwise = () => {
     const newRotationAngle = rotationAngle + 90;
-    console.log("newRotationAngle ==>",newRotationAngle)
+    // console.log("newRotationAngle ==>",newRotationAngle)
     dispatch(rotateMapAntiClockwise(newRotationAngle))
   };
 

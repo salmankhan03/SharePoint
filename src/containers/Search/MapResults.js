@@ -21,7 +21,8 @@ const MapResults = ({ path, search }) => {
   const mapLoading = useSelector((state) => state.mapLoading);
   const mapResults = useSelector((state) => state.mapResults);
   const input = useSelector((state) => state.search);
-  const tot = useSelector((state) => state);
+  // unused code comment
+  // const tot = useSelector((state) => state);
   const dispatch = useDispatch();
 
   let values;

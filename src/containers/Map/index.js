@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState,useRef  } from "react";
+import React, { useCallback, useEffect, useState, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { GoogleMap, DrawingManager } from "@react-google-maps/api";
 
@@ -23,18 +23,34 @@ const streetViewOptions = {
 };
 
 const Map = () => {
-    const { center, zoom, position, display, ref } = useSelector((state) => state);
+    // Before Code 
+    // const { center, zoom, position, display, ref } = useSelector((state) => state);
+    // warning resolve After
+    const center = useSelector((state) => state.center);
+    const zoom = useSelector((state) => state.zoom);
+    const position = useSelector((state) => state.position);
+    const display = useSelector((state) => state.display);
+    const ref = useSelector((state) => state.ref);
+
     const mapTypeId = useSelector(state => state.mapTypeId);
     const searchByButtonClick = useSelector((state) => state.searchByButtonClick);
-    const total = useSelector((state) => state);
+    // this state is not useble
+    // const total = useSelector((state) => state);
     const [mapPosition, setMapPosition] = useState(position)
     const mapRef = useRef(null);
-    const { rotationAngle } = useSelector((state) => state);
-    const { tilt } = useSelector((state) => state);
-    
+    // Before Code 
+    // const { rotationAngle } = useSelector((state) => state);
+    // warning resolve After
+    const rotationAngle = useSelector((state) => state?.rotationAngle);
+    // Before Code 
+    // const { tilt } = useSelector((state) => state);
+    // warning resolve After
+    const  tilt  = useSelector((state) => state?.tilt);
+
+
     // console.log("tilt ==>",tilt)
 
-    // console.log("rotationAngle ==>",rotationAngle)
+    // console.log("rotationAngle ==>", rotationAngle)
 
     const dispatch = useDispatch();
 
@@ -53,27 +69,27 @@ const Map = () => {
     );
     const onZoomChanged = useCallback(() => dispatch(setMapZoom()), [dispatch]);
     const onBoundsChanged = useCallback(
-      () => dispatch(setMapBounds()),
-      [dispatch]
+        () => dispatch(setMapBounds()),
+        [dispatch]
     );
 
     useEffect(() => {
         const map = mapRef.current;
         if (map) {
-          map.setOptions({
-            gestureHandling: 'greedy',
-            // rotateControl: true,
-            streetViewControl: false,
-              rotateControl: false,
-            tilt: tilt=== true ? 0 :90,
-            heading: rotationAngle,
-          });
+            map.setOptions({
+                gestureHandling: 'greedy',
+                // rotateControl: true,
+                streetViewControl: false,
+                rotateControl: false,
+                tilt: tilt === true ? 0 : 90,
+                heading: rotationAngle,
+            });
         }
-      }, [rotationAngle,tilt])
-    
-      const onUnmount = useCallback(function callback(map) {
+    }, [rotationAngle, tilt])
+
+    const onUnmount = useCallback(function callback(map) {
         setMap(null);
-      }, []);
+    }, []);
     const formatAddress = address => {
         try {
             const structuredAddress = address.address_components.reduce(
@@ -93,62 +109,63 @@ const Map = () => {
             return address.formatted_address;
         }
     };
-    
+
 
     const onMapClick = useCallback(
         (event) => {
-          const selectedPosition ={
-            lat: event.latLng.lat(),
-            lng : event.latLng.lng(),
-         }
-          const geocoder = new window.google.maps.Geocoder();
-          geocoder.geocode({ location: selectedPosition }, (results, status) => {
-              if (status === 'OK') {
-                  if (results[0]) {
-                      console.log('results----------------===============', results)
-                      dispatch(setAddress(results[0].formatted_address))
-                      const location = results[0].geometry.location;
-                      const addresses = results ? formatAddress(results[0]) : undefined;
+            const selectedPosition = {
+                lat: event.latLng.lat(),
+                lng: event.latLng.lng(),
+            }
+            const geocoder = new window.google.maps.Geocoder();
+            geocoder.geocode({ location: selectedPosition }, (results, status) => {
+                if (status === 'OK') {
+                    if (results[0]) {
+                        console.log('results----------------===============', results)
+                        dispatch(setAddress(results[0].formatted_address))
+                        const location = results[0].geometry.location;
+                        const addresses = results ? formatAddress(results[0]) : undefined;
 
-                      const addressComponents = results[0].address_components;
+                        const addressComponents = results[0].address_components;
 
-                      let city, state, country, zipcode, premise, political, sublocality, streetNumber, route;
+                        let city, state, country, zipcode, premise, political, sublocality, streetNumber, route;
 
-                      if (Array.isArray(addressComponents)) {
-                          for (const component of addressComponents) {
+                        if (Array.isArray(addressComponents)) {
+                            for (const component of addressComponents) {
 
-                              if (component.types.includes("administrative_area_level_3") || component.types.includes("locality")) {
-                                  city = component.long_name;
-                              } else if (component.types.includes("administrative_area_level_1")) {
-                                  state = component.long_name;
-                              } else if (component.types.includes("country")) {
-                                  country = component.long_name;
-                              } else if (component.types.includes("postal_code")) {
-                                  zipcode = component.long_name;
-                              }
-                          }
-                      }
+                                if (component.types.includes("administrative_area_level_3") || component.types.includes("locality")) {
+                                    city = component.long_name;
+                                } else if (component.types.includes("administrative_area_level_1")) {
+                                    state = component.long_name;
+                                } else if (component.types.includes("country")) {
+                                    country = component.long_name;
+                                } else if (component.types.includes("postal_code")) {
+                                    zipcode = component.long_name;
+                                }
+                            }
+                        }
 
-                      dispatch(setAddressDetails({city, state, country, zipcode, addresses }))
-                      console.log('results[0]?.address_components[0]?.long_name-----------------', results[0]?.address_components[0]?.long_name   )
-                      // console.log("item.structured_formatting.main_text",item.structured_formatting.main_text)
-                      dispatch(setLocation({
-                        locationName:  results[0]?.formatted_address                       ,
-                        locationDetail: results[0].formatted_address, 
-                        id: results[0].place_id, 
-                        lat: selectedPosition.lat, 
-                        lng: selectedPosition.lng}))
+                        dispatch(setAddressDetails({ city, state, country, zipcode, addresses }))
+                        console.log('results[0]?.address_components[0]?.long_name-----------------', results[0]?.address_components[0]?.long_name)
+                        // console.log("item.structured_formatting.main_text",item.structured_formatting.main_text)
+                        dispatch(setLocation({
+                            locationName: results[0]?.formatted_address,
+                            locationDetail: results[0].formatted_address,
+                            id: results[0].place_id,
+                            lat: selectedPosition.lat,
+                            lng: selectedPosition.lng
+                        }))
                         dispatch(setSelectedMapHideShow(false));
-                    
-                  }
-              } else {
-                  console.error('Geocoder failed due to: ' + status);
-              }
-          });
+
+                    }
+                } else {
+                    console.error('Geocoder failed due to: ' + status);
+                }
+            });
 
         },
         []
-      );
+    );
 
     const mapProps = {
         mapContainerStyle: { ...styles.map },
@@ -179,7 +196,7 @@ const Map = () => {
         onClick: searchByButtonClick ? onMapClick : undefined, // Only attach onClick if searchByButtonClick is true
         onLoad,
         onUnmount,
-        tilt:tilt,
+        tilt: tilt,
         heading: rotationAngle,
         onZoomChanged: _.debounce(onZoomChanged, 500),
         onBoundsChanged: _.debounce(onBoundsChanged, 500),
@@ -188,8 +205,8 @@ const Map = () => {
 
     return (
         <GoogleMap {...mapProps}>
-           <SearchInformation/>
-           <SearchMarker/>
+            <SearchInformation />
+            <SearchMarker />
         </GoogleMap>
     );
 };
