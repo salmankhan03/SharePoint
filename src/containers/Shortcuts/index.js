@@ -29,9 +29,9 @@ const Shortcuts = () => {
     const [fontColor, setFontColor] = useState()
     // console.log("zoom",zoom)
     // Before Code
-    // const { rotationAngle } = useSelector((state) => state);
+    const { rotationAngle } = useSelector((state) => state);
     // After Warning Resolve
-    const { rotationAngle } = useSelector((state) => state?.rotationAngle);
+    // const { rotationAngle } = useSelector((state) => state?.rotationAngle);
     //Not Useable
     // const { tilt } = useSelector((state) => state);
 

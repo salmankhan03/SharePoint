@@ -39,9 +39,9 @@ const Map = () => {
     const [mapPosition, setMapPosition] = useState(position)
     const mapRef = useRef(null);
     // Before Code 
-    // const { rotationAngle } = useSelector((state) => state);
+    const { rotationAngle } = useSelector((state) => state);
     // warning resolve After
-    const rotationAngle = useSelector((state) => state?.rotationAngle);
+    // const rotationAngle = useSelector((state) => state?.rotationAngle);
     // Before Code 
     // const { tilt } = useSelector((state) => state);
     // warning resolve After
