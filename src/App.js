@@ -17,6 +17,8 @@ const App = () => {
         async function verifySession() {
             try {
                 const urlParams = new URLSearchParams(window.location.search);
+                const siteURL = urlParams.get('siteURL');
+                const ApiDomain = siteURL ? new URL(siteURL).hostname : 'https://sites.sitewise.com';
                 const sessionToken = urlParams.get("accessKey");
                 setLoading(true);
 
@@ -32,75 +34,73 @@ const App = () => {
                     domainName: domainName
                 };
 
-                const response = await fetch(
-                    `https://submitapi.sitewise.com/validate`,
-                    {
-                        method: 'POST',
-                        body: JSON.stringify(payload)
+                const response = await fetch(`${ApiDomain}/api/validate`, {
+                    method: 'POST',
+                    body: JSON.stringify(payload)
                     }
                 );
-                const data = await response.json()
-                if (data) {
-                    dispatch(validateData(data));
-                    if (navigator.geolocation) {
-                        navigator.geolocation.getCurrentPosition(
-                            (position) => {
-                                const { latitude, longitude } = position.coords;
-                                const center = {
-                                    lat: latitude,
-                                    lng: longitude - 0.001,
-                                };
-                                const zoom = 15
-                                dispatch(setCurrentUserLocation({ center, zoom }));
-                                setLoading(false);
-                            },
-                            (error) => {
-                                const center = { lat: 40.117546, lng: -107.20 };
-                                const zoom = 5;
-                                dispatch(setCurrentUserLocation({ center, zoom }));
-                                setLoading(false);
-                                // console.error("Error getting current location:", error);
-                            }
-                        );
-                    } else {
-                        console.error("Geolocation is not supported by this browser.");
-                    }
-                } else {
-                    setIsValidSession(false);
-                    console.error(
-                        `Failed to verify session. Status code: ${response.status}`
-                    );
+    const data = await response.json()
+    if (data) {
+        dispatch(validateData(data));
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    const { latitude, longitude } = position.coords;
+                    const center = {
+                        lat: latitude,
+                        lng: longitude - 0.001,
+                    };
+                    const zoom = 15
+                    dispatch(setCurrentUserLocation({ center, zoom }));
+                    setLoading(false);
+                },
+                (error) => {
+                    const center = { lat: 40.117546, lng: -107.20 };
+                    const zoom = 5;
+                    dispatch(setCurrentUserLocation({ center, zoom }));
+                    setLoading(false);
+                    // console.error("Error getting current location:", error);
                 }
-            } catch (error) {
-                setIsValidSession(false);
-                console.error("Error while verifying session:", error);
-            }
+            );
+        } else {
+            console.error("Geolocation is not supported by this browser.");
+        }
+    } else {
+        setIsValidSession(false);
+        console.error(
+            `Failed to verify session. Status code: ${response.status}`
+        );
+    }
+} catch (error) {
+    setIsValidSession(false);
+    console.error("Error while verifying session:", error);
+}
         }
 
-        verifySession();
+verifySession();
     }, [dispatch]);
 
-    if (isValidSession === false) {
-        return (
-            <div>
-                <SessionInvalid />
-            </div>
-        );
-    }
-
-    if (loading) {
-        return (
-            <div>
-                <Loading />
-            </div>
-        );
-    }
-
+if (isValidSession === false) {
     return (
-        <div style={styles.fullscreen}>
-            <Dashboard />
+        <div>
+            <SessionInvalid />
         </div>
     );
+}
+
+if (loading) {
+    return (
+        <div>
+            <Loading />
+        </div>
+    );
+}
+
+return (
+    <div style={styles.fullscreen}>
+        <Dashboard />
+    </div>
+);
 };
 
 const styles = {

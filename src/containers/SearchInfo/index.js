@@ -109,6 +109,9 @@ const InputComp = (props) => {
 const Layers = ({ width }) => {
     const [currentStep, setCurrentStep] = useState(1);
     const [selectedMapOptions, setSelectedMapOptions] = useState(false);
+    const urlParams = new URLSearchParams(window.location.search);
+    const siteURL = urlParams.get('siteURL');
+    const ApiDomain = siteURL ? new URL(siteURL).hostname : 'https://sites.sitewise.com';
 
     // Before Code
     // const { locationDetail, viewSideDetailFields, position } = useSelector((state) => state);
@@ -391,7 +394,7 @@ const Layers = ({ width }) => {
             phone: mapData.phone
         }
         try {
-            const response = await axios.post('https://submitapi.sitewise.com/submit', payload);
+            const response = await axios.post(`${ApiDomain}/api/submit`, payload);
             // console.log('API Response:', response);
             SetSubmitSuccessFull(true)
             localStorage.setItem('contactInfo', JSON.stringify(contactInfo));
@@ -551,7 +554,7 @@ const Layers = ({ width }) => {
                     contentType: file.type
                 }));
 
-                const response = await axios.post('https://submitapi.sitewise.com/attach_urls', payload);
+                const response = await axios.post(`${ApiDomain}/api/attach_urls`, payload);
 
                 const combinedData = response.data.map((url, index) => ({
                     url,
