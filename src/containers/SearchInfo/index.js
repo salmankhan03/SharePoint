@@ -476,21 +476,25 @@ const Layers = ({ width }) => {
             }
             acceptedFiles = filesToAccept;
         }
-        rejectedFiles.forEach(file => {
-            file.errors.forEach(error => {
-                if (error.code === 'file-too-large') {
-                    if (!errorMessages.includes("The file is too large. Max size is 10MB.")) {
-                        errorMessages.push("The file is too large. Max size is 10MB.");
-                    }
-                } else if (error.code === 'file-invalid-type') {
-                    if (!errorMessages.includes("The file has an unsupported format. Allowed formats: JPG, PNG, GIF, PDF, SVG.")) {
-                        errorMessages.push("The file has an unsupported format. Allowed formats: JPG, PNG, GIF, PDF, SVG.");
-                    }
-                } else if (!errorMessages.includes(error.message)) {
-                    errorMessages.push(error.message);
+        if (Array.isArray(rejectedFiles)) {
+            rejectedFiles.forEach(file => {
+                if (file.errors && Array.isArray(file.errors)) {
+                    file.errors.forEach(error => {
+                        if (error.code === 'file-too-large') {
+                            if (!errorMessages.includes("The file is too large. Max size is 10MB.")) {
+                                errorMessages.push("The file is too large. Max size is 10MB.");
+                            }
+                        } else if (error.code === 'file-invalid-type') {
+                            if (!errorMessages.includes("The file has an unsupported format. Allowed formats: JPG, PNG, GIF, PDF, SVG.")) {
+                                errorMessages.push("The file has an unsupported format. Allowed formats: JPG, PNG, GIF, PDF, SVG.");
+                            }
+                        } else if (!errorMessages.includes(error.message)) {
+                            errorMessages.push(error.message);
+                        }
+                    });
                 }
             });
-        });
+        }
 
         if (errorMessages.length > 0) {
             const uniqueErrorMessages = [...new Set(errorMessages)];
