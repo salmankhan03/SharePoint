@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { Provider } from "react-redux";
+import { useDispatch } from "react-redux";
 import Dashboard from "./containers/Dashboard";
 import "./App.css";
 
-import store, { setCurrentUserLocation, validateData } from "./store";
+import  { setCurrentUserLocation, validateData } from "./store";
 import Loading from "./components/Loading";
 import SessionInvalid from "./components/SessionInvalid";
 
@@ -20,7 +19,7 @@ const App = () => {
                 const sessionToken = urlParams.get("accessKey");
                 setLoading(true);
 
-                const domainName = urlParams.get('domain')
+                let domainName = urlParams.get('domain')
 
                 if (domainName === null) {
                     // get the url
@@ -33,7 +32,7 @@ const App = () => {
                 };
 
                 const response = await fetch(
-                    `https://submitapi.sitewise.com/validate`,
+                    `/api/validate`,
                     {
                         method: 'POST',
                         body: JSON.stringify(payload)
@@ -42,29 +41,37 @@ const App = () => {
                 const data = await response.json()
                 if (data) {
                     dispatch(validateData(data));
-                    if (navigator.geolocation) {
-                        navigator.geolocation.getCurrentPosition(
-                            (position) => {
-                                const { latitude, longitude } = position.coords;
-                                const center = {
-                                    lat: latitude,
-                                    lng: longitude - 0.001,
-                                };
-                                const zoom = 15
-                                dispatch(setCurrentUserLocation({ center, zoom }));
-                                setLoading(false);
-                            },
-                            (error) => {
-                                const center = { lat: 40.117546, lng: -107.20 };
-                                const zoom = 5;
-                                dispatch(setCurrentUserLocation({ center, zoom }));
-                                setLoading(false);
-                                // console.error("Error getting current location:", error);
-                            }
-                        );
-                    } else {
-                        console.error("Geolocation is not supported by this browser.");
+                    // Check if geolocation should be requested
+                    if (data.geolocation === true) {
+                        if (navigator.geolocation) {
+                            navigator.geolocation.getCurrentPosition(
+                                (position) => {
+                                    const { latitude, longitude } = position.coords;
+                                    const center = {
+                                        lat: latitude,
+                                        lng: longitude - 0.001,
+                                    };
+                                    const zoom = 15
+                                    dispatch(setCurrentUserLocation({ center, zoom }));
+                                    setLoading(false);
+                                },
+                                (error) => {
+                                    const center = { lat: 40.117546, lng: -107.20 };
+                                    const zoom = 5;
+                                    dispatch(setCurrentUserLocation({ center, zoom }));
+                                    setLoading(false);
+                                }
+                            );
+                        } else {
+                            console.error("Geolocation is not supported by this browser.");
+                        }
+                    } else{
+                        const center = { lat: 40.117546, lng: -107.20 };
+                        const zoom = 5;
+                        dispatch(setCurrentUserLocation({ center, zoom }));
+                        setLoading(false);
                     }
+                   
                 } else {
                     setIsValidSession(false);
                     console.error(

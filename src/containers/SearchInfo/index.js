@@ -157,8 +157,16 @@ const Layers = ({ width }) => {
     const fileInputRef = useRef(null)
     const timestampRef = useRef(Date.now());
     const [errorMessages, setErrorMessages] = useState([]);
+    const [apiDomain, setApiDomain] = useState('sitewise.com');
+
+    useEffect(() => {
+        if (window.apiDomain) {
+            setApiDomain(window.apiDomain);
+        }
+    }, []);
+
     const timeoutRef = useRef(null);
-    const maxFileSize = 10485760; // 10MB in bytes
+    const maxFileSize = 52428800; // 50MB in bytes
     const maxFiles = 5;
 
     useEffect(() => {
@@ -174,7 +182,6 @@ const Layers = ({ width }) => {
                 }
                 return newItem;
             });
-            // console.log("updatedCustomData",updatedCustomData)
             setValidateAttributeData(updatedCustomData)
         }
     }, [validateData]);
@@ -196,10 +203,6 @@ const Layers = ({ width }) => {
 
     const getDefaultOption = (attribute) => {
         if (attribute.tyo && attribute.tyo.length > 0) {
-
-            // const [defaultValue] = attribute.tyo.find(option => option.startsWith(''))?.split('|') || [attribute.dv];
-            // return defaultValue;
-            // console.log("att",attribute?.columnName , attribute.dv)
             const defaultValue = attribute.dv == null
                 ? (attribute.tyo.find(option => option === attribute.dv)?.split('|')[0]
                 || attribute.tyo.find(option => option.startsWith(''))?.split('|')[0]
@@ -295,11 +298,6 @@ const Layers = ({ width }) => {
                 name: storedContactInfo?.name || '',
                 email: storedContactInfo?.email || '',
                 phone: storedContactInfo?.phone || '',
-                // pco_name: addressDetails ? addressDetails?.formattedAddress : '',
-                // pco_address: addressDetails ? addressDetails?.formattedAddress : '',
-                // pco_city: addressDetails ? addressDetails?.structuredAddress['locality,political'] : '',
-                // pco_state: addressDetails ? addressDetails?.structuredAddress['administrative_area_level_1,political'] : '',
-                // pco_zipcode: addressDetails ? addressDetails?.structuredAddress?.postal_code : ''
             }));
         } else {
             setMapData((prevMapData) => ({
@@ -391,8 +389,7 @@ const Layers = ({ width }) => {
             phone: mapData.phone
         }
         try {
-            const response = await axios.post('https://submitapi.sitewise.com/submit', payload);
-            // console.log('API Response:', response);
+            const response = await axios.post('/api/submit', payload);
             SetSubmitSuccessFull(true)
             localStorage.setItem('contactInfo', JSON.stringify(contactInfo));
             // message.success('Site Submitted successfully');
@@ -473,22 +470,23 @@ const Layers = ({ width }) => {
             }
             acceptedFiles = filesToAccept;
         }
-        rejectedFiles.forEach(file => {
-            file.errors.forEach(error => {
-                if (error.code === 'file-too-large') {
-                    if (!errorMessages.includes("The file is too large. Max size is 10MB.")) {
-                        errorMessages.push("The file is too large. Max size is 10MB.");
+        if (rejectedFiles && rejectedFiles.length > 0) {
+            rejectedFiles.forEach(file => {
+                file.errors.forEach(error => {
+                    if (error.code === 'file-too-large') {
+                        if (!errorMessages.includes("The file is too large. The maximum allowed size is 50MB.")) {
+                            errorMessages.push("The file is too large. The maximum allowed size is 50MB.");
+                        }
+                    } else if (error.code === 'file-invalid-type') {
+                        if (!errorMessages.includes("The file has an unsupported format. Accepted formats are JPG, PNG, GIF, PDF, and SVG.")) {
+                            errorMessages.push("The file has an unsupported format. Accepted formats are JPG, PNG, GIF, PDF, and SVG.");
+                        }
+                    } else if (!errorMessages.includes(error.message)) {
+                        errorMessages.push(error.message);
                     }
-                } else if (error.code === 'file-invalid-type') {
-                    if (!errorMessages.includes("The file has an unsupported format. Allowed formats: JPG, PNG, GIF, PDF, SVG.")) {
-                        errorMessages.push("The file has an unsupported format. Allowed formats: JPG, PNG, GIF, PDF, SVG.");
-                    }
-                } else if (!errorMessages.includes(error.message)) {
-                    errorMessages.push(error.message);
-                }
+                });
             });
-        });
-
+        }
         if (errorMessages.length > 0) {
             const uniqueErrorMessages = [...new Set(errorMessages)];
             setErrorMessages(uniqueErrorMessages);
@@ -551,7 +549,7 @@ const Layers = ({ width }) => {
                     contentType: file.type
                 }));
 
-                const response = await axios.post('https://submitapi.sitewise.com/attach_urls', payload);
+                const response = await axios.post('/api/attach_urls', payload);
 
                 const combinedData = response.data.map((url, index) => ({
                     url,
@@ -586,7 +584,6 @@ const Layers = ({ width }) => {
 
                             try {
                                 await axios.put(file.url, arrayBuffer, options);
-                                // console.log('after save!');
                                 resolve();
                             } catch (error) {
                                 reject(error);
@@ -697,7 +694,6 @@ const Layers = ({ width }) => {
         setExpandedGroups(presenceTracker);
     }, [presenceTracker]);
     const toggleGroup = (groupName) => {
-        // console.log("Call toggleGroup", expandedGroups);
 
         setExpandedGroups((prev) => ({
             ...prev,
@@ -708,7 +704,6 @@ const Layers = ({ width }) => {
     const handleDropdownOpenChange = (columnName, isOpen) => {
         setOpenStates(prev => ({ ...prev, [columnName]: isOpen }));
     };
-
     return (
         <div style={styles.container} className={"layerContainer"}>
             {/* {saveModal}
@@ -827,23 +822,6 @@ const Layers = ({ width }) => {
                                                                                     {attribute.description}
                                                                                 </Col>
                                                                                 <Col span={24} style={styles.inputs}>
-                                                                                    {/* <Select
-                                                                                    style={{ width: '100%'}}    
-                                                                                    value={formData[attribute.columnName]}
-                                                                                    onChange={(e) => handleInputChange(attribute.columnName, e)}
-                                                                                    onDropdownVisibleChange={(isOpen) => handleDropdownOpenChange(attribute.columnName, isOpen)}
-                                                                                    placeholder={attribute.description}
-                                                                                    suffixIcon={openStates[attribute.columnName] ? <CaretUpOutlined /> : <CaretDownOutlined />}
-                                                                                >
-                                                                                    {attribute.tyo?.map((option) => {
-                                                                                        const [value, label] = option.split('|');
-                                                                                        return (
-                                                                                            <Option key={value} value={value}>
-                                                                                                {label}
-                                                                                            </Option>
-                                                                                        );
-                                                                                    })}
-                                                                                </Select> */}
                                                                                     <Select
                                                                                         style={{ width: '100%' }}
                                                                                         activeBorderColor={'red'}
@@ -1164,6 +1142,8 @@ const Layers = ({ width }) => {
             </LeftDrawerContent>
         </div>
     );
+
+  
 };
 
 const styles = {
