@@ -329,7 +329,7 @@ button.gm-ui-hover-effect {
   }
 
   .selectOnTheMap {
-    display: none;
+    display: none !important;
   }
 
   .headerImage {
