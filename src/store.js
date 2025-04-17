@@ -90,7 +90,6 @@ const mapSlice = createSlice({
             };
         },
         onHideShowInfo: (state, action) => {
-            // console.log(action)
             return {
                 ...state,
                 display: action.payload,
@@ -315,7 +314,6 @@ export const pressSearchPoint = (value) => async (dispatch, getState) => {
 export const searchMapLocation = (input) => (dispatch, getState) => {
     const { northeast, southwest } = getState().bounds;
     const bounds = new window.google.maps.LatLngBounds(southwest, northeast);
-    // console.log("bounds in searchLocat:", bounds);
     dispatch(setSearchProps("mapLoading", true));
     const service = new window.google.maps.places.AutocompleteService();
     const geocoder = new window.google.maps.Geocoder();
@@ -328,8 +326,6 @@ export const searchMapLocation = (input) => (dispatch, getState) => {
                     (r) => r.description === res[0].formatted_address
                 );
                 const combined = shouldAdd ? filtered.concat(res[0]) : filtered;
-                // console.log('combined-----------------------', combined)
-                // console.log('filtered-----------------------', filtered)
                 dispatch(mapSlice.actions.setSearchMap(combined));
             } else {
                 dispatch(mapSlice.actions.setSearchMap(filtered));
@@ -339,7 +335,6 @@ export const searchMapLocation = (input) => (dispatch, getState) => {
 };
 
 export const saveMapRef = (map) => async (dispatch, getState) => {
-    // console.log("map ==>",map)
     dispatch(mapSlice.actions.saveMapRef(map));
     map?.enableKeyDragZoom(keyDragZoom);
 };
@@ -407,7 +402,6 @@ export const setMapBounds = () => async (dispatch, getState) => {
 
 export const setMapZoom = () => async (dispatch, getState) => {
     const ref = getState()?.ref;
-    // console.log("ref ==>", ref)
     if (ref) {
         dispatch(mapSlice.actions.zoom(ref?.getZoom()));
     }

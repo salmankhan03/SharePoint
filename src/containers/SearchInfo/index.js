@@ -6,20 +6,17 @@ import {
 
 import { Row, Col } from "antd";
 import { Input as AntInput, Select, Checkbox } from 'antd';
-import { CaretDownOutlined, CaretRightOutlined, DeleteOutlined, MapOutlined, DownOutlined, CaretUpOutlined, UpOutlined } from '@ant-design/icons';
+import { CaretDownOutlined, CaretRightOutlined, DeleteOutlined, DownOutlined, UpOutlined } from '@ant-design/icons';
 
 import LeftDrawerContent from "../../components/LeftDrawerContent";
 import Search from "../Search";
 import {
-    center,
     closeInfo,
     setSelectedMapHideShow,
     setContactScreenShowHide,
     setAttributesData
 } from "../../store";
 import axios from 'axios';
-import submitSuccess from '../../assets/images/submitSuccess.svg'
-import optionalFieldDown from '../../assets/images/optionalFieldDown.svg'
 import { useDropzone } from 'react-dropzone';
 
 import { message } from 'antd';
@@ -61,7 +58,6 @@ const InputComp = (props) => {
                     style={{ position: 'inherit' }}
                     ref={inputRef}
                     autoFocus={autoFocus}
-                    // className={`${col_field} ${multiline ? 'input-multiline' : ''}`}
                     disabled={disabled}
                     placeholder={placeholder}
                     type={type}
@@ -72,11 +68,9 @@ const InputComp = (props) => {
                 /> :
                     <TextArea
                         rows={4}
-                        // maxLength={6}
                         style={{ position: 'inherit' }}
                         ref={inputRef}
                         autoFocus={autoFocus}
-                        // className={`${col_field} ${multiline ? 'input-multiline' : ''}`}
                         disabled={disabled}
                         placeholder={placeholder}
                         type={type}
@@ -139,8 +133,6 @@ const Layers = ({ width }) => {
     const [submitSuccessFull, SetSubmitSuccessFull] = useState(false)
     const [optionalField, SetOptionalField] = useState(true)
     const [selectedFiles, setSelectedFiles] = useState([]);
-
-    const [siteCharacteristics, SetSiteCharacteristics] = useState([])
     const [timeStamp, setTimeStamp] = useState(false)
     // const timestampRef = useRef('');
     const [expandedGroups, setExpandedGroups] = useState({});
@@ -177,7 +169,6 @@ const Layers = ({ width }) => {
                 const newItem = { ...item };
                 const element = newItem?.tyo;
                 if (element?.length > 0) {
-                    // console.log("161",element)
                     // newItem.tyo = ["|Select an option", ...element];
                 }
                 return newItem;
@@ -1142,8 +1133,6 @@ const Layers = ({ width }) => {
             </LeftDrawerContent>
         </div>
     );
-
-  
 };
 
 const styles = {

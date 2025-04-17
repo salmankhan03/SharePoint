@@ -23,7 +23,6 @@ const highlightText = (text, input, structured) => {
     return false;
   }
   const parts = text.split(new RegExp(`(${input})`, "gi"));
-  // console.log("parts:", parts);
   return (
     <span>
       {parts.map((part, i) => (

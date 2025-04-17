@@ -7,16 +7,6 @@ const reverse = {
   right: "left",
 };
 
-const boxShadows = {
-  left: "2px 0 8px rgba(0, 0, 0, 0.15)",
-  right: "-2px 0 8px rgba(0, 0, 0, 0.15)",
-};
-
-const zIndexes = {
-  left: 1,
-  right: 0,
-};
-
 const Drawer = ({
                   direction,
                   path,

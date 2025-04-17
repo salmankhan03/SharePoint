@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { GoogleMap, DrawingManager } from "@react-google-maps/api";
+import { GoogleMap } from "@react-google-maps/api";
 
 import SearchInformation from './SearchInformation'
 import SearchMarker from "./SearchMarker";
@@ -12,15 +12,8 @@ import {
     setMapBounds,
     saveMapRef,
     setAddressDetails,
-    setCurrentUserLocation
 } from "../../store";
 import _ from "lodash";
-
-const streetViewOptions = {
-    addressControl: true,
-    enableCloseButton: true,
-    zoomControlOptions: true,
-};
 
 const Map = () => {
     // Before Code 
@@ -29,8 +22,6 @@ const Map = () => {
     const center = useSelector((state) => state.center);
     const zoom = useSelector((state) => state.zoom);
     const position = useSelector((state) => state.position);
-    const display = useSelector((state) => state.display);
-    const ref = useSelector((state) => state.ref);
 
     const mapTypeId = useSelector(state => state.mapTypeId);
     const searchByButtonClick = useSelector((state) => state.searchByButtonClick);
@@ -46,11 +37,6 @@ const Map = () => {
     // const { tilt } = useSelector((state) => state);
     // warning resolve After
     const  tilt  = useSelector((state) => state?.tilt);
-
-
-    // console.log("tilt ==>",tilt)
-
-    // console.log("rotationAngle ==>", rotationAngle)
 
     const dispatch = useDispatch();
 
@@ -121,9 +107,7 @@ const Map = () => {
             geocoder.geocode({ location: selectedPosition }, (results, status) => {
                 if (status === 'OK') {
                     if (results[0]) {
-                        console.log('results----------------===============', results)
                         dispatch(setAddress(results[0].formatted_address))
-                        const location = results[0].geometry.location;
                         const addresses = results ? formatAddress(results[0]) : undefined;
 
                         const addressComponents = results[0].address_components;
@@ -146,8 +130,6 @@ const Map = () => {
                         }
 
                         dispatch(setAddressDetails({ city, state, country, zipcode, addresses }))
-                        console.log('results[0]?.address_components[0]?.long_name-----------------', results[0]?.address_components[0]?.long_name)
-                        // console.log("item.structured_formatting.main_text",item.structured_formatting.main_text)
                         dispatch(setLocation({
                             locationName: results[0]?.formatted_address,
                             locationDetail: results[0].formatted_address,

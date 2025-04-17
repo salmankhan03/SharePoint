@@ -1,7 +1,6 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import MapTypes from "../MapTypes";
 import { useDispatch, useSelector } from "react-redux";
-import CloseOutlined from "@ant-design/icons/lib/icons/CloseOutlined";
 import RotationClockwiseIcon from "../../assets/icons/RotationClockwiseIcon";
 import RotationRoadIcon from "../../assets/icons/RotationRoadIcon";
 import RotationIcon from "../../assets/icons/RotationIcon";

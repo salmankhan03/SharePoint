@@ -8,7 +8,7 @@ import Summary from '../../components/Summary';
 import { addSiteDetail, closeInfo, setSelectedMapHideShow, setContactScreenShowHide, onHideShowInfo, validateData } from "../../store";
 import Thumbnails from "./Thumbnails";
 import { Button } from "antd";
-import { Row, Col } from "antd";
+import { Col } from "antd";
 const border = '#264475';
 
 
@@ -131,9 +131,6 @@ const StudyAreaInfo = () => {
     // const { display } = useSelector((state) => state);
     // warning resolve After
     const display  = useSelector((state) => state?.display);
-
-    // console.log('display------------------------', display)
-    // console.log('locationName------------------------', locationName)
     return (
         <InfoBox visible={display} position={position}>
             <StudyAreas locationDetail={locationDetail} position={position} locationName={locationName} />
