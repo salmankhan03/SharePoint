@@ -7,7 +7,7 @@ import RotationIcon from "../../assets/icons/RotationIcon";
 import RotationAntiClockwiseIcon from "../../assets/icons/RotationAntiClockwiseIcon";
 
 
-import { closeInfo, setSelectedMapHideShow, rotateMapClockwise, rotateMapAntiClockwise, rotateMapUp, setMapZoom } from "../../store";
+import { setSelectedMapHideShow, rotateMapClockwise, rotateMapAntiClockwise, rotateMapUp } from "../../store";
 import PrimarySquareButton from "../../components/PrimarySquareButton";
 import logo from '../../assets/images/sitewise_logo_navy_border_88px.png';
 import whiteLogo from '../../assets/images/sitewise_white_border_88.png';
@@ -229,9 +229,6 @@ const Shortcuts = () => {
                                             color: fontColor ? fontColor : '',
                                         }}>Click a point on the map to select a location</div>
                                 </div>
-                                {/* <div onClick={onClose}>
-                                    <CloseOutlined style={styles.closeIcon} />
-                                </div> */}
                             </div>
                             <div style={styles.footer}>
                                 <div style={styles.flex}>

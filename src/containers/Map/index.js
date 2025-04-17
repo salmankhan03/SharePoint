@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState, useRef } from "react";
+import React, { useCallback, useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { GoogleMap } from "@react-google-maps/api";
 
@@ -16,42 +16,23 @@ import {
 import _ from "lodash";
 
 const Map = () => {
-    // Before Code 
-    // const { center, zoom, position, display, ref } = useSelector((state) => state);
-    // warning resolve After
     const center = useSelector((state) => state.center);
     const zoom = useSelector((state) => state.zoom);
-    const position = useSelector((state) => state.position);
 
     const mapTypeId = useSelector(state => state.mapTypeId);
     const searchByButtonClick = useSelector((state) => state.searchByButtonClick);
-    // this state is not useble
-    // const total = useSelector((state) => state);
-    const [mapPosition, setMapPosition] = useState(position)
     const mapRef = useRef(null);
-    // Before Code 
     const { rotationAngle } = useSelector((state) => state);
-    // warning resolve After
-    // const rotationAngle = useSelector((state) => state?.rotationAngle);
-    // Before Code 
-    // const { tilt } = useSelector((state) => state);
-    // warning resolve After
     const  tilt  = useSelector((state) => state?.tilt);
 
     const dispatch = useDispatch();
 
-    useEffect(() => {
-        setMapPosition(position)
-    }, [position])
-
-    const [map, setMap] = useState(null);
     const onLoad = useCallback(
         (map) => {
             dispatch(saveMapRef(map))
-            setMap(map);
             mapRef.current = map;
         },
-        [setMap, dispatch]
+        [dispatch]
     );
     const onZoomChanged = useCallback(() => dispatch(setMapZoom()), [dispatch]);
     const onBoundsChanged = useCallback(
@@ -74,7 +55,6 @@ const Map = () => {
     }, [rotationAngle, tilt])
 
     const onUnmount = useCallback(function callback(map) {
-        setMap(null);
     }, []);
     const formatAddress = address => {
         try {
@@ -112,7 +92,7 @@ const Map = () => {
 
                         const addressComponents = results[0].address_components;
 
-                        let city, state, country, zipcode, premise, political, sublocality, streetNumber, route;
+                        let city, state, country, zipcode;
 
                         if (Array.isArray(addressComponents)) {
                             for (const component of addressComponents) {
