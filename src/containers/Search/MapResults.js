@@ -8,7 +8,6 @@ import SearchResult from "../../components/SearchResult";
 import {
   pressSearchPoint,
   setAddressDetails,
-  setLayer,
   setLocation,
   setSearchProps,
   setSelectedMapHideShow
@@ -102,7 +101,6 @@ const MapResults = ({ path, search }) => {
                   const { terms } = item;
                   const locationTerm = terms.find((term) => term.offset === 0);
                   if (locationTerm) {
-                    const locationName = locationTerm.value;
                     const geocoder = new window.google.maps.Geocoder();
                     geocoder.geocode(
                       { address: item.description },

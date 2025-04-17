@@ -1,6 +1,5 @@
 import { configureStore, createSlice } from "@reduxjs/toolkit";
 import _ from "lodash";
-import { message } from "antd";
 import { mapBounds } from "./helpers/mapLocation";
 // import uuid from "uuid";
 
@@ -19,8 +18,6 @@ const keyDragZoom = {
 
 export const center = { lat: 40.117546, lng: -107.20 };
 export const zoom = 5;
-
-const measureUnit = (metricUnit) => (metricUnit ? "metric" : "imperial");
 
 const initialState = {
     center,
@@ -75,14 +72,11 @@ const mapSlice = createSlice({
                 ...state,
                 mapResults: action.payload,
                 mapLoading: false,
-                // display: true,
             };
         },
         closeInfo: (state, action) => {
             return {
                 ...state,
-                // shape: undefined,
-                // prevId: initialState.infoId,
                 position: null,
                 locationDetail: null,
                 display: false,
@@ -247,10 +241,6 @@ export const searchLocation = (input, path) => (dispatch) => {
         dispatch(mapSlice.actions.setSearchPoint({ point, path }));
     } else {
         dispatch(searchMapLocation(input));
-
-        // if (path === "input" || path === "tourInput") {
-        //     dispatch(searchLayerLocation(input, path));
-        // }
     }
 };
 

@@ -1,12 +1,8 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import _ from 'lodash';
-
 import InfoBox from './Infobox';
 import InfoCard from '../../components/InfoCard';
-import Summary from '../../components/Summary';
-import { addSiteDetail, closeInfo, setSelectedMapHideShow, setContactScreenShowHide, onHideShowInfo, validateData } from "../../store";
-import Thumbnails from "./Thumbnails";
+import { addSiteDetail, closeInfo, setSelectedMapHideShow, onHideShowInfo } from "../../store";
 import { Button } from "antd";
 import { Col } from "antd";
 const border = '#264475';

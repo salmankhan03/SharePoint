@@ -112,7 +112,6 @@ const Layers = ({ width }) => {
     const position = useSelector((state) => state.position);
 
     const addressDetails = useSelector((state) => state.addressDetails);
-    const locationName = useSelector((state) => state.locationName);
     const validateData = useSelector((state) => state.validateData);
     const attributeData = useSelector((state) => state.attributeData);
     const [fontFamilys, setFontFamilys] = useState()
@@ -338,7 +337,6 @@ const Layers = ({ width }) => {
                 }
             }
         });
-        const formattedAddress = [addressDetails.streetNumber, addressDetails.premise, addressDetails.route, addressDetails.political, addressDetails.sublocality].filter(Boolean).join(', ');
 
         let submitfiles = selectedFiles.map(file => `${file.path}`);
         const payload = {
@@ -380,7 +378,6 @@ const Layers = ({ width }) => {
             phone: mapData.phone
         }
         try {
-            const response = await axios.post('/api/submit', payload);
             SetSubmitSuccessFull(true)
             localStorage.setItem('contactInfo', JSON.stringify(contactInfo));
             // message.success('Site Submitted successfully');
@@ -590,7 +587,7 @@ const Layers = ({ width }) => {
         }
     };
 
-    const { getRootProps, getInputProps, isDragActive, fileRejections } = useDropzone({
+    const { getRootProps, getInputProps, isDragActive } = useDropzone({
         // accept: ['application/pdf', 'image/gif', 'image/jpeg', 'image/png'],  // Allowed file formats
         accept: {
             'application/pdf': [],

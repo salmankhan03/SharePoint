@@ -2,11 +2,6 @@ import React from "react";
 import _ from "lodash";
 import '../../App.css'
 
-const reverse = {
-  left: "right",
-  right: "left",
-};
-
 const Drawer = ({
                   direction,
                   path,
@@ -16,8 +11,6 @@ const Drawer = ({
                   space = 0,
                   children,
                 }) => {
-  const reversed = reverse[direction];
-  const isOpen = !!path;
   const Content = page && page.content;
   const safeWidth = width || _.get(page, "defaultWidth", defaultWidth);
   const containerStyles = {
